@@ -337,11 +337,9 @@ class Main_window(ttk.Frame):
         #         draw.ellipse((x_ - 10*self.plot_scale, y_ - 10*self.plot_scale, x_ + 10*self.plot_scale, y_ + 10*self.plot_scale), fill=(255, 0, 0))
         #         draw.line([(x_, y_), (x1, y1)], fill=(255, 0, 0), width=int(7*self.plot_scale))
 
-        paths=[self.pose[:2]]+self.paths
-        if self.pose and len(self.destination)>0:
-            for i in range(1,len(paths)):
-                x0, y0=paths[i-1]
-                x1, y1=paths[i]
+        for i in range(1,len(self.paths)):
+                x0, y0=self.paths[i-1]
+                x1, y1=self.paths[i]
                 draw_floorplan_with_keyframe.line([(x0, y0), (x1, y1)], fill=(255,0,0), width=int(10*self.plot_scale))
                 distance=np.linalg.norm([x1-x0,y1-y0])
                 rot=np.arctan2(x1-x0,y1-y0)
@@ -429,14 +427,13 @@ class Main_window(ttk.Frame):
         Navigation
         """
         if self.pose and len(self.destination)>0:
-            self.paths=[]
+            self.paths=[self.pose[:2]]
             for destination_id in self.destination:
                 path_list=self.trajectory.calculate_path(self.pose[:2], destination_id)
                 if len(path_list)>0:
                     self.paths+=path_list
 
             self.instruction_message=command_type0(self.pose,self.paths,self.map_scale)
-            self.logger.info(f"===============================================\n                                                       {self.instruction_message}\n                                                       ===============================================")
 
         """
         Animate results on the floor plan
