@@ -5,49 +5,49 @@
 
 ---
 
-UNav is a vision-based location system designed to assist visually impaired individuals in navigating unfamiliar environments.
+UNav 是一个基于视觉的定位系统，它旨在帮助视障人士在不熟悉的环境中进行导航。
 
-## :sparkles: New Features
+## :sparkles: 新功能
 
-- May 29, 2023. Support **Parallel RanSAC** computing 
+- 2023年5月29日： 支持 **Parallel RanSAC** 计算
 
 <details>
   <summary>More</summary>
 
 </details>
 
-## :wrench: Dependencies and Installation
+## :wrench: 安装 与 安装需要
 
-- Python >= 3.8 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
+- Python >= 3.8 (推荐使用 [Anaconda](https://www.anaconda.com/download/#linux) 或 [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
 - [PyTorch >= 1.13](https://pytorch.org/)
 - NVIDIA GPU + [CUDA](https://developer.nvidia.com/cuda-downloads)
 
-1. Clone repo
+1. 克隆本 repository
 
     ```bash
     git clone https://github.com/endeleze/UNav.git
     ```
 
-1. Install dependent packages
+1. 安装所需的包
 
     ```bash
     cd UNav
     pip install -r requirements.txt
     ```
-## :computer: Using
-1. Server-Client
+## :computer: 使用
+1. Server-Client 服务器与客户端
 
-    * Setup [server.yaml](configs/server.yaml) and tune [hloc.yaml](configs/hloc.yaml) us needed.
+    * 设置 [server.yaml](configs/server.yaml) 与 [hloc.yaml](configs/hloc.yaml)， 按需求修改其中参数
 
-   * Put the data into **IO_root** you defined as following structure
+   * 将数据按如下结构放入 **IO_root** 文件夹：
    
       ```bash
-      UNav-IO/
-      ├── data
+      UNav-IO/ 文件夹
+      ├── data 文件夹
       │   ├── destination.json
-      │   ├── PLACE
-      │   │   └── BUILDING
-      │   │       └── FLOOR
+      │   ├── PLACE 文件夹
+      │   │   └── BUILDING 文件夹
+      │   │       └── FLOOR 文件夹
       │   │           ├── access_graph.npy
       │   │           ├── boundaries.json
       │   │           ├── feats-superpoint.h5
@@ -56,26 +56,26 @@ UNav is a vision-based location system designed to assist visually impaired indi
       │   │           └── floorplan.png
       ```
 
-      Note that you need to rerun [Path_finder_waypoints.py](./Path_finder_waypoints.py) using **step2_automatically.sh** if you do not have ***access_graph.npy***
-    * Run server using
+      注意：如果没有 ***access_graph.npy*** 文件，你需要重新运行**step2_automatically.sh** 中的 [Path_finder_waypoints.py](./Path_finder_waypoints.py)
+    * 运行服务器：
       ```bash
       source shell/server.sh
       ```
-    * Run client device
+    * 运行客户端：
       * Jetson Board
       * Android
   
-2. Visualization-GUI
+2. 可视化用户界面
     TODO
 
-Note that UNav is only tested in Ubuntu, and may be not suitable for Windows or MacOS.
+注意：UNav 只在 Ubuntu 进行测试，Windows 或 MacOS 并不适用。
 
 ## :hourglass_flowing_sand: TODO List
 
-Please see [project boards](https://github.com/endeleze/UNav/projects).
+请看 [project boards](https://github.com/endeleze/UNav/projects).
 
 
 
-## :e-mail: Contact
+## :e-mail: 联系
 
-If you have any question, please email `ay1620@nyu.edu`.
+如果您有任何问题，请邮件联系 `ay1620@nyu.edu`.
