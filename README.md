@@ -31,6 +31,7 @@ UNav is a vision-based location system designed to assist visually impaired indi
 1. Install dependent packages
 
     ```bash
+    pip install --upgrade pip setuptools wheel
     cd UNav
     pip install -r requirements.txt
     ```

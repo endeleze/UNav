@@ -1,24 +1,23 @@
 
 # :rocket: [UNav](https://github.com/endeleze/UNav)
 
-[English](README.md) **|** [简体中文](README_CN.md)**|** [แบบไทย](README_Thai.md)
+[English](README.md) **|** [\u7b80\u4f53\u4e2d\u6587](README_CN.md)**|** [\u0e41\u0e1a\u0e1a\u0e44\u0e17\u0e22](README_Thai.md)
 
 ---
 
-UNav is a vision-based location system designed to assist visually impaired individuals in navigating unfamiliar environments.
-
-## :sparkles: New Features
+UNav เป็นระบบบ่งบอกพิกัดโดยใช้ภาพ สำหรับนำทางผู้พิการทางสายตาในพื้นที่ที่ไม่คุ้นเคย
+## :sparkles: ฟีเจอร์ใหม่
 
 - May 29, 2023. Support **Parallel RanSAC** computing 
 
 <details>
-  <summary>More</summary>
+  <summary>เพิ่มเติม</summary>
 
 </details>
 
-## :wrench: Dependencies and Installation
+## :wrench: การติดตั้ง และ Dependencies
 
-- Python >= 3.8 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
+- Python >= 3.8 (แนะนำให้ใช้ [Anaconda](https://www.anaconda.com/download/#linux) หรือ [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
 - [PyTorch >= 1.13](https://pytorch.org/)
 - NVIDIA GPU + [CUDA](https://developer.nvidia.com/cuda-downloads)
 
@@ -28,54 +27,56 @@ UNav is a vision-based location system designed to assist visually impaired indi
     git clone https://github.com/endeleze/UNav.git
     ```
 
-1. Install dependent packages
+1. ติดตั้ง packages ที่จำเป็น
 
     ```bash
+    pip install --upgrade pip setuptools wheel
     cd UNav
     pip install -r requirements.txt
     ```
-## :computer: Using
+## :computer: การใช้งาน
 1. Server-Client
 
-    * Setup [server.yaml](configs/server.yaml) and tune [hloc.yaml](configs/hloc.yaml) us needed.
+    * ปรับแต่ง [server.yaml](configs/server.yaml) และ [hloc.yaml](configs/hloc.yaml) ตามความเหมาะสม
 
-   * Put the data into **IO_root** you defined as following structure
+   * ใส่ข้อมูลลงใน **IO_root** ตามที่แสดงด้านล่าง
    
       ```bash
       UNav-IO/
-      ├── data
-      │   ├── destination.json
-      │   ├── PLACE
-      │   │   └── BUILDING
-      │   │       └── FLOOR
-      │   │           ├── access_graph.npy
-      │   │           ├── boundaries.json
-      │   │           ├── feats-superpoint.h5
-      │   │           ├── global_features.h5
-      │   │           ├── topo-map.json
-      │   │           └── floorplan.png
+      \u251c\u2500\u2500 data
+      \u2502   \u251c\u2500\u2500 destination.json
+      \u2502   \u251c\u2500\u2500 PLACE
+      \u2502   \u2502   \u2514\u2500\u2500 BUILDING
+      \u2502   \u2502       \u2514\u2500\u2500 FLOOR
+      \u2502   \u2502           \u251c\u2500\u2500 access_graph.npy
+      \u2502   \u2502           \u251c\u2500\u2500 boundaries.json
+      \u2502   \u2502           \u251c\u2500\u2500 feats-superpoint.h5
+      \u2502   \u2502           \u251c\u2500\u2500 global_features.h5
+      \u2502   \u2502           \u251c\u2500\u2500 topo-map.json
+      \u2502   \u2502           \u2514\u2500\u2500 floorplan.png
       ```
 
-      Note that you need to rerun [Path_finder_waypoints.py](./Path_finder_waypoints.py) using **step2_automatically.sh** if you do not have ***access_graph.npy***
-    * Run server using
+      หลังจากจัดไฟล์ข้อมูลตามด้านบนแล้ว คุณต้องรัน [Path_finder_waypoints.py](./Path_finder_waypoints.py) ก่อน โดยรันผ่าน **step2_automatically.sh** ถ้าคุณยังไม่มีไฟล์ ***access_graph.npy***
+    * รันเซอร์เวอร์
       ```bash
       source shell/server.sh
       ```
-    * Run client device
+    * รันอุปกรณ์ client
       * Jetson Board
       * Android
   
-2. Visualization-GUI
+2. Visualization-GUI สำหรับ
     TODO
 
 Note that UNav is only tested in Ubuntu, and may be not suitable for Windows or MacOS.
+ระบบ server ของ UNav ได้รับการทดสอบบนระบบปฏิบัติการ Ubuntu เท่านั้น และอาจจะไม่สามารถรันได้บน Windows กับ MacOS เนื่องจากยังไม่ได้ทดสอบ
 
 ## :hourglass_flowing_sand: TODO List
 
-Please see [project boards](https://github.com/endeleze/UNav/projects).
+ดู [project boards](https://github.com/endeleze/UNav/projects).
 
 
 
 ## :e-mail: Contact
 
-If you have any question, please email `ay1620@nyu.edu`.
+หากคุณมีคำถาม คุณสามารถติดต่อสอบถามได้ทางอีเมล `ay1620@nyu.edu`.
