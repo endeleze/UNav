@@ -28,7 +28,11 @@ UNav เป็นระบบบ่งบอกพิกัดโดยใช้
     ```
 
 1. ติดตั้ง packages ที่จำเป็น
-
+    APT packages
+    ```bash
+    sudo apt install < apt-requirements.txt
+    ```
+    Python modules
     ```bash
     pip install --upgrade pip setuptools wheel
     cd UNav

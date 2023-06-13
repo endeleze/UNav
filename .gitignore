@@ -1,2 +1,4 @@
 UNav-IO/
 src/navigation/__pycache__/
+env/
+*.swp

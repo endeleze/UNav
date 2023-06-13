@@ -28,12 +28,31 @@ UNav is a vision-based location system designed to assist visually impaired indi
     git clone https://github.com/endeleze/UNav.git
     ```
 
-1. Install dependent packages
-
+1. Create Python virtual environment
     ```bash
-    pip install --upgrade pip setuptools wheel
     cd UNav
-    pip install -r requirements.txt
+    virtualenv env
+    ```
+    If you have not installed virtualenv, install it globally as follows.
+    ```bash
+    sudo pip3 install virtualenv
+    ```
+
+1. Activate the virtual environment
+    ```bash
+    source env/bin/activate
+    ```
+
+1. Install dependent packages
+    APT packages
+    ```bash
+    sudo apt install < apt-requirements.txt
+    ```
+    Python modules
+    ```bash
+    pip3 install --upgrade pip setuptools wheel
+    cd UNav
+    pip3 install -r requirements.txt
     ```
 ## :computer: Using
 1. Server-Client

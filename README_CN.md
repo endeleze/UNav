@@ -29,7 +29,11 @@ UNav 是一个基于视觉的定位系统，它旨在帮助视障人士在不熟
     ```
 
 1. 安装所需的包
-
+    APT packages
+    ```bash
+    sudo apt install < apt-requirements.txt
+    ```
+    Python modules
     ```bash
     pip install --upgrade pip setuptools wheel
     cd UNav
