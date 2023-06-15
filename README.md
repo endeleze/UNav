@@ -76,7 +76,7 @@ UNav is a vision-based location system designed to assist visually impaired indi
       │   │           └── floorplan.png
       ```
 
-      Note that you need to rerun [Path_finder_waypoints.py](./Path_finder_waypoints.py) using **step2_automatically.sh** if you do not have ***access_graph.npy***
+      Note that you need to rerun [Path_finder_waypoints.py](./Path_finder_waypoints.py) using **shell/step4.0.1.sh** if you do not have ***access_graph.npy***
     * Run server using
       ```bash
       source shell/server.sh

@@ -26,6 +26,19 @@ UNav เป็นระบบบ่งบอกพิกัดโดยใช้
     ```bash
     git clone https://github.com/endeleze/UNav.git
     ```
+1. Create Python virtual environment
+    ```bash
+    cd UNav
+    virtualenv env 
+    ```
+    If you have not installed virtualenv, install it globally as follows.
+    ```bash
+    sudo pip3 install virtualenv
+    ```
+1. Activate the virtual environment
+    ```bash
+    source env/bin/activate
+    ```
 
 1. ติดตั้ง packages ที่จำเป็น
     APT packages
@@ -60,7 +73,7 @@ UNav เป็นระบบบ่งบอกพิกัดโดยใช้
       \u2502   \u2502           \u2514\u2500\u2500 floorplan.png
       ```
 
-      หลังจากจัดไฟล์ข้อมูลตามด้านบนแล้ว คุณต้องรัน [Path_finder_waypoints.py](./Path_finder_waypoints.py) ก่อน โดยรันผ่าน **step2_automatically.sh** ถ้าคุณยังไม่มีไฟล์ ***access_graph.npy***
+      หลังจากจัดไฟล์ข้อมูลตามด้านบนแล้ว คุณต้องรัน [Path_finder_waypoints.py](./Path_finder_waypoints.py) ก่อน โดยรันผ่าน **shell/step4.0.1.sh** ถ้าคุณยังไม่มีไฟล์ ***access_graph.npy***
     * รันเซอร์เวอร์
       ```bash
       source shell/server.sh

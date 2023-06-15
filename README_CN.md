@@ -27,6 +27,19 @@ UNav 是一个基于视觉的定位系统，它旨在帮助视障人士在不熟
     ```bash
     git clone https://github.com/endeleze/UNav.git
     ```
+1. Create Python virtual environment
+    ```bash
+    cd UNav
+    virtualenv env 
+    ```
+    If you have not installed virtualenv, install it globally as follows.
+    ```bash
+    sudo pip3 install virtualenv
+    ```
+1. Activate the virtual environment
+    ```bash
+    source env/bin/activate
+    ```
 
 1. 安装所需的包
     APT packages
@@ -61,7 +74,7 @@ UNav 是一个基于视觉的定位系统，它旨在帮助视障人士在不熟
       │   │           └── floorplan.png
       ```
 
-      注意：如果没有 ***access_graph.npy*** 文件，你需要重新运行**step2_automatically.sh** 中的 [Path_finder_waypoints.py](./Path_finder_waypoints.py)
+      注意：如果没有 ***access_graph.npy*** 文件，你需要重新运行**shell/step4.0.1.sh** 中的 [Path_finder_waypoints.py](./Path_finder_waypoints.py)
     * 运行服务器：
       ```bash
       source shell/server.sh
