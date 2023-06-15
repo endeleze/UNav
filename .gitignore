@@ -1,4 +1,12 @@
 UNav-IO/
+src/__pycache__/
 src/navigation/__pycache__/
+src/third_party/__pycache__/
+src/conversation/__pycache__/
+src/feature/__pycache__/
+src/loader/__pycache__/
+src/ransac/__pycache__/
+src/track/__pycache__/
+src/visualization/__pycache__/
 env/
 *.swp
