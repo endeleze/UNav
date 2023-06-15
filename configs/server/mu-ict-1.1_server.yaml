@@ -1,0 +1,17 @@
+location: 
+  place: Mahidol_University
+  building: ICT
+  floor: 1.1
+  scale: 0.05876267834
+
+server:
+  host: "10.134.1.1"
+  port: 30001
+  feedback_freq: 0.1
+  FEC: false
+  DEBUG: true
+  INFERENCE: false
+  encoding: "h265"
+  sink_type: "video"
+
+IO_root: "/home/nattachart.tak/updates-unav/mahidol-branch/UNav/UNav-IO"

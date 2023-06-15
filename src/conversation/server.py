@@ -134,7 +134,7 @@ class Connected_Client(threading.Thread):
 class Server():
     device = 'cuda' if torch.cuda.is_available() else "cpu"
 
-    def __init__(self, root, map_data, hloc_config, server_config):
+    def __init__(self, root, map_data, hloc_config, server_config, host_config):
         location_config = server_config['location']
         self.log_path = join(server_config['IO_root'], 'logs', location_config['place'],
                              location_config['building'], str(location_config['floor']))
@@ -143,7 +143,7 @@ class Server():
         self.trajectory=Trajectory(map_data)
 
         server_configs = server_config['server']
-        host = server_configs['host']
+        host = host_config['host']
         port = server_configs['port']
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.bind((host, port))
