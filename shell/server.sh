@@ -28,4 +28,4 @@ server_yaml=$(echo $server_yaml | sed "s/\.yaml$//g") #Remove .yaml extension if
 
 server_config="$CURRENT_DIR/../configs/server/$server_yaml.yaml"
 
-python3 $script -s $server_config -h $host_config -l $hloc_config
+python3 $script -s $server_config -c $host_config -l $hloc_config

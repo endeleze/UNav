@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 class Connected_Client(threading.Thread):
-    def __init__(self, socket=None, address='128.122.136.173', hloc=None,trajectory=None, connections=None, destinations=None, map_scale=1,log_dir=None, logger=None):
+    def __init__(self, socket=None, address='10.134.1.1', hloc=None,trajectory=None, connections=None, destinations=None, map_scale=1,log_dir=None, logger=None):
         threading.Thread.__init__(self)
         self.socket = socket
         self.address = address
