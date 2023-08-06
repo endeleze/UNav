@@ -44,11 +44,85 @@ UNav is a vision-based location system designed to assist visually impaired indi
     ```
 
 1. Install dependent packages
-    APT packages
+    * CUDA Toolkit
+    ```bash
+    wget https://developer.download.nvidia.com/compute/cuda/12.1.1/local_installers/cuda_12.1.1_530.30.02_linux.run
+    chmod 755 cuda_12.1.1_530.30.02_linux.run
+    ./cuda_12.1.1_530.30.02_linux.run
+    ```
+    * APT packages
     ```bash
     sudo apt install < apt-requirements.txt
     ```
-    Python modules
+    * From sources
+    ** glog v0.4.0 (dependency for pyimplicite)
+    ```bash
+    git clone https://github.com/google/glog.git
+    cd glog
+    git checkout v0.4.0
+    mkdir build
+    cd build
+    cmake ..
+    make -j
+    make install 
+    ```
+    ** Eigen v3.4.0 (dependency for pyimplicite)
+    ```bash
+    git clone https://gitlab.com/libeigen/eigen.git
+    cd eigen
+    git checkout 3.4.0
+    mkdir build
+    cd build
+    cmake ..
+    make install
+    ```
+    ** Ceres v2.1.0 (dependency for pyimplicite)
+    ```bash
+    git clone https://ceres-solver.googlesource.com/ceres-solver
+    cd ceres-solver
+    git checkout 2.1.0
+    mkdir build
+    cd build
+    cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF
+    make -j
+    make install
+    ldconfig
+    ```
+    ** GKlib (dependency for METIS)
+    ```bash
+    git clone https://github.com/KarypisLab/GKlib.git
+    cd GKlib
+    make config prefix=/usr/local
+    make -j
+    make install
+    ```
+    ** METIS (dependency for pyimplicite)
+    ```bash
+    git clone https://github.com/KarypisLab/METIS.git
+    cd METIS
+    git checkout v5.2.1
+    make config cc=gcc prefix=/usr/local
+    make install
+    ```
+    ** GMP (dependency for SuiteSparse)
+    ```bash
+    wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.lz
+    tar --lzip -xf gmp-6.2.1.tar.lz
+    cd gmp-6.2.1
+    ./configure
+    make -j
+    make check
+    make install -j
+    ```
+    ** SuiteSparse (dependency for pyimplicite)
+    ```bash
+    git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
+    cd SuiteSparse
+    git checkout v6.0.0
+    CMAKE_OPTIONS="-DENABLE_CUDA=1 -DCMAKE_CXX_FLAGS=-I/usr/local/cuda/include -DCMAKE_C_FLAGS=-I/usr/local/cuda/include" make global -j
+    make install
+    ```
+    * Python modules
     ```bash
     pip3 install --upgrade pip setuptools wheel
     cd UNav

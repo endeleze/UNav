@@ -352,11 +352,11 @@ tomlkit==0.11.8
 toolz
 #topic-monitor==0.20.3
 #torch==1.13.1+cu117
-#torch
+torch
 #torchaudio==0.9.0
-#torchaudio
+torchaudio
 #torchvision==0.14.1+cu117
-#torchvision
+torchvision
 #tornado @ file:///opt/conda/conda-bld/tornado_1662061693373/work
 tornado
 tqdm==4.65.0

@@ -6,6 +6,9 @@ python3-pip
 pkg-config
 cmake
 build-essential
+glibc-source
+gfortran
+linux-libc-dev
 libboost-program-options-dev
 libboost-filesystem-dev
 libboost-graph-dev
@@ -23,3 +26,11 @@ qt5-default
 libcgal-qt5-dev
 libcairo2-dev
 libgirepository1.0-dev
+libatlas-base-dev
+#libopenblas-dev
+#libsuitesparse-dev
+mercurial
+info
+lzip
+m4
+libmpfr-dev
