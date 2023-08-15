@@ -6,6 +6,8 @@ host_config="$CURRENT_DIR/../configs/host.yaml"
 hloc_config="$CURRENT_DIR/../configs/hloc.yaml"
 
 echo $CURRENT_DIR
+echo $host_config
+echo $hloc_config
 
 usage(){
     printf "Usage: %s: -s <Server YAML File Name>\n" $(basename $0) >&2
@@ -27,5 +29,8 @@ done
 server_yaml=$(echo $server_yaml | sed "s/\.yaml$//g") #Remove .yaml extension if existing
 
 server_config="$CURRENT_DIR/../configs/server/$server_yaml.yaml"
+
+echo $server_yaml
+echo $server_config
 
 python3 $script -s $server_config -c $host_config -l $hloc_config

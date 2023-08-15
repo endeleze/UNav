@@ -23,6 +23,9 @@ if __name__=='__main__':
     parser.add_argument('-s', '--server_config', type=str, default='configs/server/server.yaml')
     parser.add_argument('-l', '--hloc_config', type=str, default='configs/hloc.yaml')
     parser.add_argument('-c', '--host_config', type=str, default='configs/host.yaml')
+    hloc_config = None
+    server_config = None
+    host_config = None
     args = parser.parse_args()
     with open(args.hloc_config, 'r') as f:
         hloc_config = yaml.safe_load(f)
@@ -30,4 +33,4 @@ if __name__=='__main__':
         server_config = yaml.safe_load(f)
     with open(args.host_config, 'r') as f:
         host_config = yaml.safe_load(f)
-    main(root,hloc_config,host_config)
+    main(root, hloc_config, server_config, host_config)

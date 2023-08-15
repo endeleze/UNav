@@ -1,0 +1,3 @@
+[submodule "src/third_party/local_feature/LightGlue"]
+	path = src/third_party/local_feature/LightGlue
+	url = https://github.com/cvg/LightGlue.git

@@ -1,7 +1,10 @@
 hloc:
   retrieval_num: 50
-  implicit_num: 20
+  implicit_num: 1
   ransac_thre: 30
+  # match_type: 'nvs' 
+  match_type: 'lightglue'
+  batch_mode: false
 
 feature:
   global:
@@ -13,10 +16,18 @@ feature:
       num_clusters: 64
       pooling: 'netvlad'
   local:
-    superpoint+superglue:
+    superpoint+lightglue:
       detector_name: superpoint
       nms_radius: 4
       max_keypoints: 4096
-      matcher_name: superglue
-      weights: 'outdoor'
-      sinkhorn_iterations: 50
+      matcher_name: lightglue
+      match_conf:
+        width_confidence: -1
+        depth_confidence: -1
+    # superpoint+superglue:
+    #   detector_name: superpoint
+    #   nms_radius: 4
+    #   max_keypoints: 4096
+    #   matcher_name: superglue
+    #   weights: 'outdoor'
+    #   sinkhorn_iterations: 50

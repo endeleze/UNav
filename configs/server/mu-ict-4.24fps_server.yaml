@@ -1,11 +1,11 @@
 location: 
   place: Mahidol_University
   building: ICT
-  floor: 3.24fps
-  scale: 0.05618118961
+  floor: 4.24fps
+  scale: 0.05815132361
 
 server:
-  port: 30013
+  port: 30014
   feedback_freq: 0.1
   FEC: false
   DEBUG: true

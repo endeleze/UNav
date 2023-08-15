@@ -1,5 +1,6 @@
 from third_party.local_feature.SuperPoint_SuperGlue.base_model import dynamic_load
 from third_party.local_feature.SuperPoint_SuperGlue import extractors,matchers
+from third_party.local_feature.LightGlue.lightglue import LightGlue
 import numpy as np
 import torch
 import cv2
@@ -24,31 +25,18 @@ class Superpoint():
         pred0 = {k: v[0].cpu().detach().numpy() for k, v in pred0.items()}
         if 'keypoints' in pred0:
             pred0['keypoints'] = (pred0['keypoints'] + .5) - .5
-        pred0.update({'image_size': np.array([image0.shape[0], image0.shape[1]])})
+        pred0.update({'image_size': np.array([image0.shape[1], image0.shape[0]])})
         return pred0
-
-class Superpoint_class():
-    def __init__(self,device,**config):
-        self.local_feature_extractor = loadModel(device,config['vpr']['local_feature']['path'])
-        self.device=device
-
-    def extract_local_features(self,image):
-        params = {
-            'out_num_points': 500,
-            'patch_size': 5,
-            'device': self.device,
-            'nms_dist': 4,
-            'conf_thresh': 0.015
-        }
-        image=image.to(self.device)
-        out=self.local_feature_extractor(image)
-        return out
 
 class Local_extractor():
     def __init__(self,configs):
         self.configs=configs
         self.device='cuda' if torch.cuda.is_available() else 'cpu'
 
+    def lightglue(self,conf):
+        Model_lg=LightGlue(pretrained='superpoint', **conf['match_conf']).eval()
+        return Model_lg
+    
     def superglue(self,conf):
         Model_sg = dynamic_load(matchers, conf['matcher_name'])
         return Model_sg({'name':conf['matcher_name'],'weights':conf['weights'],'sinkhorn_iterations':conf['sinkhorn_iterations']}).eval()
@@ -58,7 +46,9 @@ class Local_extractor():
             if name=='superpoint+superglue':
                 superpoint=Superpoint(self.device,self.configs['superpoint+superglue'])
                 return superpoint.extract_local_features
-
+            elif name=='superpoint+lightglue':
+                superpoint=Superpoint(self.device,self.configs['superpoint+lightglue'])
+                return superpoint.extract_local_features
             elif name=='sift':
                 pass
 
@@ -69,6 +59,8 @@ class Local_extractor():
         for name,content in self.configs.items():
             if name == 'superpoint+superglue':
                 return self.superglue(self.configs['superpoint+superglue'])
+            elif name == 'superpoint+lightglue':
+                return self.lightglue(self.configs['superpoint+lightglue'])
             elif name == 'sift':
                 pass
             elif name == 'surf':

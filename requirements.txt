@@ -199,6 +199,7 @@ ply==3.11
 pooch
 #poselib @ file:///home/unav/Desktop/UNav_server/PoseLib/_build_python/pybind/pip_package/poselib-2.0.0-cp38-cp38-linux_x86_64.whl
 #poselib
+POT
 prompt-toolkit==3.0.38
 psutil==5.9.5
 ptyprocess==0.7.0

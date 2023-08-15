@@ -74,6 +74,7 @@ class NetVladFeatureExtractor:
             raise ValueError('Unknown pooling type: ' + pooling)
 
         resume_ckpt = join(ckpt_path, 'checkpoints', 'checkpoint.pth.tar')
+        print(resume_ckpt)
 
         if isfile(resume_ckpt):
             print("=> loading checkpoint '{}'".format(resume_ckpt))
