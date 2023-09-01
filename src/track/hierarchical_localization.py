@@ -43,7 +43,9 @@ class Hloc():
         Global Images Retrieval:
             Find the topk closest database images of input query image
         """
-        self.query_desc = self.global_extractor.feature(image)
+        self.query_desc = self.global_extractor(image)
+        # print(self.query_desc)
+        # exit()
         sim = torch.einsum('id,jd->ij', self.query_desc, self.db_desc)
         topk = torch.topk(sim, self.config['retrieval_num'], dim=1).indices.cpu().numpy()
         return topk
@@ -274,21 +276,15 @@ class Hloc():
         if self.match_type=='superglue':
             self.logger.info("Matching local feature")
             pts0_list,pts1_list,lms_list,max_len=self.feature_matching_superglue(image,topk)
-
             self.logger.info("Start geometric verification")
             feature2D,landmark3D=self.geometric_verification(pts0_list, pts1_list, lms_list,max_len)
-        
+
         elif self.match_type=='lightglue':
             self.logger.info("Matching local feature")
             if self.batch_mode:
                 pts0_list,pts1_list,lms_list,max_len=self.feature_matching_lightglue_batch(image,topk)
             else:
                 pts0_list,pts1_list,lms_list,max_len=self.feature_matching_lightglue(image,topk)
-
-            # for i,(lm,lm1) in enumerate(zip(lms_list,lms_list1)):
-            #     print(lm)
-            #     print(lm1)
-            #     exit()
 
             self.logger.info("Start geometric verification")
             feature2D,landmark3D=self.geometric_verification(pts0_list, pts1_list, lms_list,max_len)
