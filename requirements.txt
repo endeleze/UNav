@@ -61,6 +61,7 @@ dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-table==5.0.0
 #dask @ file:///croot/dask-core_1680090504145/work
+dataloaders
 debugpy==1.6.7
 decorator==5.1.1
 deepspeed==0.9.1
@@ -79,6 +80,8 @@ dill==0.3.6
 #examples-rclpy-minimal-service==0.15.1
 #examples-rclpy-minimal-subscriber==0.15.1
 executing==1.2.0
+faiss-cpu
+faiss-gpu
 fastjsonschema==2.16.3
 filelock==3.11.0
 Flask==2.2.3
@@ -179,6 +182,7 @@ nvidia-nvtx-cu11==11.7.91
 #open3d==0.17.0
 open3d
 opencv-contrib-python==4.7.0.72
+opencv-python
 osrf-pycommon==2.0.2
 #packaging @ file:///croot/packaging_1671697413597/work
 packaging
@@ -200,6 +204,7 @@ pooch
 #poselib @ file:///home/unav/Desktop/UNav_server/PoseLib/_build_python/pybind/pip_package/poselib-2.0.0-cp38-cp38-linux_x86_64.whl
 #poselib
 POT
+prettytable
 prompt-toolkit==3.0.38
 psutil==5.9.5
 ptyprocess==0.7.0
@@ -234,6 +239,9 @@ PySocks
 python-dateutil
 #python-qt-binding==1.1.1
 python-qt-binding
+pytorch-lightning
+pytorch-metric-learning
+pyparsing
 pytz==2023.3
 #PyWavelets @ file:///croot/pywavelets_1670425177960/work
 PyWavelets
@@ -345,6 +353,7 @@ tenacity==8.2.2
 threadpoolctl
 #tifffile @ file:///tmp/build/80754af9/tifffile_1627275862826/work
 tifffile
+timm
 #toml @ file:///tmp/build/80754af9/toml_1616166611790/work
 toml
 tomli==2.0.1
