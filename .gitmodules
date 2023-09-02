@@ -4,3 +4,4 @@
 [submodule "src/third_party/global_feature/MixVPR"]
 	path = src/third_party/global_feature/MixVPR
 	url = https://github.com/amaralibey/MixVPR.git
+    ignore = dirty
