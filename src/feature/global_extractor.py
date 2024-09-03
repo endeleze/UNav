@@ -4,9 +4,9 @@ import torch
 import sys
 from third_party.global_feature.pytorch_NetVlad.Feature_Extractor import NetVladFeatureExtractor
 
-mixvpr_path = join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'third_party', 'global_feature', 'MixVPR')
-sys.path.append(mixvpr_path)
-from main import VPRModel
+#mixvpr_path = join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'third_party', 'global_feature', 'MixVPR')
+#sys.path.append(mixvpr_path)
+#from main import VPRModel
 
 class Global_Extractors():
     def __init__(self, root,config):

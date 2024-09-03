@@ -1,0 +1,387 @@
+2024-04-11 10:39:44,957 - loader.data_loader - INFO - ============Loading map=============
+2024-04-11 10:39:54,250 - loader.data_loader - INFO - Loaded 1087 keyframes data
+2024-04-11 10:39:54,464 - loader.data_loader - INFO - Loaded 18263 local descriptors
+2024-04-11 10:40:03,271 - loader.data_loader - INFO - Loaded 18263 global descriptors
+2024-04-11 10:40:03,397 - loader.data_loader - INFO - Loaded 36 anchor points and 347 boundaries
+2024-04-11 10:40:03,403 - loader.data_loader - INFO - ==========Finished Loading==========
+/home/nattachart.tak/.local/lib/python3.8/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/nattachart.tak/.local/lib/python3.8/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+2024-04-11 10:40:04,691 - conversation.server - INFO - Setup server at address:10.134.1.3 port:30022
+2024-04-11 10:40:12,588 - conversation.server - INFO - New connection at ID 0 ('10.62.98.129', 44938)
+2024-04-11 10:40:12,588 - conversation.server - INFO - =====Send destination to Client=====
+2024-04-11 10:40:52,155 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:40:52,615 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:40:52,615 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:41:04,418 - track.hierarchical_localization - INFO - Matching local feature
+/home/nattachart.tak/.local/lib/python3.8/site-packages/torch/nn/functional.py:4296: UserWarning: Default grid_sample and affine_grid behavior has changed to align_corners=False since 1.3.0. Please specify align_corners=True if the old behavior is desired. See the documentation of grid_sample for details.
+  warnings.warn(
+2024-04-11 10:41:06,429 - track.hierarchical_localization - INFO - Start geometric verification
+/home/nattachart.tak/.local/lib/python3.8/site-packages/torch/nested/__init__.py:58: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. (Triggered internally at ../aten/src/ATen/NestedTensorImpl.cpp:178.)
+  return torch._nested_tensor_from_tensor_list(tensor_list, dtype, None, device, None)
+2024-04-11 10:41:14,774 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:41:15,695 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1225, y: 856, ang: 86
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:41:15,824 - conversation.server - INFO - ===============================================
+                                                       turn around at 5 o'clock direction, and walk 6 meters
+
+                                                       ===============================================
+2024-04-11 10:41:15,826 - conversation.server - INFO - ===========Loading image===========
+Exception in thread Thread-2:
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/UNavPy3.8/lib/python3.8/threading.py", line 932, in _bootstrap_inner
+    self.run()
+  File "/home/nattachart.tak/updates-unav/mahidol-branch/UNav/src/conversation/server.py", line 80, in run
+    Destination = jpysocket.jpydecode(Destination)
+  File "/home/nattachart.tak/.local/lib/python3.8/site-packages/jpysocket/__init__.py", line 5, in jpydecode
+    msg=str(msg.decode()[2:])
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb8 in position 48: invalid start byte
+2024-04-11 10:42:36,379 - conversation.server - INFO - New connection at ID 1 ('10.62.98.129', 44944)
+2024-04-11 10:42:36,382 - conversation.server - INFO - =====Send destination to Client=====
+2024-04-11 10:42:55,784 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:42:55,805 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:42:55,805 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:42:55,851 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:42:56,541 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:42:56,667 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:42:56,760 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1323, y: 814, ang: 91
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:42:56,766 - conversation.server - INFO - ===============================================
+                                                       turn around at 6 o'clock direction, and walk 29 meters
+
+                                                       ===============================================
+2024-04-11 10:43:01,175 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:43:01,211 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:43:01,211 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:43:01,300 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:43:02,961 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:43:03,609 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:43:03,609 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:43:03,622 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:43:12,719 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:43:12,744 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:43:12,744 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:43:13,040 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:43:13,914 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:43:13,947 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:43:13,995 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1345, y: 815, ang: 89
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:43:14,001 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:43:23,027 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:43:23,745 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:43:23,745 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:43:23,762 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:43:24,277 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:43:24,427 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:43:24,526 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1324, y: 831, ang: 90
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:43:24,531 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:43:34,869 - conversation.server - INFO - New connection at ID 2 ('10.62.98.129', 44954)
+2024-04-11 10:43:34,870 - conversation.server - INFO - =====Send destination to Client=====
+2024-04-11 10:43:46,743 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:43:46,763 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:43:46,763 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:43:46,948 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:43:47,415 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:43:47,803 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:43:47,917 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1308, y: 830, ang: 91
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:43:47,922 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:43:54,589 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:43:54,624 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:43:54,624 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:43:54,654 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:43:55,066 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:43:55,141 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:43:55,215 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1324, y: 809, ang: 92
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:43:55,221 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:44:01,739 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:44:01,764 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:44:01,765 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:44:02,048 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:44:03,017 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:44:03,059 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:44:03,107 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1323, y: 818, ang: 90
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:44:03,112 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:44:07,031 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:44:08,661 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:44:08,661 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:44:08,806 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:44:09,522 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:44:09,633 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:44:09,700 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 997, y: 880, ang: 276
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:44:09,704 - conversation.server - INFO - ===============================================
+                                                       go straight at 12 o'clock direction, and walk 20 meters
+
+                                                       ===============================================
+2024-04-11 10:44:23,497 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:44:23,700 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:44:23,701 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:44:23,721 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:44:24,499 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:44:24,507 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:44:24,507 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:44:24,523 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:44:31,989 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:44:32,055 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:44:32,055 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:44:32,164 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:44:32,855 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:44:32,864 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:44:32,865 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:44:32,879 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:44:37,174 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:44:37,315 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:44:37,315 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:44:37,589 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:44:38,370 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:44:38,379 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:44:38,379 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:44:38,393 - conversation.server - INFO - ===============================================
+                                                       Look another direction. 
+
+                                                       ===============================================
+2024-04-11 10:44:42,380 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:44:42,536 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:44:42,536 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:44:42,551 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:44:43,634 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:44:43,685 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:44:43,745 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1603, y: 842, ang: 131
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:44:43,750 - conversation.server - INFO - ===============================================
+                                                       turn left at 8 o'clock direction, and walk 8 meters
+
+                                                       ===============================================
+2024-04-11 10:44:55,463 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:44:56,039 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:44:56,040 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:44:56,092 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:44:57,015 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:44:57,045 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:44:57,076 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1878, y: 921, ang: 266
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:44:57,081 - conversation.server - INFO - ===============================================
+                                                       go straight at 12 o'clock direction, and walk 9 meters
+
+                                                       ===============================================
+2024-04-11 10:45:07,419 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:45:07,462 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:45:07,463 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:45:07,532 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:45:08,455 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:45:08,479 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:45:08,528 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1954, y: 925, ang: 271
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:45:08,532 - conversation.server - INFO - ===============================================
+                                                       go straight to 12 o'clock, and walk 4 meters.  Then turn right. 
+
+                                                       ===============================================
+2024-04-11 10:45:16,886 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:45:16,915 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:45:16,915 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:45:17,141 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:45:18,155 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:45:18,185 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:45:18,248 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 2022, y: 928, ang: 270
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:45:18,257 - conversation.server - INFO - ===============================================
+                                                       turn right at 3 o'clock direction, and walk 8 meters to approach your destination
+
+                                                       ===============================================
+2024-04-11 10:45:29,280 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:45:29,317 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:45:29,317 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:45:29,388 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:45:30,352 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:45:30,425 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:45:30,481 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 2034, y: 1082, ang: 196
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:45:30,486 - conversation.server - INFO - ===============================================
+                                                       You have arrived your destination
+
+                                                       ===============================================
+2024-04-11 10:45:55,199 - conversation.server - INFO - New connection at ID 3 ('10.62.98.129', 44964)
+2024-04-11 10:45:55,200 - conversation.server - INFO - =====Send destination to Client=====
+2024-04-11 10:46:12,757 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:46:12,820 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:46:12,820 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:46:12,928 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:46:13,532 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:46:13,556 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:46:13,589 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 2044, y: 1045, ang: 182
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:46:13,594 - conversation.server - INFO - ===============================================
+                                                       turn around at 6 o'clock direction, and walk 7 meters
+
+                                                       ===============================================
+2024-04-11 10:46:24,870 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:46:24,929 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:46:24,930 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:46:24,951 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:46:26,179 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:46:26,269 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:46:26,337 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 2081, y: 930, ang: 1
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:46:26,344 - conversation.server - INFO - ===============================================
+                                                       turn left at 9 o'clock direction, and walk 15 meters
+
+                                                       ===============================================
+2024-04-11 10:46:46,408 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:46:46,483 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:46:46,483 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:46:46,503 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:46:46,989 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:46:47,020 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:46:47,084 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1622, y: 843, ang: 112
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:46:47,089 - conversation.server - INFO - ===============================================
+                                                       go straight at 12 o'clock direction, and walk 6 meters to approach your destination
+
+                                                       ===============================================
+2024-04-11 10:46:56,081 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:46:56,110 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:46:56,110 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:46:56,131 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:46:56,944 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:46:56,953 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:46:56,954 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:46:56,970 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:47:05,178 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:47:05,199 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:47:05,199 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:47:05,218 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:47:05,876 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:47:05,884 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:47:05,884 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:47:05,897 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:47:12,199 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:47:12,230 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:47:12,230 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:47:12,305 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:47:12,830 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:47:12,839 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:47:12,890 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1493, y: 851, ang: 61
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:47:12,906 - conversation.server - INFO - ===============================================
+                                                       turn around to 7 o'clock, and walk 2 meters.  to approach your destination
+
+                                                       ===============================================
+2024-04-11 10:47:19,718 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:47:19,731 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:47:19,731 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:47:19,822 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:47:20,341 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:47:20,350 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:47:20,350 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:47:20,364 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:47:28,645 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:47:28,664 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:47:28,664 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:47:28,682 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:47:29,212 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:47:29,216 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:47:29,217 - track.hierarchical_localization - WARNING - !!!Cannot localize at this point, please take some steps or turn around!!!
+2024-04-11 10:47:29,230 - conversation.server - INFO - ===============================================
+                                                       
+
+                                                       ===============================================
+2024-04-11 10:47:36,354 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:47:36,395 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:47:36,396 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:47:36,554 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:47:37,324 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:47:37,333 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:47:37,364 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1455, y: 865, ang: 164
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:47:37,370 - conversation.server - INFO - ===============================================
+                                                       turn left to 9 o'clock, and walk 3 meters.  to approach your destination
+
+                                                       ===============================================
+2024-04-11 10:47:47,059 - conversation.server - INFO - ===========Loading image===========
+2024-04-11 10:47:47,080 - conversation.server - INFO - =========Received one image=========
+2024-04-11 10:47:47,080 - track.hierarchical_localization - INFO - Start image retrieval
+2024-04-11 10:47:47,102 - track.hierarchical_localization - INFO - Matching local feature
+2024-04-11 10:47:47,648 - track.hierarchical_localization - INFO - Start geometric verification
+2024-04-11 10:47:47,663 - track.hierarchical_localization - INFO - Estimate the camera pose using PnP algorithm
+2024-04-11 10:47:47,708 - conversation.server - INFO - ===============================================
+                                                       Estimated location: x: 1496, y: 868, ang: 151
+                                                       Used 1 images for localization
+                                                       ===============================================
+2024-04-11 10:47:47,714 - conversation.server - INFO - ===============================================
+                                                       You have arrived your destination
+
+                                                       ===============================================

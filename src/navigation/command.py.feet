@@ -47,8 +47,8 @@ def command_debug(action_list):
         rot_clock, distance = ac
         direction = get_direction(rot_clock)   #go straight, right, left
         # distance = round(distance*3.28,1)
-        distance = int(distance)
-        message += f"please {direction} and walk {distance} meters along {int(rot_clock)} o'clock direction. "
+        distance = int(distance*3.28)
+        message += f"please {direction} and walk {distance} feet along {int(rot_clock)} o'clock direction. "
         # message += 'Please walk %.1f meters along %d clock' % (
         #     distance, int(rot_clock))
         if i < len(action_list) - 1:
@@ -66,8 +66,8 @@ def command_alert(action_list):
         message='You have arrived your destination'
     else:                                               
         # next_distance = round(next_distance*3.28,1)                 #not arrived at destination yet    
-        next_distance = int(next_distance)                                              
-        message += f"{direction} to {int(rot_clock)} o'clock, and walk {next_distance} meters. "
+        next_distance = int(next_distance*3.28)                                              
+        message += f"{direction} to {int(rot_clock)} o'clock, and walk {next_distance} feet. "
         # message += 'Alert!!!!!!! %s to %d clock, and walk %d steps ' % (
         #     direction, int(rot_clock), int(next_distance/0.55))
         if next_station=='':
@@ -102,7 +102,7 @@ def command_normal(action_list):
     rot_clock,next_distance=action_list[0]
     direction = get_direction(rot_clock)
     next_station='your destination' if len(action_list)==1 else ''
-    message += f"{direction} at {int(rot_clock)} o'clock direction, and walk {int(next_distance)} meters"
+    message += f"{direction} at {int(rot_clock)} o'clock direction, and walk {int(next_distance*3.28)} feet"
     # message += '%s to %d clock, and walk %d steps' % (
     #     direction, int(rot_clock), int(next_distance/0.55))
     if next_station=='':
@@ -120,9 +120,9 @@ def command_count(parent,action_list,length):
         percentage = int(length/parent.base_len*100)
         if percentage>=40 and percentage<=60:
             parent.halfway = True
-            lenFeetLeft = int((parent.base_len-length))
+            lenFeetLeft = int((parent.base_len-length)*3.28)
             # result_message = 'you have walked {lenFeet} feet, halfway there for next intruction \n'
-            result_message = f'{lenFeetLeft} meters left for next intruction \n'
+            result_message = f'{lenFeetLeft} feet left for next intruction \n'
         # elif percentage>=75 and percentage<=85:
         #     parent.eighty_way = True
         #     # remain = round((parent.base_len-length)*3.28,1)

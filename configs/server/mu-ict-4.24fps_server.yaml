@@ -5,7 +5,7 @@ location:
   scale: 0.05815132361
 
 server:
-  port: 30014
+  port: 30015
   feedback_freq: 0.1
   FEC: false
   DEBUG: true

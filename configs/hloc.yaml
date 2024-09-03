@@ -1,5 +1,6 @@
 hloc:
-  retrieval_num: 50
+  #retrieval_num: 50
+  retrieval_num: 10
   implicit_num: 1
   ransac_thre: 30
   # match_type: 'nvs' 

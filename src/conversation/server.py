@@ -5,16 +5,15 @@ import torch
 from os.path import join, exists
 from os import makedirs, mkdir
 from track import Hloc
-from navigation import Trajectory,command_type0,command_type1
+from navigation import Trajectory,actions,command_alert,command_normal, command_debug, command_count
 import numpy as np
 import cv2
 import jpysocket
 from time import time
 from datetime import datetime
 
-
 class Connected_Client(threading.Thread):
-    def __init__(self, socket=None, address='10.134.1.1', hloc=None,trajectory=None, connections=None, destinations=None, map_scale=1,log_dir=None, logger=None):
+    def __init__(self, parent,socket=None, address='128.122.136.173', hloc=None,trajectory=None, connections=None, destinations=None, map_scale=1,log_dir=None, logger=None,initial=False):
         threading.Thread.__init__(self)
         self.socket = socket
         self.address = address
@@ -40,6 +39,7 @@ class Connected_Client(threading.Thread):
         self.log_dir = log_dir
         self.logger = logger
         self.map_scale=map_scale
+        self.parent=parent
 
     def __str__(self):
         return str(self.id) + " " + str(self.address)
@@ -59,81 +59,110 @@ class Connected_Client(threading.Thread):
 
     def run(self):
         while self.signal:
-            try:
-                number = self.recvall(self.socket, 4)
-                if not number:
+            # try:
+            self.logger.debug("Waiting to receiver number")
+            number = self.recvall(self.socket, 4)
+            if not number:
+                continue
+            command = int.from_bytes(number, 'big')
+            if command == 1:
+                self.logger.info('===========Loading image===========')
+                length = self.recvall(self.socket, 4)
+                data = self.recvall(self.socket, int.from_bytes(length, 'big'))
+                if not data:
                     continue
-                command = int.from_bytes(number, 'big')
-                if command == 1:
-                    self.logger.info('===========Loading image===========')
-                    length = self.recvall(self.socket, 4)
-                    data = self.recvall(self.socket, int.from_bytes(length, 'big'))
-                    if not data:
-                        continue
-                    nparr = np.frombuffer(data, np.uint8)
-                    img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
-                    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                nparr = np.frombuffer(data, np.uint8)
+                img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                
 
-                    Destination = self.socket.recv(4096)
-                    Destination = jpysocket.jpydecode(Destination)
-                    Place, Building, Floor, Destination_ = Destination.split(',')
-                    dicts = self.destination[Place][Building][Floor]
-                    for i in dicts:
-                        for k, v in i.items():
-                            if k == Destination_:
-                                destination_id = v
-                    self.logger.info('=========Received one image=========')
-                    pose = self.hloc.get_location(img)
-                    image_destination = join(
-                        self.log_dir, destination_id, 'images')
-                    if not exists(image_destination):
-                        makedirs(image_destination)
-                    message_destination = join(
-                        self.log_dir, destination_id, 'logs')
-                    if not exists(message_destination):
-                        mkdir(message_destination)
-                    current_time = time()
-                    readable_date = datetime.fromtimestamp(current_time)
-                    formatted_date = readable_date.strftime('%Y-%m-%d_%H-%M-%S')
+                Destination = self.socket.recv(4096)
+                Destination = jpysocket.jpydecode(Destination)
+                Place, Building, Floor, Destination_ = Destination.split(',')
+                dicts = self.destination[Place][Building][Floor]
+                for i in dicts:
+                    for k, v in i.items():
+                        if k == Destination_:
+                            destination_id = v
+                self.logger.info('=========Received one image=========')
+                pose = self.hloc.get_location(img)
+                image_destination = join(
+                    self.log_dir, destination_id, 'images')
+                if not exists(image_destination):
+                    makedirs(image_destination)
+                message_destination = join(
+                    self.log_dir, destination_id, 'logs')
+                if not exists(message_destination):
+                    mkdir(message_destination)
+                current_time = time()
+                readable_date = datetime.fromtimestamp(current_time)
+                formatted_date = readable_date.strftime('%Y-%m-%d_%H-%M-%S')
 
-                    image_num=len(self.hloc.list_2d)
-                    cv2.imwrite(
-                        join(image_destination, formatted_date+'.png'), img)
-                    if pose:
-
-                        self.logger.info(f"===============================================\n                                                       Estimated location: x: %d, y: %d, ang: %d\n                                                       Used {image_num} images for localization\n                                                       ===============================================" % (
-                            pose[0], pose[1], pose[2]))
-                        path_list=self.trajectory.calculate_path(pose[:2], destination_id)
-                        
-                        if image_num==1:
-                            message=command_type0(pose, path_list, self.map_scale)
+                image_num=len(self.hloc.list_2d)
+                cv2.imwrite(
+                    join(image_destination, formatted_date+'.png'), img)
+                if pose:
+                    fail_count = 0
+                    self.logger.info(f"===============================================\n                                                       Estimated location: x: %d, y: %d, ang: %d\n                                                       Used {image_num} images for localization\n                                                       ===============================================" % (
+                        pose[0], pose[1], pose[2]))
+                    path_list=self.trajectory.calculate_path(pose[:2], destination_id)
+                    if len(path_list) > 0:
+                        action_list=actions(pose,path_list,self.map_scale)
+                        length = action_list[0][1]
+                        if len(action_list) != self.parent.actionlines:
+                            self.parent.actionlines = len(action_list)
+                            self.parent.halfway = False
+                            self.parent.eighty_way = False
+                            message=command_normal(action_list)
+                            self.parent.base_len=length
+                        elif length < 8:
+                            message=command_alert(action_list)
                         else:
-                            message=command_type0(pose, path_list, self.map_scale)
-
-                        self.logger.info(f"===============================================\n                                                       {message}\n                                                       ===============================================")
-                        self.socket.sendall(bytes(message, 'UTF-8'))
-
-                        with open(join(message_destination, formatted_date+'.txt'), "w") as file:
-                            file.write(str(pose[0])+', '+str(pose[1])+'\n')
-                            file.write(message)
-
+                            message=command_count(self.parent,action_list,length)
+                            # message=command_normal(action_list)
+                        message+='\n'
                     else:
-                        pass
+                        message = 'There is no path to the destination. \n'
+                else:
+                    try:
+                        fail_count
+                    except NameError:
+                        fail_count = 1
+                    else:
+                        fail_count += 1
+                    print(f"failed {fail_count} times in a row")
+                    if fail_count == 3:
+                        message = "Look another direction. \n"
+                        fail_count = 0
+                    else:
+                        message = "\n"
 
-                elif command == 0:
-                    self.logger.info('=====Send destination to Client=====')
-                    destination_dicts = str(self.destinations_dicts) + '\n'
-                    self.socket.sendall(bytes(destination_dicts, 'UTF-8'))
+                self.logger.info(f"===============================================\n                                                       {message}\n                                                       ===============================================")
+                self.socket.sendall(bytes(message, 'UTF-8'))
+
+                with open(join(message_destination, formatted_date+'.txt'), "w") as file:
+                    if pose:
+                        file.write(str(pose[0])+', '+str(pose[1])+'\n')
+                    file.write(message)
+
+            elif command == 0:
+                self.logger.info('=====Send destination to Client=====')
+                destination_dicts = str(self.destinations_dicts) + '\n'
+                self.socket.sendall(bytes(destination_dicts, 'UTF-8'))
+            
+            elif command == 2:
+                self.logger.debug("Number 2 sent to server")
+                return
+            """
             except:
                 self.logger.warning("Client " + str(self.address) + " has disconnected")
                 self.signal = False
                 self.connections.remove(self)
                 break
-
+            """
 
 class Server():
     device = 'cuda' if torch.cuda.is_available() else "cpu"
-
     def __init__(self, root, map_data, hloc_config, server_config, host_config):
         location_config = server_config['location']
         self.log_path = join(server_config['IO_root'], 'logs', location_config['place'],
@@ -158,15 +187,21 @@ class Server():
         console_handler.setFormatter(console_format)
         self.logger.addHandler(console_handler)
         self.logger.info(f'Setup server at address:{host} port:{port}')
+        self.halfway = False
+        self.eighty_way = False
+        self.actionlines = -100
 
     def set_new_connections(self, map_data):
         return threading.Thread(target=self.run, args=(map_data,))
 
     def run(self, map_data):
         while True:
+            for index in range(len(self.connections)):
+                if not self.connections[index].is_alive():
+                    self.logger.debug(f"Dead thread index: {index}")
             sock, address = self.sock.accept()
             self.connections.append(
-                Connected_Client(socket=sock, address=address, hloc=self.hloc,trajectory=self.trajectory, connections=self.connections,
+                Connected_Client(parent=self,socket=sock, address=address, hloc=self.hloc,trajectory=self.trajectory, connections=self.connections,
                                  destinations=map_data['destinations'], map_scale=self.scale, log_dir=self.log_path, logger=self.logger))
             self.connections[len(self.connections) - 1].start()
             self.logger.info("New connection at ID " +

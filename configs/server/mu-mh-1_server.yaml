@@ -1,11 +1,11 @@
 location: 
   place: Mahidol_University
-  building: ICT
-  floor: 2.1
-  scale: 0.05831505734
+  building: MahidolHall
+  floor: 1
+  scale: 0.03354523443
 
 server:
-  port: 30022
+  port: 30020
   feedback_freq: 0.1
   FEC: false
   DEBUG: true
