@@ -43,7 +43,7 @@
 from pathlib import Path
 import torch
 from torch import nn
-import collections
+import collections.abc as collections
 
 def simple_nms(scores, nms_radius: int):
     """ Fast Non-maximum suppression to remove nearby points """
