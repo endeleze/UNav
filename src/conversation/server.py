@@ -1,9 +1,11 @@
 import socket
+import struct
 import threading
 import logging
 import torch
 from os.path import join, exists
 from os import makedirs, mkdir
+import os, json
 from track import Hloc
 from navigation import Trajectory,actions,command_alert,command_normal, command_debug, command_count
 import numpy as np
@@ -23,9 +25,10 @@ class Connected_Client(threading.Thread):
         self.total_connections = 0
         self.hloc = hloc
         self.trajectory=trajectory
-        self.destination = destinations
+        self.destination_coords = destinations['destination_coords']
+        self.destinations = destinations["destinations"]
         self.destinations_dicts = {}
-        for k0, v0 in destinations.items():
+        for k0, v0 in self.destinations.items():
             building_dicts = {}
             for k1, v1 in v0.items():
                 floor_dicts = {}
@@ -57,6 +60,27 @@ class Connected_Client(threading.Thread):
     def date(self, s):
         return [s.year, s.month, s.day, s.hour, s.minute, s.second]
 
+    def record_user_navigation_action_paths(self, x, y, ang, path_list, action_list, destination_id, navigation_message, action_message):
+        try:
+            json_data = json.dumps({
+                'timestamp': str(datetime.now()),
+                "ux": x,
+                "uy": y,
+                "ang": ang,
+                "path_list": path_list,
+                "action_list": action_list,
+                "dx": self.destination_coords[destination_id]["x"],
+                "dy": self.destination_coords[destination_id]["y"],
+                "navigation_msg": navigation_message,
+                "action_msg": action_message,
+                "client_socket_id": self.__hash__()
+            })
+            #with open('/home/nattachart.tak/updates-unav/mahidol-branch/navigationUpdates.txt', 'a') as file:
+            with open(join(self.log_dir, 'user_navigation_action_paths.txt'), 'a') as file:
+                file.write(json_data + '\n')
+        except Exception as e:
+            print(e)
+    
     def run(self):
         while self.signal:
             # try:
@@ -79,7 +103,8 @@ class Connected_Client(threading.Thread):
                 Destination = self.socket.recv(4096)
                 Destination = jpysocket.jpydecode(Destination)
                 Place, Building, Floor, Destination_ = Destination.split(',')
-                dicts = self.destination[Place][Building][Floor]
+                dicts = self.destinations[Place][Building][Floor]
+                print(dicts[0])
                 for i in dicts:
                     for k, v in i.items():
                         if k == Destination_:
@@ -101,24 +126,42 @@ class Connected_Client(threading.Thread):
                 image_num=len(self.hloc.list_2d)
                 cv2.imwrite(
                     join(image_destination, formatted_date+'.png'), img)
+                action_message = ''
+                action_list = None
+                path_list = None
+                message = ''
+                user_pose_x, user_pose_y, user_pose_angle = None, None, None
                 if pose:
                     fail_count = 0
-                    self.logger.info(f"===============================================\n                                                       Estimated location: x: %d, y: %d, ang: %d\n                                                       Used {image_num} images for localization\n                                                       ===============================================" % (
+                    self.logger.info(f"===============================================\n Estimated location: x: %d, y: %d, ang: %d destination_id: {destination_id}\nUsed {image_num} images for localization\n===============================================" % (
                         pose[0], pose[1], pose[2]))
+                    user_pose_x, user_pose_y, user_pose_angle = pose[0], pose[1], pose[2]
                     path_list=self.trajectory.calculate_path(pose[:2], destination_id)
                     if len(path_list) > 0:
                         action_list=actions(pose,path_list,self.map_scale)
                         length = action_list[0][1]
+                        print(f"Total number of remaining steps: {length}")
+                        for act in action_list[:5]:
+                            print(act)
                         if len(action_list) != self.parent.actionlines:
                             self.parent.actionlines = len(action_list)
                             self.parent.halfway = False
                             self.parent.eighty_way = False
                             message=command_normal(action_list)
                             self.parent.base_len=length
+                            action_message = "Moving"
+                            print("Moving")
+                            print(message)
                         elif length < 8:
                             message=command_alert(action_list)
+                            action_message = "Nearby"
+                            print("Nearby")
+                            print(message)
                         else:
                             message=command_count(self.parent,action_list,length)
+                            action_message = "Navigation steps unchanged"
+                            print("Navigation steps unchanged")
+                            print(message)
                             # message=command_normal(action_list)
                         message+='\n'
                     else:
@@ -132,12 +175,13 @@ class Connected_Client(threading.Thread):
                         fail_count += 1
                     print(f"failed {fail_count} times in a row")
                     if fail_count == 3:
-                        message = "Look another direction. \n"
+                        message = "Look another direction to capturn new image to estimate new pose angle and floorplan coordinate (x,y). {failed 3 times to find the shortest path to the destination}\n"
                         fail_count = 0
                     else:
                         message = "\n"
 
-                self.logger.info(f"===============================================\n                                                       {message}\n                                                       ===============================================")
+                self.record_user_navigation_action_paths(user_pose_x, user_pose_y, user_pose_angle, path_list, action_list, destination_id, message, action_message)
+                self.logger.info(f"===============================================\n {message}\n ===============================================")
                 self.socket.sendall(bytes(message, 'UTF-8'))
 
                 with open(join(message_destination, formatted_date+'.txt'), "w") as file:
@@ -148,7 +192,9 @@ class Connected_Client(threading.Thread):
             elif command == 0:
                 self.logger.info('=====Send destination to Client=====')
                 destination_dicts = str(self.destinations_dicts) + '\n'
-                self.socket.sendall(bytes(destination_dicts, 'UTF-8'))
+                self.send_msg(destination_dicts)
+                #self.socket.sendall(bytes(destination_dicts, 'UTF-8'))
+                #print(destination_dicts)
             
             elif command == 2:
                 self.logger.debug("Number 2 sent to server")
@@ -160,6 +206,11 @@ class Connected_Client(threading.Thread):
                 self.connections.remove(self)
                 break
             """
+    def send_msg(self, msg):
+        msg = bytes(msg, 'UTF-8')
+        # Prefix each message with a 4-byte length (network byte order)
+        msg = struct.pack('>I', len(msg)) + msg
+        self.socket.sendall(msg)
 
 class Server():
     device = 'cuda' if torch.cuda.is_available() else "cpu"
@@ -194,6 +245,7 @@ class Server():
     def set_new_connections(self, map_data):
         return threading.Thread(target=self.run, args=(map_data,))
 
+
     def run(self, map_data):
         while True:
             for index in range(len(self.connections)):
@@ -202,7 +254,7 @@ class Server():
             sock, address = self.sock.accept()
             self.connections.append(
                 Connected_Client(parent=self,socket=sock, address=address, hloc=self.hloc,trajectory=self.trajectory, connections=self.connections,
-                                 destinations=map_data['destinations'], map_scale=self.scale, log_dir=self.log_path, logger=self.logger))
+                                 destinations=map_data, map_scale=self.scale, log_dir=self.log_path, logger=self.logger))
             self.connections[len(self.connections) - 1].start()
             self.logger.info("New connection at ID " +
                              str(self.connections[len(self.connections) - 1]))

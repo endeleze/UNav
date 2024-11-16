@@ -33,4 +33,5 @@ server_config="$CURRENT_DIR/../configs/server/$server_yaml.yaml"
 echo $server_yaml
 echo $server_config
 
-python3 $script -s $server_config -c $host_config -l $hloc_config
+#python3 $script -s $server_config -c $host_config -l $hloc_config
+python3 -Xfaulthandler $script -s $server_config -c $host_config -l $hloc_config

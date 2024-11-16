@@ -1,3 +1,5 @@
+import faulthandler
+import numpy as np
 import logging
 from feature.global_extractor import Global_Extractors
 from feature.local_extractor import Local_extractor
@@ -7,7 +9,6 @@ from third_party.torchSIFT.src.torchsift.ransac.matcher import match
 from .implicit_distortion_model import coarse_pose,pose_multi_refine
 import torch
 import cv2
-import numpy as np
 from time import time
 
 class Hloc():
@@ -249,9 +250,12 @@ class Hloc():
         Start Perspective-n-points:
             Estimate the current location using implicit distortion model
         """
+        faulthandler.enable()
         if feature2D.size()[0]>0:
             height, width, _ = image.shape
+            print("==================== feature2D - {0}:{2}, landmark3D - {1}:{3}  =================".format(feature2D.size(), landmark3D.size(), type(feature2D), type(landmark3D)))
             feature2D, landmark3D=feature2D.cpu().numpy(),landmark3D.cpu().numpy()
+            #feature2D, landmark3D=np.ascontiguousarray(np.copy(feature2D.cpu().numpy().astype(np.float32))),np.ascontiguousarray(np.copy(landmark3D.cpu().numpy().astype(np.float32)))
             out, p2d_inlier, p3d_inlier = coarse_pose(feature2D, landmark3D, np.array([width / 2, height / 2]))
             self.list_2d.append(p2d_inlier)
             self.list_3d.append(p3d_inlier)

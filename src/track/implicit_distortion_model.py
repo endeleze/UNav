@@ -1,6 +1,6 @@
+import numpy as np
 import pyimplicitdist
 import poselib
-import numpy as np
 from scipy.spatial.transform import Rotation as R
 
 def colmap2world(tvec, quat):
@@ -13,6 +13,7 @@ def colmap2world(tvec, quat):
 def coarse_pose(p2d, p3d, initial_pp):
     threshold = 6.0
     p2d_center = [x - initial_pp for x in p2d]
+    #print("**********p2d_center {0}:{2}, p3d {1}:{3}************".format(len(p2d_center), len(p3d), type(p2d_center), type(p3d)))
     poselib_pose, info = poselib.estimate_1D_radial_absolute_pose(p2d_center, p3d, {"max_reproj_error": threshold})
     p2d_inlier = p2d[info["inliers"]]
     p3d_inlier = p3d[info["inliers"]]

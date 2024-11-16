@@ -20,9 +20,13 @@ class Trajectory():
         return np.linalg.norm(np.array(c) - np.array(d))
 
     def calculate_path(self,pose,destination_id):
+        print(len(self.anchor_location))
+        for loc in range(3):
+            a = self.anchor_location[loc]
+            print(f"pose:{pose}, anchor_location[{loc}]:{a}")
         for i,loc in enumerate(self.anchor_location):
             self.M[i,-1]=self.distance(pose, loc)
-        _, Pr = shortest_path(self.M, directed=True, method='FW', return_predecessors=True)
+        _, Pr = shortest_path(self.M, directed=True, method='D', return_predecessors=True)
         index=self.anchor_name.index(destination_id)
         Pr=Pr[index]
         path_list=[]

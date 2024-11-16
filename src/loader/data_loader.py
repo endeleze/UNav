@@ -75,16 +75,18 @@ def load_boundaires(path):
             lines.append(i)
         destinations = data['destination']
         anchor_name,anchor_location=[],[]
+        destination_coords = {}
         for k, v in destinations.items():
             ll = k.split('-')
             anchor_name.append(v['id'])
             anchor_location.append([int(ll[0]), int(ll[1])])
+            destination_coords[v["id"]] = {"x":int(ll[0]), "y":int(ll[1]), "name":v["name"]}
         targets_num = len(destinations)
         for k, v in data['waypoints'].items():
             anchor_name.append(k)
             anchor_location.append(v)
         logger.info(f'Loaded {len(anchor_name)} anchor points and {len(lines)} boundaries')
-    return anchor_name,anchor_location,lines
+    return anchor_name,anchor_location,lines,destination_coords
 
 def load_graph(path):
     access_graph = np.load(path)
@@ -142,10 +144,11 @@ def load_data(config):
     """
     Load boundaries
     """
-    anchor_name,anchor_location,lines=load_boundaires(paths['Boundaries'])
+    anchor_name,anchor_location,lines,destination_coords=load_boundaires(paths['Boundaries'])
     map_data['anchor_name']=anchor_name
     map_data['anchor_location']=anchor_location
     map_data['lines']=lines
+    map_data['destination_coords']=destination_coords
     
     """
     Load shortest path
