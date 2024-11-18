@@ -1,4 +1,7 @@
 #numpy
+streamlit
+plotly
+pandas
 addict
 angles
 appdirs
