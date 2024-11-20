@@ -60,7 +60,7 @@ class Connected_Client(threading.Thread):
     def date(self, s):
         return [s.year, s.month, s.day, s.hour, s.minute, s.second]
 
-    def record_user_navigation_action_paths(self, x, y, ang, path_list, action_list, destination_id, navigation_message, action_message):
+    def record_user_navigation_action_paths(self, x, y, ang, path_list, action_list, destination_id, navigation_message, action_message, img_path):
         try:
             json_data = json.dumps({
                 'timestamp': str(datetime.now()),
@@ -71,9 +71,10 @@ class Connected_Client(threading.Thread):
                 "action_list": action_list,
                 "dx": self.destination_coords[destination_id]["x"],
                 "dy": self.destination_coords[destination_id]["y"],
-                "navigation_msg": navigation_message,
-                "action_msg": action_message,
-                "client_socket_id": self.__hash__()
+                "navigation_msg": navigation_message.replace('\n', ''),
+                "action_msg": action_message.replace('\n', ''),
+                "client_socket_id": self.__hash__(),
+                "img_path": img_path
             })
             #with open('/home/nattachart.tak/updates-unav/mahidol-branch/navigationUpdates.txt', 'a') as file:
             with open(join(self.log_dir, 'user_navigation_action_paths.txt'), 'a') as file:
@@ -96,8 +97,9 @@ class Connected_Client(threading.Thread):
                 if not data:
                     continue
                 nparr = np.frombuffer(data, np.uint8)
-                img = cv2.imdecode(nparr, cv2.IMREAD_UNCHANGED)
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                org_img = cv2.imdecode(np.copy(nparr), cv2.IMREAD_UNCHANGED)
+                img = cv2.imdecode(np.copy(nparr), cv2.IMREAD_UNCHANGED)
+                img = cv2.cvtColor(org_img, cv2.COLOR_BGR2RGB)
                 
 
                 Destination = self.socket.recv(4096)
@@ -111,6 +113,7 @@ class Connected_Client(threading.Thread):
                             destination_id = v
                 self.logger.info('=========Received one image=========')
                 pose = self.hloc.get_location(img)
+                self.logger.info('=========After localization=========')
                 image_destination = join(
                     self.log_dir, destination_id, 'images')
                 if not exists(image_destination):
@@ -124,8 +127,10 @@ class Connected_Client(threading.Thread):
                 formatted_date = readable_date.strftime('%Y-%m-%d_%H-%M-%S')
 
                 image_num=len(self.hloc.list_2d)
+                img_path = join(image_destination, formatted_date+'.png')
                 cv2.imwrite(
-                    join(image_destination, formatted_date+'.png'), img)
+                    img_path, org_img
+                    )
                 action_message = ''
                 action_list = None
                 path_list = None
@@ -180,7 +185,7 @@ class Connected_Client(threading.Thread):
                     else:
                         message = "\n"
 
-                self.record_user_navigation_action_paths(user_pose_x, user_pose_y, user_pose_angle, path_list, action_list, destination_id, message, action_message)
+                self.record_user_navigation_action_paths(user_pose_x, user_pose_y, user_pose_angle, path_list, action_list, destination_id, message, action_message, img_path)
                 self.logger.info(f"===============================================\n {message}\n ===============================================")
                 self.socket.sendall(bytes(message, 'UTF-8'))
 

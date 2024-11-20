@@ -67,7 +67,8 @@ def command_alert(action_list):
     else:                                               
         # next_distance = round(next_distance*3.28,1)                 #not arrived at destination yet    
         next_distance = int(next_distance)                                              
-        message += f"{direction} to {int(rot_clock)} o'clock, and walk {next_distance} meters. "
+        #message += f"{direction} to {int(rot_clock)} o'clock, and walk {next_distance} meters. "
+        message += f"{direction} to {int(rot_clock)} o'clock, and walk {next_distance} steps. "
         # message += 'Alert!!!!!!! %s to %d clock, and walk %d steps ' % (
         #     direction, int(rot_clock), int(next_distance/0.55))
         if next_station=='':
@@ -102,7 +103,8 @@ def command_normal(action_list):
     rot_clock,next_distance=action_list[0]
     direction = get_direction(rot_clock)
     next_station='your destination' if len(action_list)==1 else ''
-    message += f"{direction} at {int(rot_clock)} o'clock direction, and walk {int(next_distance)} meters"
+    #message += f"{direction} at {int(rot_clock)} o'clock direction, and walk {int(next_distance)} meters"
+    message += f"{direction} at {int(rot_clock)} o'clock direction, and walk {int(next_distance)} steps"
     # message += '%s to %d clock, and walk %d steps' % (
     #     direction, int(rot_clock), int(next_distance/0.55))
     if next_station=='':

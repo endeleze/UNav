@@ -9,7 +9,7 @@ from third_party.torchSIFT.src.torchsift.ransac.matcher import match
 from .implicit_distortion_model import coarse_pose,pose_multi_refine
 import torch
 import cv2
-from time import time
+import time
 
 class Hloc():
     device='cuda' if torch.cuda.is_available() else "cpu"
@@ -37,7 +37,7 @@ class Hloc():
         self.logger.addHandler(console_handler)
 
         self.list_2d, self.list_3d, self.initial_poses, self.pps = [], [], [], []
-        self.last_time=time()
+        self.last_time=time.time()
 
     def global_retrieval(self,image):
         """
@@ -275,29 +275,52 @@ class Hloc():
 
     def get_location(self, image):
         self.logger.info("Start image retrieval")
+        def get_time_ms(): return time.time_ns() // 1_000_000
+        def report_time_duration(self, s, obj:str): self.logger.info(f'{obj} run duration: {get_time_ms() - s} ms')
+        time_start = get_time_ms()
         topk=self.global_retrieval(image)
-
+        report_time_duration(self, s=time_start, obj='global_retrieval')
+        try:
+            self.logger.info(f'TopK from Global Retrieval n={len(topk)}')
+        except Exception as e:
+            self.logger.error(f'Type of topK: {type(topk)}')
+        
         if self.match_type=='superglue':
+            time_start = get_time_ms()
             self.logger.info("Matching local feature")
             pts0_list,pts1_list,lms_list,max_len=self.feature_matching_superglue(image,topk)
             self.logger.info("Start geometric verification")
             feature2D,landmark3D=self.geometric_verification(pts0_list, pts1_list, lms_list,max_len)
+            report_time_duration(self, s=time_start, obj=self.match_type)
 
         elif self.match_type=='lightglue':
+            time_start = get_time_ms()
             self.logger.info("Matching local feature")
-            if self.batch_mode:
-                pts0_list,pts1_list,lms_list,max_len=self.feature_matching_lightglue_batch(image,topk)
-            else:
-                pts0_list,pts1_list,lms_list,max_len=self.feature_matching_lightglue(image,topk)
+            try:
+                if self.batch_mode:
+                    pts0_list,pts1_list,lms_list,max_len=self.feature_matching_lightglue_batch(image,topk)
+                else:
+                    pts0_list,pts1_list,lms_list,max_len=self.feature_matching_lightglue(image,topk)
+            except Exception as e:
+                self.logger.error(e)
 
-            self.logger.info("Start geometric verification")
-            feature2D,landmark3D=self.geometric_verification(pts0_list, pts1_list, lms_list,max_len)
+            try:
+                self.logger.info("Start geometric verification")
+                feature2D,landmark3D=self.geometric_verification(pts0_list, pts1_list, lms_list,max_len)
+            except Exception as e:
+                self.logger.error(e)
+                feature2D,landmark3D=torch.tensor([]),torch.tensor([])
+            report_time_duration(self, s=time_start, obj=self.match_type)
 
         elif self.match_type=='nvs':
+            time_start = get_time_ms()
             self.logger.info("Doing NVS+OT")
             feature2D,landmark3D=self.nvs_ot(image,topk)
+            report_time_duration(self, s=time_start, obj=self.match_type)
 
         self.logger.info("Estimate the camera pose using PnP algorithm")
+        time_start = get_time_ms()
         pose=self.pnp(image,feature2D,landmark3D)
+        report_time_duration(self, s=time_start, obj='PnP algorithm')
 
         return pose
