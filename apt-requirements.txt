@@ -1,4 +1,7 @@
 vim
+locales
+graphviz
+protobuf-compiler
 sudo
 fakeroot
 libceres-dev

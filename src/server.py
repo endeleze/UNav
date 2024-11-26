@@ -4,6 +4,11 @@ import yaml
 import socket
 from conversation import Server,Connected_Client,utils
 import loader
+from IPython.display import Image
+import time
+from pycallgraph2 import PyCallGraph, Config as Conf
+from pycallgraph2.output import GraphvizOutput
+import locale
 
 def get_server(root,map_data,hloc_config,server_config, host_config):
     # IFACE = utils.get_wireless_iface()
@@ -18,6 +23,7 @@ def main(root,hloc_config,server_config,host_config):
     newConnectionsThread.start()
 
 if __name__=='__main__':
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     root = dirname(realpath(__file__)).replace('/src','')
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--server_config', type=str, default='configs/server/server.yaml')
@@ -33,4 +39,11 @@ if __name__=='__main__':
         server_config = yaml.safe_load(f)
     with open(args.host_config, 'r') as f:
         host_config = yaml.safe_load(f)
-    main(root, hloc_config, server_config, host_config)
+
+    output_filename = 'unav'
+    conf = Conf(max_depth=5)
+    graphviz = GraphvizOutput()
+    graphviz.output_file = f'callgraph_{output_filename}.png'
+    with PyCallGraph(output=graphviz):
+        main(root, hloc_config, server_config, host_config)
+    display(Image(f'callgraph_{output_filename}.png'))
