@@ -4,3 +4,5 @@ __pycache__/
 src/**/__pycache__/
 env/
 *.sw*
+shell/*.png
+shell/.ipynb_checkpoints/

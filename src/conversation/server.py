@@ -13,6 +13,10 @@ import cv2
 import jpysocket
 from time import time
 from datetime import datetime
+from IPython.display import Image
+#import time
+from pycallgraph2 import PyCallGraph, Config as Conf
+from pycallgraph2.output import GraphvizOutput
 
 class Connected_Client(threading.Thread):
     def __init__(self, parent,socket=None, address='128.122.136.173', hloc=None,trajectory=None, connections=None, destinations=None, map_scale=1,log_dir=None, logger=None,initial=False):
@@ -112,7 +116,18 @@ class Connected_Client(threading.Thread):
                         if k == Destination_:
                             destination_id = v
                 self.logger.info('=========Received one image=========')
-                pose = self.hloc.get_location(img)
+
+                current_time = time()
+                readable_date = datetime.fromtimestamp(current_time)
+                formatted_date = readable_date.strftime('%Y-%m-%d_%H-%M-%S')
+                output_filename = 'locallize_'+formatted_date
+                conf = Conf(max_depth=5)
+                graphviz = GraphvizOutput()
+                graphviz.output_file = f'callgraph_{output_filename}.png'
+                pose = None
+                with PyCallGraph(output=graphviz):
+                    pose = self.hloc.get_location(img)
+
                 self.logger.info('=========After localization=========')
                 image_destination = join(
                     self.log_dir, destination_id, 'images')
@@ -122,9 +137,6 @@ class Connected_Client(threading.Thread):
                     self.log_dir, destination_id, 'logs')
                 if not exists(message_destination):
                     mkdir(message_destination)
-                current_time = time()
-                readable_date = datetime.fromtimestamp(current_time)
-                formatted_date = readable_date.strftime('%Y-%m-%d_%H-%M-%S')
 
                 image_num=len(self.hloc.list_2d)
                 img_path = join(image_destination, formatted_date+'.png')
@@ -141,7 +153,15 @@ class Connected_Client(threading.Thread):
                     self.logger.info(f"===============================================\n Estimated location: x: %d, y: %d, ang: %d destination_id: {destination_id}\nUsed {image_num} images for localization\n===============================================" % (
                         pose[0], pose[1], pose[2]))
                     user_pose_x, user_pose_y, user_pose_angle = pose[0], pose[1], pose[2]
-                    path_list=self.trajectory.calculate_path(pose[:2], destination_id)
+
+
+                    output_filename = 'path_calculation_'+formatted_date
+                    graphviz = GraphvizOutput()
+                    graphviz.output_file = f'callgraph_{output_filename}.png'
+                    path_list = []
+                    with PyCallGraph(output=graphviz):
+                        path_list=self.trajectory.calculate_path(pose[:2], destination_id)
+
                     if len(path_list) > 0:
                         action_list=actions(pose,path_list,self.map_scale)
                         length = action_list[0][1]

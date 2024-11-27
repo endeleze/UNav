@@ -46,4 +46,4 @@ if __name__=='__main__':
     graphviz.output_file = f'callgraph_{output_filename}.png'
     with PyCallGraph(output=graphviz):
         main(root, hloc_config, server_config, host_config)
-    display(Image(f'callgraph_{output_filename}.png'))
+    #display(Image(f'callgraph_{output_filename}.png'))
