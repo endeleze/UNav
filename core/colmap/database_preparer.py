@@ -1,3 +1,4 @@
+import os
 import logging
 from pathlib import Path
 import h5py
@@ -89,7 +90,8 @@ def create_colmap_database_with_known_poses(
     matches_file: Path,
     cameras_txt: Path,
     images_txt: Path,
-    pairs_txt: Path
+    pairs_txt: Path,
+    overwrite: bool = True
 ) -> None:
     """
     Create and populate a COLMAP SQLite database using known poses and feature matches.
@@ -103,6 +105,8 @@ def create_colmap_database_with_known_poses(
         pairs_txt (Path): List of matched image pairs.
     """
     logging.info(f"[UNav] Creating COLMAP database with known poses from TXT files...")
+    if overwrite and os.path.exists(database_path):
+        os.remove(database_path)
     db = COLMAPDatabase.connect(database_path)
     db.create_tables()
 

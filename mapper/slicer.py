@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import cv2
+import shutil
 import numpy as np
 import re
 from tqdm import tqdm
@@ -159,6 +160,9 @@ def slice_perspectives(
     fov = slicer_config["fov"]
     pitch = slicer_config["pitch"]
     out_dir = slicer_config["output_perspective_dir"]
+    if os.path.exists(out_dir):
+        print(f"[INFO] Output dir exists. Removing: {out_dir}")
+        shutil.rmtree(out_dir)
     os.makedirs(out_dir, exist_ok=True)
 
     kf_list = get_keyframe_image_list(keyframe_dir)
@@ -191,8 +195,6 @@ def slice_perspectives(
 
             out_name = generate_perspective_name(name, pitch, yaw_idx)
             out_path = os.path.join(out_dir, out_name)
-            if os.path.exists(out_path):
-                continue
 
             slice_img = equirectangular_to_perspective(
                 pano, fov_deg=fov,

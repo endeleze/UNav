@@ -26,36 +26,45 @@ docker build -t stella_vslam_dense .
 
 ---
 
-## 🚀 Getting Started (Mapping Pipeline Only)
+## 🚀 One-command Installation (All-in-One)
 
-### 1. One-command Installation
-
-Install the UNav system (including all Python dependencies) via pip:
+Install all UNav functionality (mapping, localization, navigation) with one command:
 
 ```sh
 pip install git+https://github.com/ai4ce/unav.git
 ```
 
-### 2. Run the Mapping Pipeline
+---
 
-This runs the full mapping pipeline (dense SLAM, slicing, feature extraction, matching, triangulation):
+## 🏁 Getting Started (Full System Workflow)
 
-```sh
-python main_mapping_pipeline.py <data_temp_root> <data_final_root> <feature_model> <place> <building> <floor>
-```
+Below is the **essential workflow to construct a metrically registered, navigation-ready environment**:
 
-Example:
-```sh
-python main_mapping_pipeline.py /mnt/data/UNav-IO/temp /mnt/data/UNav-IO/data DinoV2Salad New_York_City LightHouse 4_floor
-```
+1. **Mapping:**  
+   Run the mapping pipeline to generate 3D map, slice images, extract features, perform matching, and triangulate points.
 
-### 3. Align 3D Map to Floorplan (Optional but Recommended)
+   ```sh
+   python main_mapping_pipeline.py <data_temp_root> <data_final_root> <feature_model> <place> <building> <floor>
+   ```
 
-Run the floorplan alignment GUI for metric registration:
+   Example:
+   ```sh
+   python main_mapping_pipeline.py /mnt/data/UNav-IO/temp /mnt/data/UNav-IO/data DinoV2Salad New_York_City LightHouse 4_floor
+   ```
 
-```sh
-python mapper/aligner.py <data_temp_root> <data_final_root> <place> <building> <floor>
-```
+2. **Align 3D Map to Floorplan (Required):**  
+   This step **is mandatory** for metric localization and navigation.  
+   Launch the alignment GUI to register SLAM map coordinates to the architectural floorplan.
+
+   ```sh
+   python mapper/aligner.py <data_temp_root> <data_final_root> <place> <building> <floor>
+   ```
+
+   You must repeat this for every mapped floor/building.
+
+3. **Localization & Navigation:**  
+   Use the generated outputs for real-time localization and navigation.  
+   See example usage and API in the `localizer/` and `navigator/` folders and [project documentation](https://github.com/ai4ce/unav).
 
 ---
 

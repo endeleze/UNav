@@ -50,8 +50,8 @@ def extract_features_from_dir(config: UNavMappingConfig) -> None:
     global_extractor.set_train(False)
 
     # Open output HDF5 files for local/global features
-    with h5py.File(feat_cfg["local_feat_save_path"], "a") as local_h5, \
-         h5py.File(feat_cfg["global_feat_save_path"], "a") as global_h5:
+    with h5py.File(feat_cfg["local_feat_save_path"], "w") as local_h5, \
+         h5py.File(feat_cfg["global_feat_save_path"], "w") as global_h5:
 
         for img_name in tqdm(img_list, desc="Extracting Features"):
             img_path = os.path.join(feat_cfg["input_perspective_dir"], img_name)

@@ -18,7 +18,7 @@ DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"     # Final output directory (floorplan
 
 PLACE="New_York_University"                        # Name of the place/city/campus
 BUILDING="Langone"                        # Name of the building
-FLOOR="15_floor"                              # Floor label/ID
+FLOOR="17_floor"                              # Floor label/ID
 
 # ------------------- Main Script Execution -------------------
 
