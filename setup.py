@@ -27,7 +27,7 @@ setup(
         "Pillow>=10.0.0",
         "poselib>=2.0.0",
         "POT>=0.9.0",
-        "prettytable>=3.16.0",
+        "prettytable<=3.11.0",
         "pyimplicitdist>=1.0.0",
         "pytorch-lightning>=2.0.6",
         "pytorch-metric-learning>=2.3.0",

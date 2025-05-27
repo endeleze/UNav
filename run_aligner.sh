@@ -16,9 +16,9 @@ set -e  # Exit on error
 DATA_TEMP_ROOT="/mnt/data/UNav-IO/temp"      # Temporary/intermediate files directory (e.g., SLAM outputs)
 DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"     # Final output directory (floorplan, transformation matrix, etc.)
 
-PLACE="New_York_City"                        # Name of the place/city/campus
-BUILDING="LightHouse"                        # Name of the building
-FLOOR="4_floor"                              # Floor label/ID
+PLACE="New_York_University"                        # Name of the place/city/campus
+BUILDING="Langone"                        # Name of the building
+FLOOR="15_floor"                              # Floor label/ID
 
 # ------------------- Main Script Execution -------------------
 
