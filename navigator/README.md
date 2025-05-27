@@ -1,65 +1,179 @@
 # 🧭 UNav Navigation System
 
-A multi-floor, multi-building indoor navigation module that supports visual pathfinding, spoken-style command generation, and segment-based path planning. Designed for applications in visually impaired assistance, robotics, and digital twin simulations.
+A robust, multi-floor, multi-building **indoor navigation module** for visual pathfinding, spoken-style command generation, and modular path planning.  
+Designed for applications in **visually impaired assistance, robotics, digital twins, and smart buildings**.
 
-## ✨ Features
+---
 
-- ✅ Multi-floor and multi-building visual pathfinding
-- ✅ Inter-waypoints for stairs/elevator transitions
-- ✅ Spoken-style navigation commands (e.g., “Turn left to 10 o'clock”)
-- ✅ Snapping of noisy or invalid poses to the nearest walkable space
-- ✅ Modular structure for easy extension and integration
+## 📦 Prerequisites
 
-## 🛠 Installation
+Before using the navigation system, make sure you have the following:
 
-Make sure you have Python 3.7+ and `pip` installed. Install it:
+- **Python 3.8+**
+- All dependencies from your project `requirements.txt`
+- **Shapely** and **networkx** (for graph and geometry operations)
+- **labelme** for floorplan/waypoint annotation:
+    - Annotate your floorplans and boundaries with [labelme](https://github.com/wkentaro/labelme).
+- Properly prepared floorplan annotation JSONs for all floors and buildings you wish to use.
 
-```bash
-pip install git+https://github.com/ai4ce/UNav_Navigation.git
-```
+Optionally:
+- `visualize_navigation.ipynb` is provided for visual debugging and path simulation.
 
-This installs the `unav` module for import.
+---
 
 ## 🚀 Quick Start
 
+### 1. **Load Floorplan Data into FacilityNavigator**
+
 ```python
-from unav_navigator import FacilityNavigator, commands_from_result
+from config import UNavConfig
+from navigator.navigator import FacilityNavigator
 
-# Load navigation system
-building_jsons = {
-    "LightHouse": {
-        "3_floor": "example_data/New_York_City/LightHouse/3_floor/boundaries.json",
-        "4_floor": "example_data/New_York_City/LightHouse/4_floor/boundaries.json",
-        "6_floor": "example_data/New_York_City/LightHouse/6_floor/boundaries.json",
-    }
-}
-nav = FacilityNavigator(building_jsons, scale_file=scale_file)
+DATA_FINAL_ROOT = "/mnt/data/UNav-IO/data"
+PLACES = ["New_York_City"]
+BUILDINGS = ["LightHouse"]
+FLOORS = ["3_floor", "4_floor", "6_floor"]
 
-# Sample a valid start pose
-floor_key, (x, y), theta = 'LightHouse__4_floor', (1560.0018488325186, 667.4292020409354), 2.1883365724167443
-
-# Choose a destination
-dest_building, dest_floor, selected_index = "LightHouse", "3_floor", 3
-target_key = f"{dest_building}__{dest_floor}"
-
-# Plan path
-pf_target = nav.pf_map[target_key]
-dest_id = pf_target.dest_ids[selected_index]
-
-result = nav.find_path("LightHouse", "4_floor", (x, y), dest_building, dest_floor, dest_id)
-
-# Generate navigation instructions
-commands = commands_from_result(nav, result, initial_heading=theta)
-for i, cmd in enumerate(commands, 1):
-    print(f"{i}. {cmd}")
+config = UNavConfig(
+    data_final_root=DATA_FINAL_ROOT,
+    places=PLACES,
+    buildings=BUILDINGS,
+    floors=FLOORS
+)
+nav = FacilityNavigator(config.navigator_config)
 ```
 
-## 📦 Data Annotation Format
+---
 
-To learn how to label floorplans and define waypoints, doors, and walkable space, please refer to:
+### 2. **Select Destination from a Target Floor**
 
-📄 [`example_data/README.md`](example_data/README.md)
+```python
+target_place = "New_York_City"
+target_building = "LightHouse"
+target_floor = "6_floor"
+target_key = f"{target_place}__{target_building}__{target_floor}"
 
-## 📄 License
+# Select a destination index (e.g., the 4th destination)
+selected_index = 3
+pf_target = nav.pf_map[target_key]
+dest_id = pf_target.dest_ids[selected_index]
+```
 
-MIT License © 2025 Anbang Yang
+---
+
+### 3. **Get a Starting Pose**
+
+You can use the output of the UNav localizer as the starting pose, or for demo/testing, sample randomly:
+
+```python
+from navigator.tools.pose_sampling import sample_random_pose
+
+key, (x, y), theta = sample_random_pose(nav.pf_map)
+start_place, start_building, start_floor = key.split("__")
+```
+
+---
+
+### 4. **Find and Visualize a Multi-floor Path**
+
+```python
+result = nav.find_path(
+    start_place, start_building, start_floor, (x, y),
+    target_place, target_building, target_floor, dest_id
+)
+```
+
+---
+
+### 5. **Generate Spoken Navigation Commands**
+
+```python
+from navigator.tools.commands import commands_from_result
+import math
+
+cmds = commands_from_result(
+    nav,
+    result,
+    initial_heading=-math.degrees(theta),
+    unit="feet"   # or "meter"
+)
+for i, c in enumerate(cmds, 1):
+    print(f"{i}. {c}")
+```
+
+---
+
+### 6. **Visual Simulation**
+
+To simulate and debug navigation visually, use:
+
+```
+./unav/visualize_navigation.ipynb
+```
+
+---
+
+## ✨ Features
+
+- ✅ Multi-floor, multi-building shortest path routing
+- ✅ Named inter-waypoints for stairs/elevator transitions
+- ✅ Spoken-style navigation commands (“Slight left to 11 o’clock”, etc.)
+- ✅ Robust pose snapping to walkable regions (handles noisy inputs)
+- ✅ Modular, extensible codebase for research and production
+
+---
+
+## 🗺️ Data Annotation Format
+
+- Floorplan JSONs should be produced using [labelme](https://github.com/wkentaro/labelme).
+- Annotate walkable areas, obstacles, doors, navigation nodes, inter-waypoints, and destinations according to project convention.
+- See `core/LABELME_README.md` for detailed guidelines.
+
+---
+
+## 🛠 Modular APIs
+
+Each navigation stage is available as a Python function/class:
+- `FacilityNavigator`: Unified interface for multi-floor pathfinding
+- `PathFinder`: Floor-level waypoint graph constructor and search
+- `snap_inside_walkable`: Utility to sanitize/snap noisy poses
+- `commands_from_result`: Spoken-style command generator for navigation
+- ...and more under `navigator/` and `navigator/tools/`
+
+---
+
+## 📁 Directory Structure
+
+```
+navigator/
+│
+├── navigator.py
+├── pathfinder.py
+├── snap.py
+├── tools/
+│   ├── commands.py
+│   ├── pose_sampling.py
+│   └── ...
+└── README.md
+```
+
+---
+
+## 💡 Tips & Best Practices
+
+- Always use **absolute paths** for annotation files.
+- Start/end locations should be safely within walkable regions (use `snap_inside_walkable` if in doubt).
+- Tune penalty values for stairs/elevator transitions in the config as needed for your building.
+- All navigation results are returned as Python dictionaries for downstream integration.
+- Spoken-style command templates can be customized in `commands_from_result`.
+
+---
+
+## 👤 Maintainer
+
+- **Developer:** Anbang Yang (`ay1620@nyu.edu`)
+- **Last updated:** 2025-05-27
+
+---
+
+**For bug reports or feature requests, please contact the maintainer.**

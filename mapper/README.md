@@ -1,123 +1,191 @@
-# UNav Mapping Pipeline
+# UNav Mapping Module
 
-This repository provides the complete pipeline for constructing mapping datasets for the UNav system.  
-It includes SLAM-based map generation, perspective slicing, feature extraction, matching, triangulation, registration, and dataset preparation for downstream localization and navigation tasks.
-
----
-
-## 📍 Step 1: Generate SLAM Map
-
-To generate the initial SLAM map using **stella_vslam_dense**, please follow the detailed instructions in  
-➡ [SLAM/stella_vslam/README.md](SLAM/stella_vslam/README.md)
-
-**Outputs produced:**
-- Camera trajectory (`trajectory.txt`)
-- Dense point cloud (`output_cloud.ply`)
-- Keyframes (`keyframes/`)
-- Serialized map database (`final_map.msg`)
-
-These outputs are essential for all subsequent steps.
+A complete, modular **mapping pipeline** and **floorplan-SLAM alignment toolkit** for the UNav visual navigation system.
 
 ---
 
-## 📍 Step 2: Slice Perspective Images
+## 📦 Prerequisites
 
-From the SLAM keyframes (`keyframes/`), generate perspective images covering the 360° FOV.
+Before running the mapping pipeline, **please make sure the following dependencies are installed and properly set up**:
 
-**Tools:**
+- **Python 3.8+** with all dependencies listed in your `requirements.txt`.
+- **Docker** is required for SLAM:
+    - The **stella_vslam_dense** container must be built and available.  
+      See official repository:  
+      https://github.com/RoblabWh/stella_vslam_dense.git
+
+    **Quick install:**
+    ```sh
+    git clone https://github.com/RoblabWh/stella_vslam_dense.git
+    cd stella_vslam_dense/docker
+    docker build -t stella_vslam_dense .
+    ```
+
+- **COLMAP** must be installed and accessible from your `$PATH` for triangulation.
+
+- **CUDA-compatible GPU** is strongly recommended for feature extraction and matching.
+
+---
+
+## Overview
+
+This folder contains all scripts and tools to convert raw sensor data into a metrically registered map suitable for robust visual localization and navigation, particularly in multi-floor and large-scale indoor environments.
+
+- **Fully modularized:** Each pipeline stage is a self-contained Python module.
+- **Batch and GUI support:** Includes both headless batch pipelines and an interactive registration GUI.
+- **Supports multiple feature models:** Plug-and-play with various global and local feature extractors.
+- **Optimized for scalability:** Designed to handle large buildings and multiple floor levels.
+
+---
+
+## 🚀 Main Mapping Pipeline
+
+**Script:** `main_mapping_pipeline.py`
+
+The recommended end-to-end mapping entrypoint. Runs the entire mapping pipeline from dense SLAM to 3D triangulation.
+
+#### **Pipeline Stages**
+
+1. **Dense Visual SLAM**  
+2. **Equirectangular-to-perspective slicing**  
+3. **Feature extraction (local & global)**  
+4. **Feature matching + geometric verification**  
+5. **3D triangulation with COLMAP (known poses)**  
+
+#### **Command-line Usage**
+
+```sh
+python main_mapping_pipeline.py <data_temp_root> <data_final_root> <feature_model> <place> <building> <floor>
 ```
-unav_mapping/mapper/slicer.py
-```
 
-**Outputs:**
-- Perspective images (`perspectives/`)
-- Perspective poses (`perspective_poses.txt`)
+#### **Python API Example**
 
----
+```python
+from config import UNavConfig
+from mapper.slam_runner import run_stella_vslam_dense
+from mapper.slicer import slice_perspectives
+from mapper.feature_extractor import extract_features_from_dir
+from mapper.matcher import generate_and_stream_colmap
+from mapper.colmap_triangulator import run_colmap_triangulation
 
-## 📍 Step 3: Feature Extraction
+# Step 1: Initialize configuration
+config = UNavConfig(
+    data_temp_root="/mnt/data/UNav-IO/temp",
+    data_final_root="/mnt/data/UNav-IO/data",
+    mapping_place="New_York_City",
+    mapping_building="LightHouse",
+    mapping_floor="4_floor",
+    global_descriptor_model="DinoV2Salad"
+)
+mapper_config = config.mapping_config
 
-Extract both **local features (e.g., SuperPoint + LightGlue)** and **global descriptors (e.g., MixVPR, DinoV2Salad)** from the sliced perspectives.
-
-**Tools:**
-```
-unav_mapping/mapper/feature_extractor.py
-```
-
-**Outputs:**
-- Global features (`global_features_{model_name}.h5`)
-- Local features (`local_features.h5`)
-
----
-
-## 📍 Step 4: Image Matching & Pairs Generation
-
-(To be added)
-
----
-
-## 📍 Step 5: COLMAP Triangulation Input Preparation
-
-Prepare COLMAP-compatible input files:
-- `images.txt`
-- `cameras.txt`
-- (optional) `pairs.txt`
-
-> Use SLAM keyframe poses and camera parameters.
-
----
-
-## 📍 Step 6: Registration & Segmentation (Optional)
-
-Align the sparse SLAM point cloud with the floorplan.
-- Estimate transformation matrix.
-- Segment the map into rooms for efficient localization.
-
----
-
-## 📍 Step 7: Convert to UNav Localization Format
-
-Convert COLMAP outputs and other prepared data into the UNav-compatible localization database format.
-
-**Outputs:**
-- UNav localization database (`unav_localization_db/`)
-
----
-
-## ⚙ Directory Structure Recommendation
-
-```
-/mnt/data/UNav-IO/temp/
-├── <PLACE>/<BUILDING>/<FLOOR>/
-│   ├── stella_vslam_dense/       # SLAM outputs
-│   ├── perspectives/             # Sliced perspectives
-│   ├── features/                 # Extracted features
-│   ├── pairs.txt
-│   ├── colmap_db/                # COLMAP workspace
-│   ├── slam_to_floorplan.npy     # Optional registration matrix
-│   └── room_segments/            # Optional segmented room maps
-└── ...
+# Step 2: Run the full pipeline
+run_stella_vslam_dense(mapper_config)               # (1) Dense SLAM
+slice_perspectives(mapper_config)                   # (2) Perspective slicing
+extract_features_from_dir(mapper_config)            # (3) Feature extraction
+generate_and_stream_colmap(mapper_config)           # (4) Feature matching + verification
+run_colmap_triangulation(mapper_config)             # (5) 3D triangulation
 ```
 
 ---
 
-## ✅ Notes
+## 🗺️ Floorplan-SLAM Alignment GUI
 
-- Ensure all paths, parameters, and model configurations are consistent across modules.
-- All configs are managed via `unav_mapping/config.py` (`UNavMappingConfig`).
-- It is recommended to carefully validate outputs at each step using provided test notebooks and scripts.
+**Script:** `aligner.py`
+
+An interactive tool to align the reconstructed 3D SLAM map with a 2D architectural floorplan image. This step is **critical** for enabling metric localization and reliable path planning.
+
+#### **Python API Example**
+
+```python
+from config import UNavConfig
+from mapper.aligner import run_aligner_gui
+
+# Setup config (identical to mapping pipeline)
+config = UNavConfig(
+    data_temp_root="/mnt/data/UNav-IO/temp",
+    data_final_root="/mnt/data/UNav-IO/data",
+    mapping_place="New_York_City",
+    mapping_building="LightHouse",
+    mapping_floor="4_floor"
+)
+mapper_config = config.mapping_config
+
+run_aligner_gui(mapper_config)
+```
+
+**Recommended:**  
+- Complete all mapping steps before running the aligner.  
+- The output transformation matrix will be saved and used in downstream localization and navigation modules.
 
 ---
 
-## 📄 Modules
+## 🛰️ Visual Inspection: Mapping Quality
 
-| Module                              | Purpose                             |
-|--------------------------------------|-------------------------------------|
-| `SLAM/stella_vslam/`                 | Run dense SLAM                      |
-| `unav_mapping/mapper/slicer.py`      | Slice perspective images            |
-| `unav_mapping/mapper/feature_extractor.py` | Extract local & global features    |
-| (To be added)                        | Image matching & pairs generation  |
-| (To be added)                        | COLMAP preparation & triangulation  |
-| (To be added)                        | UNav localization file conversion   |
+**Notebook:** `./unav/visualize_mapping.ipynb`
+
+After completing the pipeline, use this Jupyter notebook to visually inspect the mapping results, validate alignment, and assess reconstruction quality.  
+Recommended for **every new building/floor mapping session.**
 
 ---
+
+## 🛠️ Configuration Example
+
+**Location:** `config.py`
+
+```python
+from config import UNavConfig
+
+config = UNavConfig(
+    data_temp_root="/mnt/data/UNav-IO/temp",
+    data_final_root="/mnt/data/UNav-IO/data",
+    mapping_place="New_York_City",
+    mapping_building="LightHouse",
+    mapping_floor="4_floor",
+    global_descriptor_model="DinoV2Salad"
+)
+```
+
+---
+
+## 📁 Directory Structure
+
+```
+mapper/
+│
+├── main_mapping_pipeline.py
+├── aligner.py
+├── slam_runner.py
+├── slicer.py
+├── feature_extractor.py
+├── matcher.py
+├── colmap_triangulator.py
+├── tools/
+│   ├── aligner/
+│   ├── matcher/
+│   └── slam/
+├── config.py
+└── README.md
+```
+
+---
+
+## 💡 Tips & Best Practices
+
+- **Absolute paths:** Always use absolute paths for all input/output directories.
+- **Intermediate outputs:** Results are grouped by `<place>/<building>/<floor>`.
+- **Out-of-memory:** If you hit GPU OOM (out-of-memory), adjust batch sizes in `matcher.py`.
+- **Alignment:** The floorplan alignment GUI is the final mapping step before localization.
+- **Extensibility:** Add new feature models by extending the relevant extractor classes.
+
+---
+
+## 👤 Maintainer
+
+- **Developer:** Anbang Yang (`ay1620@nyu.edu`)
+- **Last updated:** 2025-05-27
+
+---
+
+**For bug reports or feature requests, please contact the maintainer.**
+

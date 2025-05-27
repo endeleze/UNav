@@ -2,9 +2,8 @@ import logging
 from pathlib import Path
 from subprocess import run
 from config import UNavMappingConfig
-
 from core.colmap.database_preparer import create_colmap_database_with_known_poses
-
+import shutil
 
 def run_colmap_triangulation(
     config: UNavMappingConfig,
@@ -12,18 +11,20 @@ def run_colmap_triangulation(
     overwrite_output: bool = True
 ) -> None:
     """
-    Full pipeline to prepare COLMAP database from H5 files and known poses in TXT,
-    then run triangulation using known poses.
+    Run the complete COLMAP triangulation pipeline:
+      1. Prepare the COLMAP database with known camera poses and matches.
+      2. Optionally remove existing database/output directories if overwrite is enabled.
+      3. Run COLMAP's point_triangulator with all necessary paths.
 
     Args:
-        config: UNavMappingConfig object containing all paths and settings.
-        overwrite_database: If True, existing database will be removed before creation.
-        overwrite_output: If True, existing triangulation output will be removed before execution.
+        config (UNavMappingConfig): Configuration object containing all required paths.
+        overwrite_database (bool): Remove existing COLMAP database before creation if True.
+        overwrite_output (bool): Remove existing triangulated output before execution if True.
 
     Raises:
-        RuntimeError: If COLMAP point_triangulator fails.
+        RuntimeError: If the COLMAP point_triangulator process fails.
     """
-    # --- Resolve paths from config
+    # === Resolve all paths from config ===
     colmap_cfg = config.colmap_config
     feat_cfg = config.feature_extraction_config
 
@@ -37,18 +38,17 @@ def run_colmap_triangulation(
     sparse_model_dir = Path(colmap_cfg["sparse_dir"])
     output_dir = Path(colmap_cfg["colmap_output_dir"])
 
-    # --- Safety checks and overwrite behavior
+    # === Handle overwrite options ===
     if database_path.exists() and overwrite_database:
-        logging.warning(f"[UNav] Overwriting existing database: {database_path}")
+        logging.warning(f"[UNav] Overwriting existing COLMAP database at: {database_path}")
         database_path.unlink()
 
     if output_dir.exists() and overwrite_output:
-        logging.warning(f"[UNav] Overwriting existing triangulated output: {output_dir}")
-        import shutil
+        logging.warning(f"[UNav] Overwriting existing triangulation output at: {output_dir}")
         shutil.rmtree(output_dir)
 
-    # --- Create COLMAP database
-    logging.info(f"[UNav] Creating COLMAP database at {database_path}")
+    # === Create COLMAP database from features, matches, and known poses ===
+    logging.info(f"[UNav] Creating COLMAP database at: {database_path}")
     create_colmap_database_with_known_poses(
         database_path=database_path,
         local_feature_file=local_feature_file,
@@ -57,31 +57,30 @@ def run_colmap_triangulation(
         images_txt=images_txt,
         pairs_txt=pairs_txt
     )
-    
+
+    # Ensure sparse_model_dir/points3D.txt exists (COLMAP expects it)
     points3d_txt = sparse_model_dir / "points3D.txt"
     if not points3d_txt.exists():
-        logging.warning(f"[UNav] points3D.txt not found in {sparse_model_dir}, creating empty file.")
+        logging.warning(f"[UNav] points3D.txt not found in {sparse_model_dir}, creating empty placeholder file.")
+        points3d_txt.parent.mkdir(parents=True, exist_ok=True)
         with open(points3d_txt, 'w') as f:
             f.write("# 3D point list with one line of data per point:\n")
 
-    # --- Run triangulation
-    output_dir.mkdir(exist_ok=True, parents=True)
+    # === Run COLMAP triangulation ===
+    output_dir.mkdir(parents=True, exist_ok=True)
     cmd = [
         "colmap", "point_triangulator",
-        "--database_path",            str(database_path),
-        "--image_path",               str(image_dir),
-        "--input_path",               str(sparse_model_dir),
-        "--output_path",              str(output_dir),
+        "--database_path", str(database_path),
+        "--image_path", str(image_dir),
+        "--input_path", str(sparse_model_dir),
+        "--output_path", str(output_dir),
     ]
 
-
-    logging.info(f"[UNav] CMD ➔ {' '.join(cmd)}")
-
-    logging.info(f"[UNav] Running COLMAP point_triangulator...")
+    logging.info(f"[UNav] Launching COLMAP: {' '.join(cmd)}")
     try:
         run(cmd, check=True)
     except Exception as e:
         logging.error(f"[UNav] COLMAP point_triangulator failed: {e}")
         raise RuntimeError("COLMAP point_triangulator execution failed.") from e
 
-    logging.info(f"[UNav] Triangulation completed at {output_dir}")
+    logging.info(f"[UNav] Triangulation completed at: {output_dir}")

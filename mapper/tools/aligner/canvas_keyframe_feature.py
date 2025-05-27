@@ -2,14 +2,14 @@ import os
 import numpy as np
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk, ImageDraw
+from PIL import Image, ImageTk
 from mapper.tools.aligner.ui_helpers import CanvasImage
 from typing import List, Dict, Tuple, Any, Optional
 
 class KeyframeViewer(tk.Canvas):
     """
-    Canvas widget for visualizing keyframe images with keypoints.
-    Allows for interactive feature annotation and correspondence management.
+    Canvas widget for visualizing keyframe images with annotated keypoints.
+    Allows interactive feature selection and correspondence management.
     """
     def __init__(
         self,
@@ -30,23 +30,23 @@ class KeyframeViewer(tk.Canvas):
             **kwargs: Additional arguments for tk.Canvas.
         """
         super().__init__(parent, bg='gray', **kwargs)
-        self.keyframe_dir    = keyframe_dir
-        self.kf_data         = kf_data
+        self.keyframe_dir = keyframe_dir
+        self.kf_data = kf_data
         self.correspondences = correspondences
         self._initial_w, self._initial_h = initial_size
 
-        # Current frame cache
-        self.current_key    = None
-        self._orig_image    = None   # PIL.Image
-        self._tk_image      = None   # ImageTk.PhotoImage
+        # State for current frame and image
+        self.current_key = None
+        self._orig_image = None  # PIL.Image
+        self._tk_image = None    # ImageTk.PhotoImage
 
-        # Redraw whenever the canvas is resized or exposed
+        # Redraw when resized or exposed
         self.bind("<Configure>", self._on_resize)
-        self.bind("<Expose>",    self._on_resize)
+        self.bind("<Expose>", self._on_resize)
 
     def _on_resize(self, event):
         """
-        Handles canvas resize events by redrawing the current keyframe.
+        Redraws the current keyframe on canvas resize.
         """
         if self.current_key:
             self.display_keyframe(
@@ -60,19 +60,18 @@ class KeyframeViewer(tk.Canvas):
         master_size: Optional[Tuple[int, int]] = None
     ) -> None:
         """
-        Display the keyframe image, scaling it to fit the available space.
-        All keypoints and correspondences are rendered on top.
+        Display the keyframe image, scaling to fit, with all keypoints/correspondences drawn.
         Args:
             keyframe_name (str): Filename of the keyframe image (with or without .png).
-            master_size (tuple): Optional size override for the display area.
+            master_size (tuple): Optional display area override.
         """
-        # Normalize filename and check existence
+        # Normalize filename
         name = keyframe_name if keyframe_name.endswith('.png') else keyframe_name + '.png'
         path = os.path.join(self.keyframe_dir, name)
         if not os.path.exists(path):
             return
 
-        # Cache image only when switching frames
+        # Only reload image if switching frames
         if name != self.current_key or self._orig_image is None:
             self._orig_image = Image.open(path)
             self.current_key = name
@@ -80,37 +79,31 @@ class KeyframeViewer(tk.Canvas):
         img_full = self._orig_image
         orig_w, orig_h = img_full.size
 
-        # Set maximum display size (limit for X11 rendering performance)
         MAX_W, MAX_H = 800, 450
+        c_w, c_h = master_size if master_size else (
+            min(self.winfo_width(), MAX_W),
+            min(self.winfo_height(), MAX_H)
+        )
 
-        if master_size is not None:
-            c_w, c_h = master_size
-        else:
-            c_w = min(self.winfo_width(), MAX_W)
-            c_h = min(self.winfo_height(), MAX_H)
-
-        # Skip if the canvas size is too small
         if c_w < 10 or c_h < 10:
             return
 
-        # Compute scaling factor (do not upscale)
         scale = min(c_w / orig_w, c_h / orig_h, 1.0)
         disp_w = max(int(orig_w * scale), 1)
         disp_h = max(int(orig_h * scale), 1)
         if disp_w < 2 or disp_h < 2:
             return
 
-        # Resize image and convert to Tkinter format
+        # Prepare resized image for Tkinter
         img_disp = img_full.resize((disp_w, disp_h), Image.Resampling.LANCZOS)
         self._tk_image = ImageTk.PhotoImage(img_disp)
 
-        # Clear canvas and center image
         self.delete("all")
         off_x = (c_w - disp_w) // 2
         off_y = (c_h - disp_h) // 2
         self.create_image(off_x, off_y, anchor='nw', image=self._tk_image)
 
-        # Draw all keypoints and highlight confirmed correspondences
+        # Draw all keypoints
         pts = self.kf_data[name]['keypoints']
         confirmed = {
             c['keypoint_idx']
@@ -118,29 +111,30 @@ class KeyframeViewer(tk.Canvas):
             if c['keyframe'] == name
         }
         pts_arr = np.asarray(pts)
-        confirmed_indices = np.array(list(confirmed), dtype=int)
+        confirmed_indices = np.array(list(confirmed), dtype=int) if confirmed else np.array([], dtype=int)
         r = 3
 
-        # Draw all keypoints in lime
+        # Draw all keypoints as lime
         for idx, (x0, y0) in enumerate(pts_arr):
             x = off_x + x0 * scale
             y = off_y + y0 * scale
             self.create_oval(x - r, y - r, x + r, y + r, fill='lime', outline='')
 
-        # Draw confirmed keypoints in red, on top
-        for x0, y0 in pts_arr[confirmed_indices]:
-            x = off_x + x0 * scale
-            y = off_y + y0 * scale
-            self.create_oval(x - r, y - r, x + r, y + r, fill='red', outline='')
+        # Draw confirmed correspondences as red (drawn last for visibility)
+        if len(confirmed_indices) > 0:
+            for x0, y0 in pts_arr[confirmed_indices]:
+                x = off_x + x0 * scale
+                y = off_y + y0 * scale
+                self.create_oval(x - r, y - r, x + r, y + r, fill='red', outline='')
 
     def open_feature_canvas(self, correspondences, on_confirm_callback, on_highlight_callback):
         """
-        Opens a popup window for interactive feature selection on the current keyframe image.
-        Only allows opening if the previous correspondence selection has been completed.
+        Opens a popup window for feature selection on the current keyframe.
+        Only allowed if the last correspondence is finished (floor2d selected).
         Args:
-            correspondences (list): List of current correspondences.
-            on_confirm_callback (callable): Callback on feature selection confirmation.
-            on_highlight_callback (callable): Callback for highlight actions.
+            correspondences (list): Current list of correspondences.
+            on_confirm_callback (callable): Called after feature selection.
+            on_highlight_callback (callable): Called to trigger highlight.
         """
         if correspondences and correspondences[-1].get("floor2d") is None:
             messagebox.showerror(
@@ -148,7 +142,6 @@ class KeyframeViewer(tk.Canvas):
                 "Please finish selecting the corresponding point on the floorplan for the last feature before annotating a new keyframe feature."
             )
             return
-
         if self.current_key is None:
             return
 
@@ -165,7 +158,6 @@ class KeyframeViewer(tk.Canvas):
             'lm': matched_3d
         }
 
-        # Create the popup window for feature selection
         top = tk.Toplevel(self.master)
         top.title(f'Annotate {name}')
         top.geometry('1024x768')
@@ -173,15 +165,15 @@ class KeyframeViewer(tk.Canvas):
         top.rowconfigure(0, weight=1)
         top.columnconfigure(0, weight=1)
 
-        # Optimized feature selection canvas
-        cif = CanvasImageFeature(top, data=data, on_confirm=on_confirm_callback, on_highlight=on_highlight_callback)
+        cif = CanvasImageFeature(top, data=data, correspondences=correspondences,
+                                on_confirm=on_confirm_callback,
+                                on_highlight=on_highlight_callback)
         cif.grid(row=0, column=0, sticky='nswe')
 
 class CanvasImageFeature(CanvasImage):
     """
     Interactive canvas for feature selection on a keyframe image.
-    Handles visualization of keypoints, selection by mouse, hover effect,
-    confirmation, and highlight of existing correspondences.
+    Handles visualization, selection by mouse, highlight and confirmation.
     """
     def __init__(
         self,
@@ -193,22 +185,21 @@ class CanvasImageFeature(CanvasImage):
     ):
         """
         Args:
-            parent (tk.Toplevel or tk.Frame): Parent widget.
-            data (dict): Dictionary containing image path ('frame'), keypoints ('gp'), and 3D matches ('lm').
-            correspondences (list): Existing correspondence dicts.
-            on_confirm (callable): Called when selection is confirmed.
-            on_highlight (callable): Called on hover/selection highlight.
+            parent: tk.Toplevel or tk.Frame.
+            data: Dict with keys 'frame', 'gp' (keypoints), and 'lm' (matched 3D).
+            correspondences: Existing correspondences (for visual feedback).
+            on_confirm: Callback on confirmation.
+            on_highlight: Callback for highlight (hover/selection).
         """
         super().__init__(parent, data['frame'])
         self.parent = parent
         self.data = data
-        self.keypoints = data['gp']        # List of [x, y]
-        self.matched_3d = data['lm']       # List of [X, Y, Z] or None
+        self.keypoints = data['gp']
+        self.matched_3d = data['lm']
         self.on_confirm = on_confirm
         self.correspondences = correspondences or []
         self.on_highlight = on_highlight
 
-        # Visualization state
         self.radius = 7
         self.hover_idx = None
         self.selected_idx = None
@@ -217,14 +208,13 @@ class CanvasImageFeature(CanvasImage):
 
         self._draw_points()
 
-        # Bind mouse interaction events
         self.canvas.bind("<Button-1>", self._on_left_click, add="+")
         self.canvas.bind("<Button-3>", self._on_right_click, add="+")
         self.canvas.bind("<Motion>", self._on_motion, add="+")
 
     def _extract_existing_indices(self):
         """
-        Returns the set of keypoint indices for this frame that already have correspondences.
+        Return a set of keypoint indices for this frame that already have correspondences.
         """
         frame_name = os.path.basename(self.data['frame'])
         idx_set = set()
@@ -235,7 +225,7 @@ class CanvasImageFeature(CanvasImage):
 
     def _get_canvas_to_image(self):
         """
-        Returns the current (scale, x0, y0) so that: image_x = (canvas_x - x0) / scale
+        Returns the (scale, x0, y0) mapping canvas to image coordinates.
         """
         box = self.canvas.coords(self.container)
         if not box or len(box) < 2:
@@ -246,12 +236,11 @@ class CanvasImageFeature(CanvasImage):
 
     def _draw_points(self):
         """
-        Draws all keypoints with color and size determined by selection/highlight state.
+        Draw all keypoints, using color and size to indicate their selection/highlight state.
         """
         self.canvas.delete("feature_pt")
         scale, x0, y0 = self._get_canvas_to_image()
 
-        # Collect indices by priority
         group_indices = {
             'chosen': [],
             'selected': [],
@@ -272,7 +261,6 @@ class CanvasImageFeature(CanvasImage):
             else:
                 group_indices['normal'].append(i)
 
-        # Draw groups in increasing priority, so high-priority covers low-priority
         for group, color, radius_scale in [
             ('normal',   "lime",   1.0),
             ('existing', "red",    1.2),
@@ -292,7 +280,7 @@ class CanvasImageFeature(CanvasImage):
 
     def _on_motion(self, event):
         """
-        Update which keypoint is being hovered over for mouse-over highlight effect.
+        Update the hovered keypoint for mouse-over highlight.
         """
         cx, cy = self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)
         scale, x0, y0 = self._get_canvas_to_image()
@@ -312,7 +300,7 @@ class CanvasImageFeature(CanvasImage):
 
     def _on_left_click(self, event):
         """
-        Selects a keypoint as the current candidate (not yet confirmed).
+        Select a keypoint as the current candidate (not yet confirmed).
         """
         cx, cy = self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)
         scale, x0, y0 = self._get_canvas_to_image()
@@ -329,8 +317,8 @@ class CanvasImageFeature(CanvasImage):
 
     def _on_right_click(self, event):
         """
-        Confirms or cancels a keypoint selection.
-        If confirming, emits the correspondence and closes the window.
+        Confirm or cancel keypoint selection.
+        If confirming, emits the correspondence and closes the popup.
         """
         cx, cy = self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)
         scale, x0, y0 = self._get_canvas_to_image()
@@ -344,7 +332,7 @@ class CanvasImageFeature(CanvasImage):
                     self.selected_idx = None
                     self._draw_points()
                 else:
-                    # Confirm selection
+                    # Confirm selection and emit correspondence
                     self.chosen_idx = i
                     self.selected_idx = None
                     self._draw_points()

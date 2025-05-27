@@ -7,7 +7,9 @@
 #
 # Usage:
 #   bash run_aligner.sh
-#   (Modify PLACE, BUILDING, FLOOR, etc. below as needed)
+#   (Modify PLACE, BUILDING, FLOOR, etc. as needed)
+
+set -e  # Exit on error
 
 # ------------------- User-Configurable Variables -------------------
 
@@ -16,11 +18,17 @@ DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"     # Final output directory (floorplan
 
 PLACE="New_York_City"                        # Name of the place/city/campus
 BUILDING="LightHouse"                        # Name of the building
-FLOOR="6_floor"                              # Floor label/ID
+FLOOR="4_floor"                              # Floor label/ID
 
 # ------------------- Main Script Execution -------------------
 
-# Launch the Python alignment pipeline
+echo "---------------------------------------------"
+echo "Launching Floorplan-SLAM Aligner GUI:"
+echo "  Place   : $PLACE"
+echo "  Building: $BUILDING"
+echo "  Floor   : $FLOOR"
+echo "---------------------------------------------"
+
 python run_aligner.py \
     "$DATA_TEMP_ROOT" \
     "$DATA_FINAL_ROOT" \
@@ -28,8 +36,16 @@ python run_aligner.py \
     "$BUILDING" \
     "$FLOOR"
 
-# Note:
+status=$?
+if [ $status -ne 0 ]; then
+  echo "!! ERROR: Floorplan-SLAM alignment failed for $PLACE / $BUILDING / $FLOOR"
+  exit 1
+fi
+
+echo "✅ Floorplan-SLAM alignment completed. Transformation matrix saved."
+echo ""
+# Notes:
 # - The GUI will open for manual alignment.
 # - After you finish correspondence selection and alignment,
 #   the transformation matrix will be saved automatically to the configured output path.
-# - For batch processing, modify the variables above or loop over multiple floor/building names.
+# - For batch processing, loop over PLACE/BUILDING/FLOOR variables above as needed.

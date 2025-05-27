@@ -1,12 +1,12 @@
 import os
 import cv2
 import yaml
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 class UNavConfig:
     """
-    Unified configuration container for the entire UNav system.
-    Manages mapping, localization, and navigation module configurations in a centralized manner.
+    Unified configuration container for the UNav system.
+    Centralizes the management of mapping, localization, and navigation module configurations.
     """
     def __init__(
         self,
@@ -22,26 +22,24 @@ class UNavConfig:
         local_feature_model: str = "superpoint+lightglue"
     ) -> None:
         """
-        Initialize the unified configuration for the entire UNav system.
+        Initialize unified configuration for the entire UNav system.
 
         Args:
-            data_temp_root (str): Temporary data root directory.
-            data_final_root (str): Final data root directory.
-            places (List[str]): List of all supported places (campuses, cities).
-            buildings (List[str]): List of all supported buildings.
-            floors (List[str]): List of all supported floors.
-            mapping_place (str): The primary place used for mapping.
-            mapping_building (str): The primary building used for mapping.
-            mapping_floor (str): The primary floor used for mapping.
+            data_temp_root (str): Path for temporary/intermediate files.
+            data_final_root (str): Path for final output/results.
+            places (List[str]): Supported places/campuses.
+            buildings (List[str]): Supported buildings.
+            floors (List[str]): Supported floors.
+            mapping_place (str): Default mapping place.
+            mapping_building (str): Default mapping building.
+            mapping_floor (str): Default mapping floor.
             global_descriptor_model (str): Global descriptor model name.
             local_feature_model (str): Local feature extractor name.
         """
-        # Data directory for mapping pipeline (single mapping_place, mapping_building, mapping_floor)
         self.data_final_dir: str = os.path.join(
             data_final_root, mapping_place, mapping_building, mapping_floor
         )
-
-        # Prepare building_jsons for all places/buildings/floors for navigation
+        # Prepare floorplan JSON dictionary for navigation
         building_jsons: Dict[str, Dict[str, Dict[str, str]]] = {
             place: {
                 building: {
@@ -52,10 +50,8 @@ class UNavConfig:
             }
             for place in places
         }
-
         scale_file = os.path.join(data_final_root, "scale.json")
 
-        # Mapping config uses only the primary mapping place/building/floor
         self.mapping_config = UNavMappingConfig(
             data_temp_root=data_temp_root,
             data_final_root=data_final_root,
@@ -65,8 +61,6 @@ class UNavConfig:
             global_descriptor_model=global_descriptor_model,
             local_feature_model=local_feature_model
         )
-
-        # Placeholder for future localization module configuration
         self.localizer_config = UNavLocalizationConfig(
             data_final_root=data_final_root,
             places=places,
@@ -75,19 +69,17 @@ class UNavConfig:
             global_descriptor_model=global_descriptor_model,
             local_feature_model=local_feature_model
         )
-
-        # Navigation config uses all available places/buildings/floors and scale_file
         self.navigator_config = UNavNavigationConfig(
             building_jsons=building_jsons,
             scale_file=scale_file
         )
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """
-        Recursively export the entire configuration as a nested dictionary.
+        Export all configuration blocks as a nested dictionary.
 
         Returns:
-            dict: A nested dictionary representing all configuration blocks.
+            dict: A dictionary representing the full configuration.
         """
         result = {"mapping_config": self.mapping_config.to_dict()}
         if self.localizer_config is not None:
@@ -96,14 +88,17 @@ class UNavConfig:
             result["navigator_config"] = self.navigator_config.to_dict()
         return result
 
+# -------------------------------- Mapping Config --------------------------------
+
+
 class UNavMappingConfig:
     """
-    Centralized, unified configuration class for the UNav Mapping pipeline.
-    Supports flexible model selection with automatic model-specific configs.
-    All data, model, and output paths are managed in a unified way.
+    Configuration class for the UNav Mapping pipeline.
+    Supports flexible model selection and unifies data/model/output path management.
     """
 
-    # ----------- Supported Model/Extractor Dictionaries -----------
+    # ----------- Supported Models/Extractors -----------
+
     SUPPORTED_GLOBAL_MODELS: Dict[str, Dict[str, Any]] = {
         "MixVPR": {
             "ckpt_path": 'parameters/MixVPR/ckpts/resnet50_MixVPR_4096_channels(1024)_rows(4).ckpt',
@@ -145,7 +140,6 @@ class UNavMappingConfig:
             "model_resize": [224, 224]
         }
     }
-
     SUPPORTED_LOCAL_EXTRACTORS: Dict[str, Dict[str, Any]] = {
         "superpoint+lightglue": {
             "detector_name": "superpoint",
@@ -159,7 +153,6 @@ class UNavMappingConfig:
         }
     }
 
-    # ----------- Initialization -----------
     def __init__(
         self,
         data_temp_root: str = "/mnt/data/UNav-IO/temp",
@@ -173,44 +166,25 @@ class UNavMappingConfig:
         """
         Initialize the UNav mapping config.
         """
-        # Root paths for temp/final data
         self.data_temp_root: str = data_temp_root
         self.data_final_root: str = data_final_root
-
-        # Task-specific identifiers
         self.place: str = place
         self.building: str = building
         self.floor: str = floor
-
-        # Model selection
         self.global_descriptor_model: str = global_descriptor_model
         self.local_feature_model: str = local_feature_model
-
-        # Auto-generated subdirectories
         self.data_temp_dir: str = os.path.join(data_temp_root, place, building, floor)
         self.data_final_dir: str = os.path.join(data_final_root, place, building, floor)
-
-        # Config blocks
         self.slam_config: Dict[str, Any] = self._init_slam_config()
         self.aligner_config: Dict[str, Any] = self._init_aligner_config()
         self.slicer_config: Dict[str, Any] = self._init_slicing_config()
         self.feature_extraction_config: Dict[str, Any] = self._init_feature_extraction_config()
         self.matcher_config: Dict[str, Any] = self._init_matching_config()
         self.colmap_config: Dict[str, Any] = self._init_colmap_config()
-
-        # YAML config for SLAM
         self._generate_stella_vslam_yaml()
 
-    # --------------------- Model Expansion Hints ---------------------
-    # To add a new global descriptor or local extractor, simply update
-    # SUPPORTED_GLOBAL_MODELS or SUPPORTED_LOCAL_EXTRACTORS with the new entry.
-    # All downstream configs will pick it up automatically by name.
-
-    # --------------------- Utility Functions ---------------------
     def to_dict(self) -> Dict[str, Any]:
-        """
-        Export the config as a nested dictionary for serialization or logging.
-        """
+        """Export config as a nested dictionary."""
         return {
             "data_temp_root": self.data_temp_root,
             "data_final_root": self.data_final_root,
@@ -228,12 +202,11 @@ class UNavMappingConfig:
         }
 
     def __repr__(self) -> str:
-        """
-        Human-readable summary for debugging.
-        """
         return (f"<UNavMappingConfig {self.place}/{self.building}/{self.floor} "
                 f"G: {self.global_descriptor_model} L: {self.local_feature_model}>")
 
+    # ----------- Internal Init Functions -----------
+    
     # ----------- SLAM Config -----------
     def _init_slam_config(self) -> dict:
         """
@@ -355,18 +328,16 @@ class UNavMappingConfig:
     # ----------- YAML Generation (for SLAM) -----------
     def _generate_stella_vslam_yaml(self) -> None:
         """
-        Automatically generate equirectangular.yaml for stella_vslam_dense using video metadata.
+        Generate equirectangular.yaml for stella_vslam_dense based on video properties.
         """
         video_path = os.path.join(self.data_temp_root, self.place, self.building, self.floor, f"{self.floor}.mp4")
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             raise FileNotFoundError(f"Cannot open video file: {video_path}")
-
         fps = cap.get(cv2.CAP_PROP_FPS)
         cols = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         rows = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         cap.release()
-
         yaml_content = {
             'Camera': {
                 'name': 'Insta360',
@@ -423,20 +394,17 @@ class UNavMappingConfig:
                 'min_stereo_score': 0
             }
         }
-
         yaml_output_path = os.path.join(self.data_temp_root, "equirectangular.yaml")
         with open(yaml_output_path, 'w') as f:
             yaml.dump(yaml_content, f, sort_keys=False)
         print(f"[✓] YAML written to: {yaml_output_path}.")
 
+# -------------------------------- Localization Config --------------------------------
+
 class UNavLocalizationConfig:
     """
-    Centralized, unified configuration class for the UNav Mapping pipeline.
-    Supports flexible model selection with automatic model-specific configs.
-    All data, model, and output paths are managed in a unified way.
+    Unified configuration class for the UNav localization module.
     """
-
-    # ----------- Supported Model/Extractor Dictionaries -----------
     SUPPORTED_GLOBAL_MODELS: Dict[str, Dict[str, Any]] = {
         "MixVPR": {
             "ckpt_path": 'parameters/MixVPR/ckpts/resnet50_MixVPR_4096_channels(1024)_rows(4).ckpt',
@@ -478,7 +446,6 @@ class UNavLocalizationConfig:
             "model_resize": [224, 224]
         }
     }
-
     SUPPORTED_LOCAL_EXTRACTORS: Dict[str, Dict[str, Any]] = {
         "superpoint+lightglue": {
             "detector_name": "superpoint",
@@ -491,8 +458,6 @@ class UNavLocalizationConfig:
             }
         }
     }
-
-    # ----------- Initialization -----------
     def __init__(
         self,
         data_final_root: str = "/mnt/data/UNav-IO/final",
@@ -502,28 +467,23 @@ class UNavLocalizationConfig:
         global_descriptor_model: str = "DinoV2Salad",
         local_feature_model: str = "superpoint+lightglue"
     ) -> None:
-        self.data_final_root = data_final_root
-        self.places = places
-        self.buildings = buildings
-        self.floors = floors
-        self.global_descriptor_model = global_descriptor_model
-        self.local_feature_model = local_feature_model
+        self.data_final_root: str = data_final_root
+        self.places: List[str] = places
+        self.buildings: List[str] = buildings
+        self.floors: List[str] = floors
+        self.global_descriptor_model: str = global_descriptor_model
+        self.local_feature_model: str = local_feature_model
         self.feature_extraction_config: Dict[str, Any] = self._init_feature_extraction_config()
-        self.localization_config: Dict[str, Any] = self._init_localizor_config()
+        self.localization_config: Dict[str, Any] = self._init_localizer_config()
 
     def _init_feature_extraction_config(self) -> dict:
         """
-        Config for local and global feature extraction, including all model configs.
+        Config for feature extraction including model configs.
         """
         if self.global_descriptor_model not in self.SUPPORTED_GLOBAL_MODELS:
             raise ValueError(f"Unsupported global descriptor model: {self.global_descriptor_model}")
         if self.local_feature_model not in self.SUPPORTED_LOCAL_EXTRACTORS:
             raise ValueError(f"Unsupported local feature extractor: {self.local_feature_model}")
-
-        feature_dir = os.path.join(self.data_final_root, "features")
-
-        colmap_input_dir = os.path.join(self.data_final_root, "colmap_map")
-        
         return {
             "parameters_root": self.data_final_root,
             "local_feature_model": self.local_feature_model,
@@ -532,18 +492,39 @@ class UNavLocalizationConfig:
             },
             "global_descriptor_config": self.SUPPORTED_GLOBAL_MODELS[self.global_descriptor_model]
         }
-    
-    def _init_localizor_config(self) -> dict:
+
+    def _init_localizer_config(self) -> dict:
         """
-        Localization parameters
+        Config for localization hyperparameters.
         """
         return {
             "topk": 50,
             "min_keypoints": 10,
             "feature_score_threshold": 0.09
         }
-        
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "feature_extraction_config": self.feature_extraction_config,
+            "localization_config": self.localization_config,
+        }
+
+# -------------------------------- Navigation Config --------------------------------
+
 class UNavNavigationConfig:
-    def __init__(self, building_jsons: Dict[str, Dict[str, str]], scale_file: str = None):
-        self.building_jsons = building_jsons    # Dict[str, Dict[str, str]]
-        self.scale_file = scale_file            # str or None
+    """
+    Unified configuration class for the UNav navigation module.
+    """
+    def __init__(self, building_jsons: Dict[str, Dict[str, Dict[str, str]]], scale_file: Optional[str] = None):
+        """
+        Args:
+            building_jsons (Dict): Hierarchical structure {place: {building: {floor: boundary_json_path}}}
+            scale_file (str): Optional scale file for navigation (meters/pixel, etc.)
+        """
+        self.building_jsons: Dict[str, Dict[str, Dict[str, str]]] = building_jsons
+        self.scale_file: Optional[str] = scale_file
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "building_jsons": self.building_jsons,
+            "scale_file": self.scale_file
+        }

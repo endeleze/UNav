@@ -7,27 +7,36 @@ from torch.nn.functional import normalize
 from core.feature.Global_Extractors import GlobalExtractors
 from core.feature.local_extractor import Local_extractor
 from config import UNavMappingConfig
-from typing import Dict
-
+from typing import Dict, Any
 
 def extract_features_from_dir(config: UNavMappingConfig) -> None:
     """
-    Extract local & global features directly from input_perspective_dir.
-    Config must follow UNavMappingConfig.feature_extraction_config format,
-    which must provide all paths including:
-    - input_perspective_dir
-    - local_feat_save_path
-    - global_feat_save_path
+    Extract local and global features from all images in the specified directory.
+
+    The config object must include a 'feature_extraction_config' dictionary containing:
+        - input_perspective_dir: Directory containing images.
+        - local_feat_save_path: Path to HDF5 file for saving local features.
+        - global_feat_save_path: Path to HDF5 file for saving global descriptors.
+        - output_feature_dir: Directory for storing any extracted feature outputs.
+        - local_feature_model, local_extractor_config: Local feature extractor settings.
+        - global_descriptor_model, global_descriptor_config: Global descriptor model settings.
+        - parameters_root: Root directory for model weights/config.
+
+    Args:
+        config (UNavMappingConfig): Configuration object.
     """
     feat_cfg = config.feature_extraction_config
-    
-    # Ensure output dir exists (already defined in feat_cfg)
+
+    # Ensure output directory exists
     os.makedirs(feat_cfg["output_feature_dir"], exist_ok=True)
 
-    # Prepare image list
-    img_list = sorted([f for f in os.listdir(feat_cfg["input_perspective_dir"]) if f.endswith('.png')])
+    # List all PNG images in input directory
+    img_list = sorted([
+        f for f in os.listdir(feat_cfg["input_perspective_dir"])
+        if f.lower().endswith('.png')
+    ])
 
-    # Devices
+    # Device selection
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Load models
@@ -40,7 +49,7 @@ def extract_features_from_dir(config: UNavMappingConfig) -> None:
     )
     global_extractor.set_train(False)
 
-    # Extraction loop
+    # Open output HDF5 files for local/global features
     with h5py.File(feat_cfg["local_feat_save_path"], "a") as local_h5, \
          h5py.File(feat_cfg["global_feat_save_path"], "a") as global_h5:
 
@@ -52,7 +61,7 @@ def extract_features_from_dir(config: UNavMappingConfig) -> None:
                 continue
             img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            # Global Descriptor
+            # Extract and save global descriptor if not already present
             if img_name not in global_h5:
                 tensor_img = torch.from_numpy(img_rgb).permute(2, 0, 1).unsqueeze(0).float().to(device) / 255.0
                 feat = global_extractor(feat_cfg["global_descriptor_model"], tensor_img)
@@ -61,9 +70,9 @@ def extract_features_from_dir(config: UNavMappingConfig) -> None:
                 feat = normalize(feat, dim=-1).squeeze(0).detach().cpu().numpy()
                 global_h5.create_dataset(img_name, data=feat, compression="gzip")
 
-            # Local Feature
+            # Extract and save local features if not already present
             if img_name not in local_h5:
-                feat_dict = local_extractor(img_rgb)
+                feat_dict: Dict[str, Any] = local_extractor(img_rgb)
                 feat_grp = local_h5.create_group(img_name)
                 for k, v in feat_dict.items():
                     feat_grp.create_dataset(k, data=v, compression="gzip")

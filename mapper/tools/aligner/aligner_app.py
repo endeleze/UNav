@@ -1,49 +1,53 @@
+"""
+UNav Floorplan-SLAM Aligner GUI
+
+This module implements the main GUI for registering 3D SLAM keyframes with a 2D floorplan.
+Handles all user interactions, layout, visualization, and delegates alignment logic to AlignerLogic.
+"""
+
 import re
 import tkinter as tk
 from tkinter import ttk, messagebox
-
 import numpy as np
-
 from PIL import Image
+
 from mapper.tools.aligner.canvas_keyframe_feature import KeyframeViewer
 from mapper.tools.aligner.canvas_floorplan_point import FloorplanViewer
 from mapper.tools.aligner.aligner_logic import AlignerLogic
 from mapper.tools.aligner.computation import (
     project_point3d_to_floor2d, lists_equal, pose_dicts_equal
 )
-
 from mapper.tools.aligner.aligner_utils import natural_sort_key, compute_floorplan_display_size
 
 class AlignerApp(ttk.Frame):
     """
-    Main GUI application for aligning 3D keyframes and 2D floorplan.
-    Handles layout, event binding, and visualization.
-    All mapping and logic operations are delegated to AlignerLogic.
+    Main GUI application for 3D keyframe / 2D floorplan alignment.
+    Handles widget layout, events, and visual overlay.
+    Core logic and mapping is delegated to AlignerLogic.
     """
-    
     LEFT_PANEL_WIDTH = 280
     INFO_PANEL_WIDTH = 320
-    
-    def __init__(self, master: tk.Tk, logic: AlignerLogic, FLOORPLAN_MAX_SIZE=4096):
+
+    def __init__(self, master: tk.Tk, logic: AlignerLogic, floorplan_max_size: int = 4096) -> None:
         super().__init__(master)
         self.master = master
-        self.logic  = logic
+        self.logic = logic
 
         self._setup_window()
         self._initialize_state()
         self._build_gui()
         self._bind_events()
 
-    def _setup_window(self):
-        """Set window title and geometry based on floorplan image size."""
+    def _setup_window(self) -> None:
+        """Set the window title and geometry based on the floorplan image size."""
         self.master.title("UNav Aligner GUI")
         fp_w, fp_h = compute_floorplan_display_size(self.logic.floorplan_path)
         width = fp_w + self.LEFT_PANEL_WIDTH + self.INFO_PANEL_WIDTH
         height = max(600, fp_h + 80)
         self.master.geometry(f"{width}x{height}")
 
-    def _initialize_state(self):
-        """Initialize viewer state and overlay cache."""
+    def _initialize_state(self) -> None:
+        """Initialize state variables and caches."""
         self.fp_image = Image.open(self.logic.floorplan_path)
         self.fp_w, self.fp_h = self.fp_image.size
         self.temporary_highlight_point3d = None
@@ -58,9 +62,9 @@ class AlignerApp(ttk.Frame):
             "curr_cam_pose": None,
             "curr_observed_3d": None
         }
-        
-    def _build_gui(self):
-        """Construct all GUI panels and place them using grid layout."""
+
+    def _build_gui(self) -> None:
+        """Create all panels and widgets, arranging with grid layout."""
         self.grid(row=0, column=0, sticky="nsew")
         self._create_left_panel()
         self._create_main_panel()
@@ -68,23 +72,23 @@ class AlignerApp(ttk.Frame):
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-    def _bind_events(self):
-        """Bind window resize and initialize default view."""
+    def _bind_events(self) -> None:
+        """Bind window events and initialize view."""
         self.master.bind("<Configure>", self._on_root_resize)
         self.after(100, self._select_initial_keyframe)
         self.after(100, self.update_correspondence_table)
-    
-    # ---- Panel creation methods ----
-    
-    def _create_left_panel(self):
-        """Create the left panel for keyframe selection and control buttons."""
+
+    # ---- Panel creation ----
+
+    def _create_left_panel(self) -> None:
+        """Left panel: keyframe selector and save button."""
         self.left = ttk.Frame(self, width=self.LEFT_PANEL_WIDTH)
         self.left.grid(row=0, column=0, sticky="ns")
         self.left.grid_propagate(False)
         self._populate_keyframe_listbox()
         self._create_save_matrix_button()
 
-    def _populate_keyframe_listbox(self):
+    def _populate_keyframe_listbox(self) -> None:
         panel = ttk.Frame(self.left)
         panel.grid(row=0, column=0, sticky="nsew")
         panel.columnconfigure(0, weight=1)
@@ -101,15 +105,15 @@ class AlignerApp(ttk.Frame):
             self.keyframe_listbox.insert(tk.END, name.replace('.png', ''))
         self.keyframe_listbox.bind('<<ListboxSelect>>', self._on_keyframe_select)
 
-    def _create_save_matrix_button(self):
+    def _create_save_matrix_button(self) -> None:
         btn_panel = ttk.Frame(self.left)
         btn_panel.grid(row=2, column=0, sticky="ew", pady=(4, 0))
         btn_panel.columnconfigure(0, weight=1)
         ttk.Button(btn_panel, text="Save Matrix", command=self._on_save_matrix_clicked)\
             .grid(row=0, column=0, sticky="ew", pady=2)
 
-    def _create_info_panel(self):
-        """Create the right panel for displaying correspondence table."""
+    def _create_info_panel(self) -> None:
+        """Right panel: correspondence table."""
         self.info = ttk.Frame(self, width=self.INFO_PANEL_WIDTH)
         self.info.grid(row=0, column=2, sticky="ns")
         self.info.grid_propagate(False)
@@ -134,8 +138,8 @@ class AlignerApp(ttk.Frame):
         self.info_table.bind('<ButtonRelease-1>', self._on_corr_select)
         self.info_table.bind('<Button-3>', self._on_corr_right_click)
 
-    def _create_main_panel(self):
-        """Create the central panel for image and floorplan display."""
+    def _create_main_panel(self) -> None:
+        """Central panel: image/floorplan viewers."""
         self.main_panel = ttk.Frame(self)
         self.main_panel.grid(row=0, column=1, sticky="nsew")
         self.main_panel.rowconfigure(0, weight=1)
@@ -173,15 +177,15 @@ class AlignerApp(ttk.Frame):
 
     # ---- Window and resize handling ----
 
-    def _on_root_resize(self, event):
-        """Debounced resize event handler for the root window."""
+    def _on_root_resize(self, event: tk.Event) -> None:
+        """Debounced handler for root window resize."""
         if event.widget is not self.master:
             return
         if self._after_id:
             self.after_cancel(self._after_id)
         self._after_id = self.after(100, lambda: self._do_resize(event.width, event.height))
 
-    def _do_resize(self, win_w, win_h):
+    def _do_resize(self, win_w: int, win_h: int) -> None:
         """Re-layout all widgets based on new window size."""
         self._after_id = None
         w1, h1 = self.keyframe_viewer._orig_image.size
@@ -203,10 +207,10 @@ class AlignerApp(ttk.Frame):
         self.keyframe_viewer.display_keyframe(self.keyframe_viewer.current_key, master_size=(int(w_img), int(h1_scaled)))
         self.floorplan_viewer.render_floorplan()
 
-    # ---- Event handlers, highlight, table update ----
+    # ---- Correspondence and interaction ----
 
-    def _select_initial_keyframe(self):
-        """On startup, select last annotated keyframe or the first keyframe."""
+    def _select_initial_keyframe(self) -> None:
+        """Select last annotated or first keyframe on startup."""
         names = list(self.keyframe_listbox.get(0, tk.END))
         corr = self.logic.correspondences
         if corr:
@@ -219,7 +223,7 @@ class AlignerApp(ttk.Frame):
         self.keyframe_listbox.see(idx)
         self._on_keyframe_select(None)
 
-    def _on_keyframe_select(self, event):
+    def _on_keyframe_select(self, event) -> None:
         sel = self.keyframe_listbox.curselection()
         if not sel:
             return
@@ -228,34 +232,29 @@ class AlignerApp(ttk.Frame):
         self.current_keyframe = name + '.png'
         self.try_draw_scene_overlay()
 
-    def _on_feature_selected(self, correspondence):
-        """
-        Called when a keyframe feature is selected/confirmed.
-        """
+    def _on_feature_selected(self, correspondence) -> None:
+        """Triggered when a keyframe feature is selected/confirmed."""
         self.logic.add_or_update_correspondence(correspondence)
         self._on_keyframe_select(None)
         self.update_correspondence_table()
 
-    def _on_floorplan_confirm(self, correspondence):
-        """
-        Called when floorplan point is confirmed.
-        """
+    def _on_floorplan_confirm(self, correspondence) -> None:
+        """Triggered when a floorplan point is confirmed."""
         self.logic.update_last_floorplan(correspondence)
         w, h = self.floorplan_viewer.winfo_width(), self.floorplan_viewer.winfo_height()
         if w < 10 or h < 10:
-            # If not laid out yet, retry after a delay
             self.after(100, self.try_draw_scene_overlay)
             return
         try:
             matrix = self.logic.compute_transform()
             self.logic.save_to_matrix(matrix=matrix)
         except Exception as e:
-            print(f"Transform error: {str(e)}\n")
+            print(f"Transform error: {str(e)}")
         self.update_correspondence_table()
         self.try_draw_scene_overlay()
 
-    def _open_floorplan_with_highlight(self):
-        """Open the floorplan selector with the latest highlighted 3D point."""
+    def _open_floorplan_with_highlight(self) -> None:
+        """Open the floorplan selector with the currently highlighted 3D point."""
         correspondence = self.logic.correspondences[-1] if self.logic.correspondences else None
         point3d = self.persistent_highlight_point3d
         matrix = self._last_overlay_data.get("matrix")
@@ -268,8 +267,8 @@ class AlignerApp(ttk.Frame):
             highlight2d=highlight2d
         )
 
-    def _on_corr_select(self, event):
-        """Highlight the selected correspondence in all panels."""
+    def _on_corr_select(self, event) -> None:
+        """Highlight the selected correspondence in viewers."""
         sel = self.info_table.selection()
         if not sel:
             return
@@ -278,14 +277,9 @@ class AlignerApp(ttk.Frame):
             c for c in self.logic.correspondences
             if c.get("floor2d") is not None and c.get("point3d") is not None
         ][idx]
-        # Keyframe jump
         keyframe = corr['keyframe']
         keypoint_idx = corr['keypoint_idx']
-        
-        # Update current_keyframe for consistency!
         self.current_keyframe = keyframe
-    
-        # Switch keyframe and highlight feature
         self.keyframe_listbox.selection_clear(0, tk.END)
         kf_name = keyframe.replace('.png', '')
         all_names = list(self.keyframe_listbox.get(0, tk.END))
@@ -294,13 +288,11 @@ class AlignerApp(ttk.Frame):
             self.keyframe_listbox.selection_set(kf_idx)
             self.keyframe_listbox.see(kf_idx)
             self.keyframe_viewer.display_keyframe(kf_name)
-            self.keyframe_viewer._highlight_feature_idx = keypoint_idx  # Should be supported by the viewer
-
-        # Floorplan highlight
+            self.keyframe_viewer._highlight_feature_idx = keypoint_idx
         self.persistent_highlight_point3d = corr['point3d']
         self.try_draw_scene_overlay()
 
-    def _on_corr_right_click(self, event):
+    def _on_corr_right_click(self, event) -> None:
         """Show right-click menu for correspondence deletion."""
         rowid = self.info_table.identify_row(event.y)
         if not rowid:
@@ -310,8 +302,8 @@ class AlignerApp(ttk.Frame):
         menu.add_command(label="Delete", command=lambda: self.delete_correspondence(idx))
         menu.tk_popup(event.x_root, event.y_root)
 
-    def delete_correspondence(self, idx):
-        """Delete the selected correspondence and refresh all panels."""
+    def delete_correspondence(self, idx: int) -> None:
+        """Delete a correspondence and refresh the panels."""
         correspondences = [
             c for c in self.logic.correspondences
             if c.get("floor2d") is not None and c.get("point3d") is not None
@@ -322,8 +314,8 @@ class AlignerApp(ttk.Frame):
         self.update_correspondence_table()
         self.try_draw_scene_overlay()
 
-    def update_correspondence_table(self):
-        """Refresh the correspondence table, showing all floor2d <-> projected 3D pairs and their distances."""
+    def update_correspondence_table(self) -> None:
+        """Refresh the table showing floor2d <-> projected 3D and distances."""
         self.info_table.delete(*self.info_table.get_children())
         scale = getattr(self.logic, 'scale', 1.0)
         correspondences = [
@@ -334,7 +326,6 @@ class AlignerApp(ttk.Frame):
             return
 
         T = self.logic.transform_matrix
-
         for idx, c in enumerate(correspondences):
             pt2d = c.get('floor2d')
             pt3d_proj = project_point3d_to_floor2d(c['point3d'], T)
@@ -345,21 +336,14 @@ class AlignerApp(ttk.Frame):
                 floor2d_str = f"({pt2d[0]:.4f}, {pt2d[1]:.4f})"
                 dist = np.linalg.norm(np.array(pt2d) - np.array(pt3d_proj)) * scale
                 dist = f"{dist:.4f}"
-
             proj3d_str = f"({pt3d_proj[0]:.4f}, {pt3d_proj[1]:.4f})"
-
             self.info_table.insert(
                 '', 'end', iid=idx,
-                values=(
-                    idx,
-                    floor2d_str,
-                    proj3d_str,
-                    dist
-                )
+                values=(idx, floor2d_str, proj3d_str, dist)
             )
 
-    def _on_save_matrix_clicked(self):
-        """Button handler to save the current transformation matrix."""
+    def _on_save_matrix_clicked(self) -> None:
+        """Save the transformation matrix to disk."""
         if self.logic.transform_matrix is not None:
             try:
                 self.logic.save_to_matrix(matrix=self.logic.transform_matrix)
@@ -369,8 +353,8 @@ class AlignerApp(ttk.Frame):
         else:
             messagebox.showwarning("Not computed", "No transformation matrix computed yet.")
 
-    def _on_feature_highlight(self, point3d, temporary=True):
-        """Highlight a 3D point either temporarily or persistently."""
+    def _on_feature_highlight(self, point3d, temporary=True) -> None:
+        """Highlight a 3D point (temp or persistent)."""
         if temporary:
             self.temporary_highlight_point3d = point3d
         else:
@@ -379,17 +363,17 @@ class AlignerApp(ttk.Frame):
         self.try_draw_scene_overlay()
 
     def _get_highlight2d_for_selector(self):
-        """Return the 2D projected position of the current highlighted 3D point, if any."""
+        """Return the 2D projected location of the current highlighted 3D point."""
         point3d = self.persistent_highlight_point3d
         T = self._last_overlay_data["matrix"]
         if point3d is None or T is None:
             return None
         return project_point3d_to_floor2d(point3d, T)
 
-    def try_draw_scene_overlay(self):
+    def try_draw_scene_overlay(self) -> None:
         """
-        Attempt to compute and update the overlay on the floorplan viewer.
-        Caches the last transformation and only redraws if inputs change.
+        Compute and update the overlay on the floorplan viewer.
+        Caches last transformation, redraws only if inputs change.
         """
         current_key = getattr(self, "current_keyframe", None)
         points2D, points3D = self.logic.get_correspondence_points()
@@ -413,14 +397,12 @@ class AlignerApp(ttk.Frame):
             and self.temporary_highlight_point3d is None
             and self.persistent_highlight_point3d is None
         ):
-            # No changes, skip redraw
-            return
+            return  # No changes, skip redraw
 
         try:
             T = self.logic.compute_transform()
         except ValueError:
-            # Not enough valid pairs
-            return
+            return  # Not enough pairs
 
         self._last_overlay_data = {
             "points2D": list(points2D),

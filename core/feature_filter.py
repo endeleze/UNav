@@ -5,11 +5,15 @@ from core.third_party.torchSIFT.src.torchsift.ransac.ransac import ransac
 import math
 
 def is_cuda_oom(e: RuntimeError) -> bool:
-    """Check if the RuntimeError was caused by CUDA out-of-memory."""
+    """
+    Check if a RuntimeError was caused by CUDA out-of-memory.
+    """
     return isinstance(e, RuntimeError) and 'CUDA out of memory' in str(e)
 
-
-def safe_empty_cache():
+def safe_empty_cache() -> None:
+    """
+    Safely empty the CUDA cache, handling illegal access errors.
+    """
     try:
         torch.cuda.empty_cache()
     except RuntimeError as e:
@@ -17,19 +21,18 @@ def safe_empty_cache():
 
 def filter_keypoints(feat: dict, score_thresh: float) -> Tuple[dict, np.ndarray]:
     """
-    Filters keypoints based on score threshold.
+    Filters keypoints based on the provided score threshold.
 
     Args:
-        feat: Dict with keys ['descriptors', 'keypoints', 'scores', 'image_size']
-        score_thresh: Score filtering threshold (e.g., 0.2)
+        feat (dict): Feature dictionary with keys ['descriptors', 'keypoints', 'scores', 'image_size'].
+        score_thresh (float): Minimum score threshold for keeping keypoints.
 
     Returns:
-        filtered_feat: Same keys, with filtered tensors
-        keep_inds: Original indices of retained keypoints (numpy array)
+        filtered_feat (dict): Filtered feature dict.
+        keep_inds (np.ndarray): Indices of the retained keypoints.
     """
     mask = feat['scores'] >= score_thresh
     keep_inds = torch.where(mask)[0]
-
     filtered = {
         'descriptors': feat['descriptors'][:, mask],
         'keypoints': feat['keypoints'][mask],
@@ -40,8 +43,17 @@ def filter_keypoints(feat: dict, score_thresh: float) -> Tuple[dict, np.ndarray]
 
 def dynamic_score_threshold(n_kpts: int, base_thresh: float = 0.2, gamma: float = 0.005) -> float:
     """
-    Exponential growth of threshold from 0 at 50 keypoints
-    to base_thresh around 500 keypoints.
+    Calculate an adaptive keypoint score threshold based on the number of keypoints.
+    Returns 0 if n_kpts <= 50, and base_thresh if n_kpts >= 500.
+    Grows exponentially in between.
+
+    Args:
+        n_kpts (int): Number of keypoints.
+        base_thresh (float): Maximum threshold.
+        gamma (float): Growth rate.
+
+    Returns:
+        float: Adaptive threshold.
     """
     if n_kpts <= 50:
         return 0.0
@@ -64,26 +76,44 @@ def match_query_to_database(
 ) -> Tuple[List[str], List[np.ndarray], List[np.ndarray], List[np.ndarray]]:
     """
     Match a query image feature to a batch of database features using LightGlue.
-    Supports dynamic score filtering, batch splitting, and CPU fallback.
+    Applies dynamic score filtering, batch splitting, and CUDA OOM fallback.
+
+    Args:
+        q_feat (dict): Query feature dict.
+        db_feats_list (list): List of reference feature dicts.
+        db_names_list (list): List of reference image names.
+        local_feature_matcher: LightGlue/SuperGlue matcher model.
+        device: Torch device.
+        feature_score_threshold (float): Score threshold for keypoints.
+        threshold (int): Minimum number of matches to consider valid.
+        max_safe_product (int): Maximum product of batch size and keypoints for a safe batch.
+
+    Returns:
+        Tuple of:
+            - valid_db_names (List[str])
+            - pts0_idx_list (List[np.ndarray])
+            - pts1_idx_list (List[np.ndarray])
+            - scores_list (List[np.ndarray])
     """
-    
     def safe_match(
         q_feat: dict,
         db_feats: List[dict],
         db_names: List[str],
         device
-    ) -> Union[None, Tuple[List[str], List[np.ndarray], List[np.ndarray], List[np.ndarray]]]:
-        # Prepare output containers
+    ) -> Tuple[List[str], List[np.ndarray], List[np.ndarray], List[np.ndarray]]:
+        """
+        Runs local feature matching for a batch, with score filtering.
+        """
         pts0_idx_list, pts1_idx_list, scores_list, valid_db_names = [], [], [], []
 
-        # 1. Filter query features dynamically
+        # Filter query features dynamically
         n_q = q_feat['scores'].shape[0]
         q_thresh = dynamic_score_threshold(n_q, base_thresh=feature_score_threshold)
         q_filtered, query_keep = filter_keypoints(q_feat, q_thresh)
         if q_filtered['keypoints'].shape[0] == 0:
             return [], [], [], []
 
-        # 2. Collect valid DB features (filtered and non-empty)
+        # Collect valid DB features
         filtered_feats = []
         filtered_names = []
         keep_inds_list = []
@@ -104,7 +134,7 @@ def match_query_to_database(
         desc_dim = q_filtered['descriptors'].shape[0]
         max_k = max(f['descriptors'].shape[1] for f in filtered_feats)
 
-        # 3. Build LightGlue tensors
+        # Prepare tensors for batched matching
         desc0 = q_filtered['descriptors'].unsqueeze(0).expand(B, -1, -1).to(device)
         kpts0 = q_filtered['keypoints'].unsqueeze(0).expand(B, -1, -1).to(device)
         scores0 = q_filtered['scores'].unsqueeze(0).expand(B, -1).to(device)
@@ -133,27 +163,23 @@ def match_query_to_database(
             'image_size1': img1,
         }
 
-        # 4. Run matching
+        # Run matching
         with torch.inference_mode():
             out = local_feature_matcher(pred)
 
         matches = out['matches0'].cpu().numpy()
         m_scores = out['matching_scores0'].cpu().numpy()
 
-        # 5. Collect verified matches
+        # Collect matches above threshold
         for i, match in enumerate(matches):
             max_valid_idx = keep_inds_list[i].shape[0]
-
             ui, vi, si = [], [], []
             for u, v in enumerate(match):
                 if v != -1:
                     ui.append(u)
                     vi.append(v)
                     si.append(m_scores[i, u])
-
-            # Filter out any v that exceeds allowed index
             filtered = [(u, v, s) for u, v, s in zip(ui, vi, si) if v < max_valid_idx]
-
             if len(filtered) >= threshold:
                 u_valid, v_valid, s_valid = zip(*filtered)
                 pts0_idx_list.append(query_keep[list(u_valid)])
@@ -163,11 +189,11 @@ def match_query_to_database(
 
         return valid_db_names, pts0_idx_list, pts1_idx_list, scores_list
 
-    # Entry point: check empty input
+    # Early exit on empty input
     if not db_feats_list:
         return [], [], [], []
 
-    # Split large batches
+    # Batch splitting to avoid OOM
     B0 = len(db_feats_list)
     max_k0 = max(f['descriptors'].shape[1] for f in db_feats_list)
     if B0 * max_k0 > max_safe_product:
@@ -180,7 +206,7 @@ def match_query_to_database(
                                        feature_score_threshold, threshold, max_safe_product)
         return ([*out1[0], *out2[0]], [*out1[1], *out2[1]], [*out1[2], *out2[2]], [*out1[3], *out2[3]])
 
-    # Try GPU match, fallback to CPU if OOM
+    # Try GPU match, fallback to CPU if OOM and only one batch left
     try:
         return safe_match(q_feat, db_feats_list, db_names_list, device)
     except RuntimeError as e:
@@ -188,7 +214,6 @@ def match_query_to_database(
             safe_empty_cache()
             return safe_match(q_feat, db_feats_list, db_names_list, 'cpu')
         raise
-
 
 def ransac_filter(
     pts0_idx_list: List[np.ndarray],
@@ -199,8 +224,26 @@ def ransac_filter(
     device,
     threshold: int = 20,
 ) -> Tuple[np.ndarray, List[np.ndarray], List[np.ndarray], List[np.ndarray]]:
+    """
+    Batch RANSAC geometric verification for keypoint matches.
 
-    MAX_SAFE_TOTAL = 12_000_000  # batch * max_len^2 upper limit (tuned for 24GB GPU)
+    Args:
+        pts0_idx_list: List of keypoint indices for query images.
+        pts1_idx_list: List of keypoint indices for database images.
+        kpts0_list: List of query keypoints (N x 2).
+        kpts1_list: List of database keypoints (N x 2).
+        scores_list: List of match scores.
+        device: Torch device.
+        threshold: Minimum number of inliers for valid match.
+
+    Returns:
+        valid_flags: Boolean array of valid matches.
+        inliers0: List of inlier indices in query image.
+        inliers1: List of inlier indices in reference image.
+        inlier_scores: List of inlier scores.
+    """
+
+    MAX_SAFE_TOTAL = 12_000_000  # batch * max_len^2 upper limit
 
     batch_size = len(pts0_idx_list)
     valid_flags = np.zeros(batch_size, dtype=bool)
@@ -208,7 +251,10 @@ def ransac_filter(
     inliers1 = [None] * batch_size
     inlier_scores = [None] * batch_size
 
-    def run_single_ransac_on_cpu(idx: int):
+    def run_single_ransac_on_cpu(idx: int) -> None:
+        """
+        Runs RANSAC for a single pair on CPU and updates results in-place.
+        """
         pts0_np = kpts0_list[idx][pts0_idx_list[idx]]
         pts1_np = kpts1_list[idx][pts1_idx_list[idx]]
         if pts0_np.shape[0] < 4:
@@ -226,7 +272,10 @@ def ransac_filter(
             inliers1[idx] = pts1_idx_list[idx][diag_mask]
             inlier_scores[idx] = scores_list[idx][diag_mask]
 
-    def recursive_ransac(batch_indices: List[int]):
+    def recursive_ransac(batch_indices: List[int]) -> None:
+        """
+        Recursively runs batch RANSAC, splitting to avoid OOM.
+        """
         if not batch_indices:
             return
 
@@ -293,5 +342,3 @@ def ransac_filter(
 
     recursive_ransac(list(range(batch_size)))
     return valid_flags, inliers0, inliers1, inlier_scores
-
-

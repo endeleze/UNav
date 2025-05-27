@@ -19,14 +19,14 @@ class FloorplanViewer(tk.Canvas):
             **kwargs: Additional arguments for tk.Canvas.
         """
         super().__init__(parent, bg='gray', **kwargs)
-        self.floorplan_path  = floorplan_path
+        self.floorplan_path = floorplan_path
         self._orig_floorplan = Image.open(self.floorplan_path)
-        self._tk_floorplan   = None
+        self._tk_floorplan = None
         self.last_overlay_args = None
-        
+
         # Bind canvas resize and expose events to trigger redraw
         self.bind("<Configure>", self._on_resize)
-        self.bind("<Expose>",    self._on_resize)
+        self.bind("<Expose>", self._on_resize)
 
     def _on_resize(self, event):
         """
@@ -69,7 +69,7 @@ class FloorplanViewer(tk.Canvas):
         self.create_image(off_x, off_y, anchor='nw', image=self._tk_floorplan)
         if self.last_overlay_args is not None:
             self.draw_scene_overlay(**self.last_overlay_args)
-            
+
     def draw_scene_overlay(
         self,
         landmarks_3d,
@@ -85,7 +85,7 @@ class FloorplanViewer(tk.Canvas):
         style=None
     ):
         """
-        Draws overlays for 3D scene geometry, trajectories, and user correspondences.
+        Draw overlays for 3D scene geometry, camera trajectory, and user correspondences.
 
         Args:
             landmarks_3d: Array-like, all 3D landmarks to be projected and drawn.
@@ -103,22 +103,21 @@ class FloorplanViewer(tk.Canvas):
         # ---- Style configuration ----
         style = style or {}
         R_LANDMARK = style.get("landmark_radius", 1)
-        R_TRAJ     = style.get("traj_radius", 1)
-        R_OBS      = style.get("obs_radius", 2)
-        R_CAM      = style.get("cam_radius", 8)
+        R_TRAJ = style.get("traj_radius", 1)
+        R_OBS = style.get("obs_radius", 2)
+        R_CAM = style.get("cam_radius", 8)
         LINE_ARROW = style.get("arrow_linewidth", 6)
 
-        COLOR_LANDMARK   = style.get("landmark_color", "gray")
-        COLOR_TRAJ       = style.get("traj_color", "blue")
-        COLOR_OBS        = style.get("obs_color", "lime")
-        COLOR_CAM        = style.get("cam_color", "red")
-        COLOR_CAM_EDGE   = style.get("cam_edge_color", "red")
-        COLOR_ARROW      = style.get("arrow_color", "red")
-        COLOR_POINT2D    = style.get("point2d_color", "#FFA500")   # Orange
-        COLOR_POINT3D    = style.get("point3d_color", "#00CED1")   # Cyan
-        COLOR_PAIR_LINE  = style.get("pair_line_color", "#FF1493") # DeepPink
+        COLOR_LANDMARK = style.get("landmark_color", "gray")
+        COLOR_TRAJ = style.get("traj_color", "blue")
+        COLOR_OBS = style.get("obs_color", "lime")
+        COLOR_CAM = style.get("cam_color", "red")
+        COLOR_CAM_EDGE = style.get("cam_edge_color", "red")
+        COLOR_ARROW = style.get("arrow_color", "red")
+        COLOR_POINT2D = style.get("point2d_color", "#FFA500")   # Orange
+        COLOR_POINT3D = style.get("point3d_color", "#00CED1")   # Cyan
+        COLOR_PAIR_LINE = style.get("pair_line_color", "#FF1493") # DeepPink
 
-        # ---- Clear previous overlay ----
         self.delete('overlay')
         self.last_overlay_args = {
             'landmarks_3d': landmarks_3d,
@@ -129,14 +128,12 @@ class FloorplanViewer(tk.Canvas):
             'style': style
         }
 
-        # ---- Ensure floorplan is rendered ----
         if self._tk_floorplan is None:
             self.render_floorplan()
             if self._tk_floorplan is None:
                 print("Warning: _tk_floorplan is still None after render_floorplan.")
                 return
 
-        # ---- Coordinate system parameters ----
         w_orig, h_orig = self._orig_floorplan.size
         w_disp = self._tk_floorplan.width()
         h_disp = self._tk_floorplan.height()
@@ -144,7 +141,6 @@ class FloorplanViewer(tk.Canvas):
         off_x = (w_canvas - w_disp) // 2
         off_y = (h_canvas - h_disp) // 2
 
-        # ---- Helper: Project 3D points to 2D floorplan space ----
         def project_and_scale(pts_3d):
             pts = np.asarray(pts_3d)
             if pts.size == 0:
@@ -159,22 +155,19 @@ class FloorplanViewer(tk.Canvas):
             pts_2d[:, 1] = pts_2d[:, 1] * h_disp / h_orig + off_y
             return pts_2d
 
-        # ---- Helper: Draw highlight marker for a 3D point ----
         def highlight_on_floor(point3d, color, outline, radius_out=10, radius_in=4, width=4):
             pt2d = project_and_scale([point3d])[0]
             x, y = pt2d
-            # Outer circle
             self.create_oval(
                 x-radius_out, y-radius_out, x+radius_out, y+radius_out,
                 fill="", outline=outline, width=width, tags="overlay"
             )
-            # Inner circle
             self.create_oval(
                 x-radius_in, y-radius_in, x+radius_in, y+radius_in,
                 fill=color, outline=outline, width=2, tags="overlay"
             )
 
-        # 1. Landmarks (gray dots)
+        # 1. Draw all landmarks as small gray dots
         pts_2d = project_and_scale(landmarks_3d)
         for x, y in pts_2d:
             self.create_oval(
@@ -182,7 +175,7 @@ class FloorplanViewer(tk.Canvas):
                 fill=COLOR_LANDMARK, outline="", tags="overlay"
             )
 
-        # 2. Camera trajectory (blue dots)
+        # 2. Draw camera trajectory (blue dots)
         cam_pts_2d = project_and_scale(cam_traj_3d)
         for x, y in cam_pts_2d:
             self.create_oval(
@@ -190,7 +183,7 @@ class FloorplanViewer(tk.Canvas):
                 fill=COLOR_TRAJ, outline="", tags="overlay"
             )
 
-        # 3. Observed points (green)
+        # 3. Draw currently observed 3D points (lime)
         obs_2d = project_and_scale(curr_observed_3d)
         for x, y in obs_2d:
             self.create_oval(
@@ -198,7 +191,7 @@ class FloorplanViewer(tk.Canvas):
                 fill=COLOR_OBS, outline="", tags="overlay"
             )
 
-        # 4. Hand-labeled 2D points and projected 3D points with lines
+        # 4. Hand-labeled 2D points and projected 3D points with dashed lines
         if points2D is not None and points3D is not None and len(points2D) == len(points3D):
             pts2d = np.asarray(points2D, dtype=np.float32)
             if pts2d.shape[0] > 0:
@@ -209,23 +202,20 @@ class FloorplanViewer(tk.Canvas):
                 for i in range(len(pts2d_disp)):
                     x2d, y2d = pts2d_disp[i]
                     x3d, y3d = pts3d_proj[i]
-                    # Floor2D point (orange)
                     self.create_oval(
                         x2d-4, y2d-4, x2d+4, y2d+4,
                         fill=COLOR_POINT2D, outline="black", width=1, tags="overlay"
                     )
-                    # Projected 3D point (cyan)
                     self.create_oval(
                         x3d-4, y3d-4, x3d+4, y3d+4,
                         fill=COLOR_POINT3D, outline="black", width=1, tags="overlay"
                     )
-                    # Dashed correspondence line
                     self.create_line(
                         x2d, y2d, x3d, y3d,
                         fill=COLOR_PAIR_LINE, width=2, dash=(4,2), tags="overlay"
                     )
 
-        # 5. Camera position (red dot)
+        # 5. Draw camera center (red dot)
         cam_center_2d = project_and_scale([curr_cam_pose['center']])[0]
         self.create_oval(
             cam_center_2d[0]-R_CAM, cam_center_2d[1]-R_CAM,
@@ -233,7 +223,7 @@ class FloorplanViewer(tk.Canvas):
             fill=COLOR_CAM, outline=COLOR_CAM_EDGE, width=2, tags="overlay"
         )
 
-        # 6. Camera heading arrow (red arrow)
+        # 6. Draw camera heading arrow (red)
         if 'R' in curr_cam_pose:
             R = np.asarray(curr_cam_pose['R'])
             t = np.asarray(curr_cam_pose['center'])
@@ -327,26 +317,23 @@ class CanvasFloorplanPoint(CanvasImage):
         self.correspondence = correspondence
         self.on_confirm = on_confirm
         self.highlight2d = highlight2d
-        
-        # Visualization state
-        self.radius = 10
-        self.selected_point = None   # [x, y] in image coordinates
-        self.chosen_point = None     # [x, y] in image coordinates
 
-        # Initialize if correspondence already has 'floor2d'
+        self.radius = 10
+        self.selected_point = None
+        self.chosen_point = None
+
         if self.correspondence.get("floor2d") is not None:
             self.selected_point = list(self.correspondence["floor2d"])
             self.chosen_point = list(self.correspondence["floor2d"])
 
         self._draw_point()
 
-        # Bind mouse events; add="+" to keep parent bindings
         self.canvas.bind("<Button-1>", self._on_left_click, add="+")
         self.canvas.bind("<Button-3>", self._on_right_click, add="+")
 
     def _draw_point(self):
         """
-        Draws the current selected and/or chosen point on the floorplan.
+        Draw the current selected and/or chosen point on the floorplan.
         """
         self.canvas.delete("floor_pt")
         box = self.canvas.coords(self.container)
@@ -354,7 +341,7 @@ class CanvasFloorplanPoint(CanvasImage):
             return
         x0, y0 = box[0], box[1]
         scale = self.imscale
-            
+
         if self.selected_point:
             cx = self.selected_point[0] * scale + x0
             cy = self.selected_point[1] * scale + y0
@@ -404,7 +391,7 @@ class CanvasFloorplanPoint(CanvasImage):
 
     def _on_left_click(self, event):
         """
-        Handles left mouse click for selecting/toggling points.
+        Handle left mouse click for selecting/toggling points.
         - If chosen point exists and user clicks it: un-choose and select it.
         - If chosen point exists and click elsewhere: do nothing (canvas pan allowed).
         - If no chosen point:
@@ -414,39 +401,31 @@ class CanvasFloorplanPoint(CanvasImage):
         ix, iy = self._get_canvas_to_image(event)
         if self.chosen_point is not None:
             if self._point_hit(ix, iy):
-                # Clicked on the chosen point: un-choose and select it
                 self.selected_point = list(self.chosen_point)
                 self.chosen_point = None
                 self._draw_point()
-            # Else: do nothing (allow pan)
         else:
             if self.selected_point is not None and self._point_hit(ix, iy):
-                # Deselect
                 self.selected_point = None
                 self._draw_point()
             else:
-                # Select new point
                 self.selected_point = [ix, iy]
                 self._draw_point()
 
     def _on_right_click(self, event):
         """
-        Handles right click: confirm the selected point (set as chosen), or cancel it.
+        Handle right click: confirm the selected point (set as chosen), or cancel it.
         """
         ix, iy = self._get_canvas_to_image(event)
         if self.selected_point and self._point_hit(ix, iy):
-            # Right click on the selected point: toggle chosen state
             if self.chosen_point and self.chosen_point == self.selected_point:
-                # Cancel chosen point
                 self.chosen_point = None
                 self._draw_point()
                 self.correspondence["floor2d"] = None
             else:
-                # Confirm point and close
                 self.chosen_point = list(self.selected_point)
                 self._draw_point()
                 self.correspondence["floor2d"] = list(self.chosen_point)
                 if self.on_confirm:
                     self.on_confirm(self.correspondence)
                 self.parent.destroy()
-        # Else: right click elsewhere does nothing

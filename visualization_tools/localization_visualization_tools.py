@@ -4,6 +4,7 @@ import os
 import cv2
 import random
 from matplotlib.patches import ConnectionPatch
+from localizer.tools.pnp import transform_pose_to_floorplan
 
 # 可视化当前帧的局部特征点
 def visualize_local_keypoints_on_image(
@@ -62,6 +63,73 @@ def plot_topk_vpr_candidates(top_candidates, k=5, root_dir="/mnt/data/UNav-IO/te
         ax.set_title(f"{img_name}\nscore={score:.3f}")
         ax.axis('off')
     plt.suptitle(f"VPR Top-{k} Retrieval Results", fontsize=16)
+    plt.tight_layout()
+    plt.show()
+
+def visualize_candidates_on_floorplans_with_heading(
+    top_candidates,
+    localizer,
+    candidates_data,
+    k=10,
+    root_dir="/mnt/data/UNav-IO/data"
+):
+    """
+    Visualize top-K VPR candidates' camera positions and headings on each floorplan.
+    Each candidate is plotted with an auto-scaled heading arrow (like plot_camera_on_floorplan).
+    """
+    # 1. Group candidates by map_key
+    key_to_candidates = {}
+    for map_key, img_name, score in top_candidates[:k]:
+        key_to_candidates.setdefault(map_key, []).append((img_name, score))
+
+    n_keys = len(key_to_candidates)
+    fig = plt.figure(figsize=(8 * n_keys, 8))
+
+    for idx, (map_key, candidates) in enumerate(key_to_candidates.items()):
+        # Load floorplan and transform matrix
+        try:
+            place, building, floor = map_key.split("__")
+        except Exception as e:
+            print(f"[WARNING] Failed to split map_key: {map_key}, {e}")
+            continue
+        floorplan_path = os.path.join(root_dir, place, building, floor, "floorplan.png")
+        transform_matrix = localizer.transform_matrices.get(map_key)
+        if not os.path.exists(floorplan_path) or transform_matrix is None:
+            print(f"[WARNING] Skip {map_key} (missing floorplan or transform)")
+            continue
+        floorplan_img = cv2.imread(floorplan_path)
+        floorplan_img = cv2.cvtColor(floorplan_img, cv2.COLOR_BGR2RGB)
+        arrow_len = compute_auto_arrow_length(floorplan_img)
+
+        ax = fig.add_subplot(1, n_keys, idx + 1)
+        ax.imshow(floorplan_img)
+        ax.set_title(f"Floorplan: {map_key}")
+
+        for img_name, score in candidates:
+            candidate = candidates_data.get(img_name)
+            if candidate is None: continue
+            ref_frame = candidate['frame']
+            tvec = np.array(ref_frame['tvec'])
+            qvec = np.array(ref_frame['qvec'])
+
+            fp_pose = transform_pose_to_floorplan(qvec, tvec, transform_matrix)
+            xy = fp_pose["xy"]
+            ang = fp_pose["ang"]
+            if xy is None or ang is None:
+                continue
+
+            # Draw camera position
+            ax.plot(xy[0], xy[1], 'ro', markersize=7)
+            # Draw heading arrow
+            angle_rad = np.deg2rad(ang)
+            dx = arrow_len * np.cos(angle_rad)
+            dy = arrow_len * np.sin(angle_rad)
+            ax.arrow(
+                xy[0], xy[1], dx, dy,
+                head_width=arrow_len * 0.2, head_length=arrow_len * 0.17,
+                fc='red', ec='red', linewidth=2, alpha=0.7
+            )
+
     plt.tight_layout()
     plt.show()
     
@@ -250,8 +318,7 @@ def plot_camera_on_floorplan(
     else:
         own_fig = False
 
-    # Arrow length automatically set to 1/20 of floorplan height
-    arrow_len = floorplan_img.shape[0] / 20.0
+    arrow_len = compute_auto_arrow_length(floorplan_img)
 
     # Show floorplan (grayscale or color)
     if floorplan_img.ndim == 2:
@@ -274,3 +341,9 @@ def plot_camera_on_floorplan(
     if own_fig and show:
         plt.show()
     return ax
+
+def compute_auto_arrow_length(floorplan_img, ratio=0.05):
+    """Auto-compute an arrow length based on floorplan size."""
+    h, _ = floorplan_img.shape[:2]
+    length = int(ratio * h)
+    return length

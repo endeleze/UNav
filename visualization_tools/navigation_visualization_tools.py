@@ -20,10 +20,10 @@ def sample_random_pose(
     pf_map: Dict[str, PathFinder]
 ) -> Tuple[str, Tuple[float, float], float]:
     """
-    Randomly sample a valid pose (x, y, theta) on any floor (including building).
+    Randomly sample a valid pose (x, y, theta) on any floor, supporting place__building__floor keys.
 
     Args:
-        pf_map (Dict[str, PathFinder]): Mapping from "building__floor" to PathFinder instance.
+        pf_map (Dict[str, PathFinder]): Mapping from "place__building__floor" to PathFinder instance.
 
     Returns:
         Tuple: (floor_key, (x, y), theta)
@@ -139,7 +139,7 @@ def plot_points(
             ax.add_patch(Circle(pt, radius=15, color='red', alpha=0.9))
             ax.text(pt[0] + 20, pt[1], name, fontsize=8, color='darkred', va='center')
 
-def plot_pose(ax, x: float, y: float, theta: float) -> None:
+def plot_pose(ax, x: float, y: float, theta: float, arrow_len: float = 100.0) -> None:
     """
     Plot a pose as a point with heading arrow and angle annotation.
 
@@ -147,43 +147,50 @@ def plot_pose(ax, x: float, y: float, theta: float) -> None:
         ax: Matplotlib axis.
         x, y: Position coordinates.
         theta: Heading in radians.
+        arrow_len (float): Arrow length in pixels.
     """
-    dx = 100 * math.cos(theta)
-    dy = 100 * math.sin(theta)
+    dx = arrow_len * math.cos(theta)
+    dy = arrow_len * math.sin(theta)
     ax.plot(x, y, marker='o', markersize=10, color='black')
-    ax.arrow(x, y, dx, dy, head_width=50, head_length=50, fc='black', ec='black', linewidth=2)
-    ax.text(x + 60, y + 60, f"θ={math.degrees(theta):.1f}°", fontsize=8, color='black')
+    ax.arrow(x, y, dx, dy, head_width=arrow_len * 0.4, head_length=arrow_len * 0.25, fc='black', ec='black', linewidth=2)
+    ax.text(x + arrow_len * 0.6, y + arrow_len * 0.6, f"θ={math.degrees(theta):.1f}°", fontsize=8, color='black')
 
 def draw_graph_on_floorplans(
     G: nx.DiGraph,
     pf_map: Dict[str, PathFinder],
     data_root: str,
-    place: str,
     floor_keys: List[str],
     show_virt: bool = False,
-    figsize: Tuple[int, int] = (8, 14)
+    figsize: Tuple[int, int] = (8, 14),
+    show_node_id: bool = True
 ) -> None:
     """
     Draw navigation graphs over floorplans, including node group coloring and edge weights.
+    All labels and keys use the unified 'place__building__floor' format.
 
     Args:
-        G (nx.DiGraph): Navigation graph.
-        pf_map (Dict[str, PathFinder]): PathFinder objects per floor.
-        place (str): Root directory for floorplan backgrounds.
-        floor_keys (List[str]): Floors to visualize (e.g., ["Building__3_floor"]).
-        show_virt (bool): Whether to draw VIRT node edges.
-        figsize (Tuple[int, int]): Figure size per subplot.
+        G (nx.DiGraph): Unified navigation graph (may include multiple places).
+        pf_map (Dict[str, PathFinder]): PathFinder objects, keyed by 'place__building__floor'.
+        data_root (str): Root directory for all places' data.
+        floor_keys (List[str]): Floors to visualize (e.g., ["Place__Building__3_floor"]).
+        show_virt (bool): Whether to visualize edges from the virtual node (VIRT).
+        figsize (Tuple[int, int]): Figure size for each subplot.
+        show_node_id (bool): Whether to display node id in the label.
     """
     n = len(floor_keys)
-    fig, axes = plt.subplots(1, n, figsize=(figsize[0]*n, figsize[1]))
+    fig, axes = plt.subplots(1, n, figsize=(figsize[0] * n, figsize[1]))
     if n == 1:
         axes = [axes]
 
     for ax, floor_key in zip(axes, floor_keys):
-        bld, flr = floor_key.split("__", 1)
+        try:
+            place, bld, flr = floor_key.split("__")
+        except ValueError:
+            print(f"[WARNING] Unexpected floor_key format: {floor_key}")
+            continue
         pf = pf_map[floor_key]
 
-        # Load floorplan background image if available
+        # Load floorplan image
         bg_path = os.path.join(data_root, place, bld, flr, "floorplan.png")
         if os.path.exists(bg_path):
             bg = mpimg.imread(bg_path)
@@ -199,7 +206,10 @@ def draw_graph_on_floorplans(
         for nid, pt in pf.nodes.items():
             full_key = f"{floor_key}__{nid}"
             node_pos[full_key] = pt
-            labels[full_key] = pf.labels.get(nid, "")
+            if show_node_id:
+                labels[full_key] = f"{place}/{bld}/{flr}/{nid}"
+            else:
+                labels[full_key] = f"{place}/{bld}/{flr}"
             gid = pf.group_ids.get(nid, -1)
             if gid == 4:
                 color_map[full_key] = "orange"
@@ -211,7 +221,7 @@ def draw_graph_on_floorplans(
                 color_map[full_key] = "blue"
                 sizes[full_key] = 100
 
-        # Optionally, include VIRT node for special navigation scenarios
+        # Show VIRT node if required
         if show_virt:
             for u, v, d in G.edges(data=True):
                 if u == "VIRT" and v.startswith(floor_key):
@@ -253,7 +263,7 @@ def draw_graph_on_floorplans(
             )
 
         nx.draw_networkx_labels(subG, pos=node_pos, labels=labels, font_size=7, ax=ax)
-        ax.set_title(f"{bld}/{flr}")
+        ax.set_title(f"{place}/{bld}/{flr}")
         ax.axis("off")
 
     plt.tight_layout()
@@ -264,13 +274,14 @@ def plot_navigation_path(
     result: dict,
     start_pose: Tuple[float, float, float],
     data_root: str,
+    start_place: str,
     start_building: str,
     start_floor: str,
+    dest_place: str,
     dest_building: str,
     dest_floor: str,
     selected_pt: Tuple[float, float],
-    selected_name: str,
-    place: str
+    selected_name: str
 ) -> None:
     """
     Plot the computed navigation path over the corresponding floorplan backgrounds.
@@ -279,15 +290,14 @@ def plot_navigation_path(
         nav: Navigation object, must contain .pf_map, .scales.
         result (dict): Navigation result containing "path_coords" and "path_keys".
         start_pose (Tuple[float, float, float]): (x, y, theta) of start.
-        start_building (str): Building of start.
-        start_floor (str): Floor of start.
-        dest_building (str): Building of destination.
-        dest_floor (str): Floor of destination.
+        data_root (str): Dataset root for floorplan backgrounds.
+        start_place, start_building, start_floor: Start keys.
+        dest_place, dest_building, dest_floor: Destination keys.
         selected_pt (Tuple[float, float]): Coordinates of selected destination.
         selected_name (str): Name of the selected destination.
-        place (str): Dataset root for background images.
     """
     if 'error' in result:
+        print("[ERROR] No path found.")
         return
 
     x, y, theta = start_pose
@@ -299,25 +309,32 @@ def plot_navigation_path(
     red_inter_pts = set()
     path_keys = result["path_keys"]
     for i in range(len(path_keys) - 1):
-        k0, k1 = path_keys[i], path_keys[i + 1]
-        if k0.count("__") == 2 and k1.count("__") == 2:
-            b0, f0, nid_str = k0.split("__")
-            b1, f1, _ = k1.split("__")
-            if (b0, f0) != (b1, f1):
-                pf = nav.pf_map[f"{b0}__{f0}"]
-                nid = int(nid_str)
-                if pf.group_ids.get(nid) == 4:
-                    red_inter_pts.add(pf.nodes[nid])
+        node_parts_0 = path_keys[i].split("__")
+        node_parts_1 = path_keys[i + 1].split("__")
+        if len(node_parts_0) < 4 or len(node_parts_1) < 4:
+            continue
+        place0, bld0, fl0, nid_str0 = node_parts_0
+        place1, bld1, fl1, _ = node_parts_1
+        if (place0, bld0, fl0) != (place1, bld1, fl1):
+            pf = nav.pf_map[f"{place0}__{bld0}__{fl0}"]
+            nid = int(nid_str0)
+            if pf.group_ids.get(nid) == 4:
+                red_inter_pts.add(pf.nodes[nid])
 
     fig, axes = plt.subplots(1, len(floors), figsize=(8 * len(floors), 14))
     if len(floors) == 1:
         axes = [axes]
 
     for ax, floor_key in zip(axes, floors):
-        bld, flr = floor_key.split("__", 1)
-        bg = mpimg.imread(os.path.join(data_root, place, bld, flr, "floorplan.png"))
-        ax.imshow(bg, extent=[0, bg.shape[1], bg.shape[0], 0])
-
+        try:
+            place_name, bld, flr = floor_key.split("__")
+        except ValueError:
+            print(f"[WARNING] Unexpected floor_key format: {floor_key}")
+            continue
+        bg_path = os.path.join(data_root, place_name, bld, flr, "floorplan.png")
+        if os.path.exists(bg_path):
+            bg = mpimg.imread(bg_path)
+            ax.imshow(bg, extent=[0, bg.shape[1], bg.shape[0], 0])
         pf = nav.pf_map[floor_key]
         w, o, d = pf.walkable_polygons, pf.obstacle_polygons, [poly for poly, _ in pf.door_polygons]
         plot_floorplan(ax, w, o, d)
@@ -335,12 +352,14 @@ def plot_navigation_path(
                             markeredgecolor=color, markerfacecolor='none')
 
         # Mark the selected destination
-        if floor_key == f"{dest_building}__{dest_floor}":
+        dest_key = f"{dest_place}__{dest_building}__{dest_floor}"
+        if floor_key == dest_key:
             ax.plot(*selected_pt, marker='*', markersize=16, color='red')
             ax.text(*selected_pt, selected_name, fontsize=12, color='red')
 
         # Plot the start pose
-        if floor_key == f"{start_building}__{start_floor}":
+        start_key = f"{start_place}__{start_building}__{start_floor}"
+        if floor_key == start_key:
             plot_pose(ax, x, y, theta)
 
         # Draw path
@@ -354,7 +373,7 @@ def plot_navigation_path(
         ) * nav.scales.get(floor_key, 1.0)
         print(f"[INFO] Floor {flr} segment length: {length_m:.2f} m")
 
-        ax.set_title(f"{bld}/{flr}")
+        ax.set_title(f"{place_name}/{bld}/{flr}")
         ax.axis("off")
 
     plt.tight_layout()

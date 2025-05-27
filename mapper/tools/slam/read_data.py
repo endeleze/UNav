@@ -1,13 +1,13 @@
 import os
 import re
 import sqlite3
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Tuple
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
 def get_keyframe_image_list(keyframe_dir: str) -> List[str]:
     """
-    Returns sorted list of files matching image\\d+\\.png in keyframe_dir.
+    Returns a naturally sorted list of image files matching 'image\\d+\\.png' in the specified directory.
     """
     files = os.listdir(keyframe_dir)
     imgs = [f for f in files if re.match(r'image\d+\.png$', f)]
@@ -18,9 +18,15 @@ def read_keyframe_trajectory(
     keyframe_names: List[str]
 ) -> Dict[str, np.ndarray]:
     """
-    Reads trajectory file lines of format:
-        frame_id tx ty tz qx qy qz qw
-    (camera→world quaternion), and returns dict of 4×4 camera→world poses.
+    Reads camera trajectory from a text file, mapping keyframe names to camera→world pose matrices.
+
+    Args:
+        trajectory_file (str): Path to trajectory file, lines formatted as:
+            frame_id tx ty tz qx qy qz qw
+        keyframe_names (List[str]): Ordered list of keyframe image names.
+
+    Returns:
+        Dict[str, np.ndarray]: image name → 4x4 camera-to-world pose matrix.
     """
     poses: Dict[str, np.ndarray] = {}
     with open(trajectory_file, 'r') as f:
@@ -32,12 +38,12 @@ def read_keyframe_trajectory(
     for idx, line in enumerate(lines[:len(keyframe_names)]):
         tok = line.split()
         if len(tok) != 8:
-            print(f"[Warning] skipping invalid trajectory line: {line}")
+            print(f"[Warning] Skipping invalid trajectory line: {line}")
             continue
         _, tx, ty, tz, qx, qy, qz, qw = tok
         t = np.array([float(tx), float(ty), float(tz)])
-        quat = np.array([float(qx), float(qy), float(qz), float(qw)])  # x,y,z,w
-        R_mat = R.from_quat(quat).as_matrix()  # camera→world
+        quat = np.array([float(qx), float(qy), float(qz), float(qw)])  # [x, y, z, w]
+        R_mat = R.from_quat(quat).as_matrix()  # scipy expects [x, y, z, w]
         pose = np.eye(4)
         pose[:3, :3] = R_mat
         pose[:3, 3] = t
@@ -48,35 +54,35 @@ def extract_kf_pose_and_matches(
     db_path: str, keyframe_dir: str
 ) -> Dict[str, Dict[str, Any]]:
     """
-    Extract keyframe poses, undistorted 2D keypoints, and associated 3D landmarks
-    from a stella_vslam_dense SQLite .msg map file, and map them using image file names.
+    Extracts keyframe poses, 2D keypoints, and associated 3D landmark matches from a stella_vslam_dense SQLite map.
 
     Args:
-        db_path (str): Path to the SQLite .msg map file.
-        keyframe_dir (str): Path to the directory containing keyframe image files (e.g., image0.png, image1.png, ...).
+        db_path (str): Path to the .msg SQLite map.
+        keyframe_dir (str): Directory with keyframe images.
 
     Returns:
-        Dict[str, Dict[str, Any]]: A dictionary mapping image name to:
-            - 'kf_id' (int): Keyframe ID
-            - 'T_cw' (np.ndarray): 4x4 camera-to-world transformation matrix
-            - 'keypoints' (np.ndarray): (N, 2) 2D keypoints
-            - 'matched_3d' (List[Optional[np.ndarray]]): 3D matches
+        Dict[str, Dict]: image name → {
+            'kf_id': int,
+            'T_cw': 4x4 np.ndarray,
+            'keypoints': np.ndarray (N,2),
+            'matched_3d': List[Optional[np.ndarray]],
+        }
     """
-    # Step 0: Get list of keyframe image filenames indexed by keyframe ID
+    # 1. Index keyframe images by their expected frame id (sequential)
     img_name_list = get_keyframe_image_list(keyframe_dir)
     id_to_imgname = {i: name for i, name in enumerate(img_name_list)}
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    # Step 1: Load all landmarks
+    # 2. Load all landmarks (id → position)
     cursor.execute("SELECT id, pos_w FROM landmarks")
     landmarks = {
         lm_id: np.frombuffer(pos_blob, dtype=np.float64)
         for lm_id, pos_blob in cursor.fetchall()
     }
 
-    # Step 2: Load associations (keypoint idx → lm_id)
+    # 3. Load associations: keypoint index → landmark id
     cursor.execute("SELECT id, lm_ids FROM associations")
     assoc_map = {}
     for kf_id, lm_blob in cursor.fetchall():
@@ -85,7 +91,7 @@ def extract_kf_pose_and_matches(
             if lm_id >= 0:
                 assoc_map[(kf_id, i)] = lm_id
 
-    # Step 3: Load keyframe pose and keypoints
+    # 4. Load keyframe pose and keypoints
     cursor.execute("SELECT id, pose_cw, undist_keypts, n_keypts FROM keyframes")
     kf_data = {}
     for kf_id, pose_blob, keypt_blob, n_keypts in cursor.fetchall():
@@ -93,20 +99,17 @@ def extract_kf_pose_and_matches(
             T_cw = np.frombuffer(pose_blob, dtype=np.float64).reshape(4, 4)
         except ValueError:
             T_cw = np.frombuffer(pose_blob, dtype=np.float32).reshape(4, 4)
-        
         try:
             raw = np.frombuffer(keypt_blob, dtype=np.float32)
-            keypoints = raw.reshape(n_keypts, 7)[:, :2]
+            keypoints = raw.reshape(n_keypts, 7)[:, :2]  # Only x, y coordinates
         except Exception:
             raise ValueError(
                 f"❌ Failed to parse keypoints in kf {kf_id}: expected float32 × 7, got {len(keypt_blob)} bytes."
             )
-
         matched_3d = [
             landmarks.get(assoc_map.get((kf_id, i))) for i in range(n_keypts)
         ]
-
-        # Match kf_id with image name
+        # Assign image name to kf_id (if exists)
         img_name = id_to_imgname.get(kf_id)
         if img_name is not None:
             kf_data[img_name] = {
@@ -124,26 +127,25 @@ def filter_kf_data(
     kf_data: Dict[str, Dict[str, Any]]
 ) -> Dict[str, Dict[str, Any]]:
     """
-    Filter raw keyframe data to only keep keypoints that have a matched 3D landmark.
+    Filters keyframe data, retaining only keypoints that have an associated 3D landmark.
 
     Args:
-        kf_data: 
-            Original dict mapping image file name (e.g. "000123_05.png") to entries:
+        kf_data (dict): image name → raw entry with fields:
             {
                 "kf_id": int,
                 "T_cw": np.ndarray (4x4),
-                "keypoints": np.ndarray of shape (N,2),
-                "matched_3d": List[Optional[List[float]]]  # length N
+                "keypoints": np.ndarray (N,2),
+                "matched_3d": List[Optional[np.ndarray]]
             }
 
     Returns:
-        filtered: Dict mapping the same image names to a simplified entry:
-        {
-            "kf_id": int,
-            "T_cw": np.ndarray (4x4),
-            "gp": List[Tuple[float, float]],    # only 2D points with a match
-            "lm": List[List[float]]             # corresponding 3D landmarks
-        }
+        Dict[str, Dict]: image name → filtered entry:
+            {
+                "kf_id": int,
+                "T_cw": np.ndarray (4x4),
+                "keypoints": List[Tuple[float, float]],
+                "matched_3d": List[List[float]]
+            }
         Only images with at least one valid match are included.
     """
     filtered: Dict[str, Dict[str, Any]] = {}
@@ -153,19 +155,19 @@ def filter_kf_data(
         gp: List[Tuple[float, float]] = []
         lm: List[List[float]] = []
 
-        # collect only those keypoints with a non-None 3D match
+        # Keep only points with a valid 3D match
         for pt, m in zip(keypoints, matched_3d):
             if m is not None:
                 x, y = float(pt[0]), float(pt[1])
                 gp.append((x, y))
-                lm.append(m)
+                lm.append(m.tolist() if isinstance(m, np.ndarray) else m)
 
         if gp:
             filtered[name] = {
                 "kf_id":   entry["kf_id"],
                 "T_cw":    entry["T_cw"],
-                "keypoints":      gp,
-                "matched_3d":      lm,
+                "keypoints": gp,
+                "matched_3d": lm,
             }
 
     return filtered
