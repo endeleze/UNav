@@ -35,7 +35,7 @@ setup(
         "scikit-image>=0.19.2",
         "scikit-learn>=1.2.1",
         "scipy>=1.10.0",
-        "Shapely>=2.1.1",
+        "Shapely>=2.0.7",
         "timm>=0.4.12",
         "torch>=2.4.0",
         "torchvision>=0.19.0",
