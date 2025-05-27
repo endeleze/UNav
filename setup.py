@@ -24,7 +24,7 @@ setup(
         "open3d>=0.19.0",
         "opencv-python>=4.10.0.84",
         # "opencv-python-headless>=4.10.0.84", # Uncomment if you only use headless version
-        "Pillow>=11.2.1",
+        "Pillow>=10.0.0",
         "poselib>=2.0.0",
         "POT>=0.9.0",
         "prettytable>=3.16.0",
