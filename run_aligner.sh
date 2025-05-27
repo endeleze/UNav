@@ -16,7 +16,7 @@ DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"     # Final output directory (floorplan
 
 PLACE="New_York_City"                        # Name of the place/city/campus
 BUILDING="LightHouse"                        # Name of the building
-FLOOR="4_floor"                              # Floor label/ID
+FLOOR="6_floor"                              # Floor label/ID
 
 # ------------------- Main Script Execution -------------------
 

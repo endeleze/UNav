@@ -6,7 +6,7 @@ FEATURE_MODEL="DinoV2Salad"
 
 PLACES=("New_York_City")
 BUILDINGS=("LightHouse")
-FLOORS=("4_floor" "6_floor" "3_floor")
+FLOORS=("6_floor")
 
 for place in "${PLACES[@]}"; do
   for building in "${BUILDINGS[@]}"; do

@@ -67,7 +67,14 @@ class UNavConfig:
         )
 
         # Placeholder for future localization module configuration
-        self.localizer_config = None
+        self.localizer_config = UNavLocalizationConfig(
+            data_final_root=data_final_root,
+            places=places,
+            buildings=buildings,
+            floors=floors,
+            global_descriptor_model=global_descriptor_model,
+            local_feature_model=local_feature_model
+        )
 
         # Navigation config uses all available places/buildings/floors and scale_file
         self.navigator_config = UNavNavigationConfig(
@@ -296,7 +303,7 @@ class UNavMappingConfig:
         feature_dir = os.path.join(self.data_final_dir, "features")
 
         return {
-            "parameters_root": self.data_temp_root,
+            "parameters_root": self.data_final_root,
             "input_perspective_dir": os.path.join(self.data_temp_dir, "perspectives"),
             "output_feature_dir": feature_dir,
             "local_feature_model": self.local_feature_model,
@@ -423,8 +430,119 @@ class UNavMappingConfig:
         print(f"[✓] YAML written to: {yaml_output_path}.")
 
 class UNavLocalizationConfig:
-    pass
+    """
+    Centralized, unified configuration class for the UNav Mapping pipeline.
+    Supports flexible model selection with automatic model-specific configs.
+    All data, model, and output paths are managed in a unified way.
+    """
 
+    # ----------- Supported Model/Extractor Dictionaries -----------
+    SUPPORTED_GLOBAL_MODELS: Dict[str, Dict[str, Any]] = {
+        "MixVPR": {
+            "ckpt_path": 'parameters/MixVPR/ckpts/resnet50_MixVPR_4096_channels(1024)_rows(4).ckpt',
+            "pt_img_size": [320, 320],
+            "cuda": True,
+            "model_resize": [320, 320]
+        },
+        "CricaVPR": {
+            "ckpt_path": 'parameters/CricaVPR/ckpts/CricaVPR_clean.pth',
+            "cuda": True,
+            "model_resize": [320, 320]
+        },
+        "DinoV2Salad": {
+            "ckpt_path": 'parameters/DinoV2Salad/ckpts/dino_salad.ckpt',
+            "max_image_size": 1024,
+            "num_channels": 384,
+            "cuda": True,
+            "model_resize": [224, 224]
+        },
+        "NetVlad": {
+            "ckpt_path": 'parameters/netvlad/paper/checkpoints',
+            "arch": 'vgg16',
+            "num_clusters": 64,
+            "pooling": 'netvlad',
+            "vladv2": False,
+            "nocuda": False,
+            "model_resize": [480, 640]
+        },
+        "AnyLoc": {
+            "model_type": 'dinov2_vitg14',
+            "ckpt_path": 'None',
+            "max_image_size": 1024,
+            "desc_layer": 31,
+            "desc_facet": 'value',
+            "num_clusters": 32,
+            "domain": 'indoor',
+            "cache_dir": 'parameters/AnyLoc/demo/cache',
+            "cuda": True,
+            "model_resize": [224, 224]
+        }
+    }
+
+    SUPPORTED_LOCAL_EXTRACTORS: Dict[str, Dict[str, Any]] = {
+        "superpoint+lightglue": {
+            "detector_name": "superpoint",
+            "nms_radius": 4,
+            "max_keypoints": 4096,
+            "matcher_name": "lightglue",
+            "match_conf": {
+                "width_confidence": -1,
+                "depth_confidence": -1
+            }
+        }
+    }
+
+    # ----------- Initialization -----------
+    def __init__(
+        self,
+        data_final_root: str = "/mnt/data/UNav-IO/final",
+        places: List[str] = ["New_York_City"],
+        buildings: List[str] = ["LightHouse"],
+        floors: List[str] = ["3_floor", "4_floor", "6_floor"],
+        global_descriptor_model: str = "DinoV2Salad",
+        local_feature_model: str = "superpoint+lightglue"
+    ) -> None:
+        self.data_final_root = data_final_root
+        self.places = places
+        self.buildings = buildings
+        self.floors = floors
+        self.global_descriptor_model = global_descriptor_model
+        self.local_feature_model = local_feature_model
+        self.feature_extraction_config: Dict[str, Any] = self._init_feature_extraction_config()
+        self.localization_config: Dict[str, Any] = self._init_localizor_config()
+
+    def _init_feature_extraction_config(self) -> dict:
+        """
+        Config for local and global feature extraction, including all model configs.
+        """
+        if self.global_descriptor_model not in self.SUPPORTED_GLOBAL_MODELS:
+            raise ValueError(f"Unsupported global descriptor model: {self.global_descriptor_model}")
+        if self.local_feature_model not in self.SUPPORTED_LOCAL_EXTRACTORS:
+            raise ValueError(f"Unsupported local feature extractor: {self.local_feature_model}")
+
+        feature_dir = os.path.join(self.data_final_root, "features")
+
+        colmap_input_dir = os.path.join(self.data_final_root, "colmap_map")
+        
+        return {
+            "parameters_root": self.data_final_root,
+            "local_feature_model": self.local_feature_model,
+            "local_extractor_config": {
+                self.local_feature_model: self.SUPPORTED_LOCAL_EXTRACTORS[self.local_feature_model]
+            },
+            "global_descriptor_config": self.SUPPORTED_GLOBAL_MODELS[self.global_descriptor_model]
+        }
+    
+    def _init_localizor_config(self) -> dict:
+        """
+        Localization parameters
+        """
+        return {
+            "topk": 50,
+            "min_keypoints": 10,
+            "feature_score_threshold": 0.09
+        }
+        
 class UNavNavigationConfig:
     def __init__(self, building_jsons: Dict[str, Dict[str, str]], scale_file: str = None):
         self.building_jsons = building_jsons    # Dict[str, Dict[str, str]]

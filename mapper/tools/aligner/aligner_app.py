@@ -318,6 +318,7 @@ class AlignerApp(ttk.Frame):
         ]
         target = correspondences[idx]
         self.logic.correspondences.remove(target)
+        self.logic.save_correspondences()
         self.update_correspondence_table()
         self.try_draw_scene_overlay()
 
