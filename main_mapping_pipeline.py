@@ -15,7 +15,7 @@ Typical usage:
 """
 
 import sys
-from config import UNavConfig
+from unav.config import UNavConfig
 
 def parse_args() -> tuple:
     """
@@ -66,23 +66,23 @@ def main():
     # ------------------- Pipeline Section -------------------
 
     # 1. Run dense SLAM mapping
-    from mapper.slam_runner import run_stella_vslam_dense
+    from unav.mapper.slam_runner import run_stella_vslam_dense
     run_stella_vslam_dense(mapper_config)
 
     # 2. Slice equirectangular video into perspective images
-    from mapper.slicer import slice_perspectives
+    from unav.mapper.slicer import slice_perspectives
     slicer_result = slice_perspectives(mapper_config)
 
     # 3. Extract local and global features
-    from mapper.feature_extractor import extract_features_from_dir
+    from unav.mapper.feature_extractor import extract_features_from_dir
     extract_features_from_dir(mapper_config)
 
     # 4. Match features and filter with geometric verification
-    from mapper.matcher import generate_and_stream_colmap
+    from unav.mapper.matcher import generate_and_stream_colmap
     verified_pairs = generate_and_stream_colmap(mapper_config)
 
     # 5. Triangulate 3D structure using COLMAP with known poses
-    from mapper.colmap_triangulator import run_colmap_triangulation
+    from unav.mapper.colmap_triangulator import run_colmap_triangulation
     run_colmap_triangulation(mapper_config)
 
 if __name__ == "__main__":

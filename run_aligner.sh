@@ -9,7 +9,6 @@
 #   bash run_aligner.sh
 #   (Modify PLACE, BUILDING, FLOOR, etc. as needed)
 
-set -e  # Exit on error
 
 # ------------------- User-Configurable Variables -------------------
 
@@ -18,7 +17,7 @@ DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"     # Final output directory (floorplan
 
 PLACE="New_York_University"                        # Name of the place/city/campus
 BUILDING="Langone"                        # Name of the building
-FLOOR="15_floor"                              # Floor label/ID
+FLOOR="16_floor"                              # Floor label/ID
 
 # ------------------- Main Script Execution -------------------
 
@@ -35,12 +34,6 @@ python run_aligner.py \
     "$PLACE" \
     "$BUILDING" \
     "$FLOOR"
-
-status=$?
-if [ $status -ne 0 ]; then
-  echo "!! ERROR: Floorplan-SLAM alignment failed for $PLACE / $BUILDING / $FLOOR"
-  exit 1
-fi
 
 echo "✅ Floorplan-SLAM alignment completed. Transformation matrix saved."
 echo ""

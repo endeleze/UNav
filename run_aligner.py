@@ -15,7 +15,7 @@ This step is required for precise metric localization and reliable path planning
 """
 
 import sys
-from config import UNavConfig
+from unav.config import UNavConfig
 
 def parse_args() -> tuple:
     """
@@ -58,7 +58,7 @@ def main():
     mapper_config = config.mapping_config
 
     # Launch the Aligner GUI for manual correspondence and transformation computation
-    from mapper.aligner import run_aligner_gui
+    from unav.mapper.aligner import run_aligner_gui
     run_aligner_gui(mapper_config)
 
     # Output: The transformation matrix will be saved for use in localization/navigation
