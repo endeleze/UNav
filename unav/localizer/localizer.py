@@ -1,6 +1,5 @@
 import os
-import cv2
-import h5py
+import time
 import torch
 import numpy as np
 
@@ -78,10 +77,10 @@ class UNavLocalizer:
         Load all COLMAP models, features, and transformation matrices for all regions.
         Should be called after __init__, or whenever maps are updated.
         """
-        for place in self.config.places:
-            for building in self.config.buildings:
-                for floor in self.config.floors:
-                    key = f"{place}__{building}__{floor}"
+        for place, bld_dict in self.config.places.items():
+            for building, floors in bld_dict.items():
+                for floor in floors:
+                    key = (place, building, floor)
                     feature_dir = os.path.join(self.config.data_final_root, place, building, floor, "features")
                     self.global_feat_paths[key] = os.path.join(feature_dir, f"global_features_{self.config.global_descriptor_model}.h5")
                     self.local_feat_paths[key] = os.path.join(feature_dir, "local_features.h5")
@@ -241,8 +240,12 @@ class UNavLocalizer:
             top_k (int, optional): Number of VPR candidates (default from config)
 
         Returns:
-            Dict with keys: success, qvec, tvec, floorplan_pose, results, etc.
+            Dict with keys: success, qvec, tvec, floorplan_pose, results, top_candidates,
+            n_frames, refinement_queue, best_map_key, localization_time, etc.
         """
+        # Start total localization timer
+        start_time = time.time()
+        
         # 1. Extract features from query
         global_feat, local_feat_dict = self.extract_query_features(query_img)
 
@@ -285,6 +288,7 @@ class UNavLocalizer:
         updated_queue[best_map_key] = refine_result["new_refinement_queue"]
 
         # 8. Output structured result
+        localization_time = time.time() - start_time
         output = {
             "success": refine_result["success"],
             "qvec": refine_result.get("qvec"),
@@ -294,7 +298,8 @@ class UNavLocalizer:
             "top_candidates": top_candidates,
             "n_frames": refine_result.get("n_frames"),
             "refinement_queue": updated_queue,
-            "best_map_key": best_map_key
+            "best_map_key": best_map_key,
+            "localization_time": localization_time
         }
         if not refine_result["success"]:
             output["reason"] = refine_result.get("reason", "Pose refinement failed.")

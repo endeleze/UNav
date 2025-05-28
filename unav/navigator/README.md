@@ -30,15 +30,15 @@ from config import UNavConfig
 from navigator.navigator import FacilityNavigator
 
 DATA_FINAL_ROOT = "/mnt/data/UNav-IO/data"
-PLACES = ["New_York_City"]
-BUILDINGS = ["LightHouse"]
-FLOORS = ["3_floor", "4_floor", "6_floor"]
+PLACES = {
+    "New_York_City": {
+        "LightHouse": ["3_floor", "4_floor", "6_floor"]
+    }
+}
 
 config = UNavConfig(
     data_final_root=DATA_FINAL_ROOT,
-    places=PLACES,
-    buildings=BUILDINGS,
-    floors=FLOORS
+    places=PLACES
 )
 nav = FacilityNavigator(config.navigator_config)
 ```
@@ -51,7 +51,7 @@ nav = FacilityNavigator(config.navigator_config)
 target_place = "New_York_City"
 target_building = "LightHouse"
 target_floor = "6_floor"
-target_key = f"{target_place}__{target_building}__{target_floor}"
+target_key = (target_place, target_building, target_floor)
 
 # Select a destination index (e.g., the 4th destination)
 selected_index = 3
@@ -69,7 +69,7 @@ You can use the output of the UNav localizer as the starting pose, or for demo/t
 from navigator.tools.pose_sampling import sample_random_pose
 
 key, (x, y), theta = sample_random_pose(nav.pf_map)
-start_place, start_building, start_floor = key.split("__")
+start_place, start_building, start_floor = key
 ```
 
 ---

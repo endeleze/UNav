@@ -44,12 +44,12 @@ Below is the **essential workflow to construct a metrically registered, navigati
    Run the mapping pipeline to generate 3D map, slice images, extract features, perform matching, and triangulate points.
 
    ```sh
-   python main_mapping_pipeline.py <data_temp_root> <data_final_root> <feature_model> <place> <building> <floor>
+   python -m unav.run_mapping <data_temp_root> <data_final_root> <feature_model> <place> <building> <floor>
    ```
 
    Example:
    ```sh
-   python main_mapping_pipeline.py /mnt/data/UNav-IO/temp /mnt/data/UNav-IO/data DinoV2Salad New_York_City LightHouse 4_floor
+   python -m unav.run_mapping /mnt/data/UNav-IO/temp /mnt/data/UNav-IO/data DinoV2Salad New_York_City LightHouse 4_floor
    ```
 
 2. **Align 3D Map to Floorplan (Required):**  
@@ -57,7 +57,7 @@ Below is the **essential workflow to construct a metrically registered, navigati
    Launch the alignment GUI to register SLAM map coordinates to the architectural floorplan.
 
    ```sh
-   python mapper/aligner.py <data_temp_root> <data_final_root> <place> <building> <floor>
+   python -m unav.aligner <data_temp_root> <data_final_root> <place> <building> <floor>
    ```
 
    You must repeat this for every mapped floor/building.

@@ -5,8 +5,8 @@ import cv2
 import random
 from matplotlib.patches import ConnectionPatch
 from unav.localizer.tools.pnp import transform_pose_to_floorplan
+from typing import Tuple, List, Dict, Any
 
-# 可视化当前帧的局部特征点
 def visualize_local_keypoints_on_image(
     img_rgb: np.ndarray,
     keypoints: np.ndarray,
@@ -27,29 +27,29 @@ def visualize_local_keypoints_on_image(
     scatter = ax.scatter(keypoints[:, 0], keypoints[:, 1], s=8, c=scores, cmap='jet', alpha=0.85)
     ax.set_title(f'Local Keypoints Visualization\nTotal: {len(keypoints)}')
     ax.axis('off')
-    # 美化colorbar，仅与图片同高
     cbar = plt.colorbar(scatter, ax=ax, fraction=0.04, pad=0.03)
     cbar.set_label('Keypoint Score')
     plt.tight_layout()
     plt.show()
 
-def plot_topk_vpr_candidates(top_candidates, k=5, root_dir="/mnt/data/UNav-IO/temp"):
+def plot_topk_vpr_candidates(
+    top_candidates: List[Tuple[Tuple[str, str, str], str, float]],
+    k: int = 5,
+    root_dir: str = "/mnt/data/UNav-IO/temp"
+):
     """
-    Visualize top-K VPR candidates side by side from /mnt/data/UNav-IO/temp/.../perspectives.
+    Visualize top-K VPR candidates side by side from perspectives folder.
+
     Args:
-        top_candidates: List of (map_key, img_name, score)
-        k: Number of candidates to display
-        root_dir: Base directory containing perspectives folders
+        top_candidates: List of (map_key_tuple, img_name, score).
+        k: Number of candidates to display.
+        root_dir: Base directory containing perspectives folders.
     """
     fig, axes = plt.subplots(1, k, figsize=(4*k, 4))
     for i in range(k):
         map_key, img_name, score = top_candidates[i]
-        # 解析 map_key
-        try:
-            place, building, floor = map_key.split("__")
-        except Exception as e:
-            print(f"[ERROR] map_key parsing failed for {map_key}: {e}")
-            continue
+        # map_key is a tuple: (place, building, floor)
+        place, building, floor = map_key
         img_dir = os.path.join(root_dir, place, building, floor, "perspectives")
         img_path = os.path.join(img_dir, img_name)
         img = cv2.imread(img_path)
@@ -67,18 +67,25 @@ def plot_topk_vpr_candidates(top_candidates, k=5, root_dir="/mnt/data/UNav-IO/te
     plt.show()
 
 def visualize_candidates_on_floorplans_with_heading(
-    top_candidates,
-    localizer,
-    candidates_data,
-    k=10,
-    root_dir="/mnt/data/UNav-IO/data"
+    top_candidates: List[Tuple[Tuple[str, str, str], str, float]],
+    localizer: Any,
+    candidates_data: Dict[str, Dict[str, Any]],
+    k: int = 10,
+    root_dir: str = "/mnt/data/UNav-IO/data"
 ):
     """
     Visualize top-K VPR candidates' camera positions and headings on each floorplan.
-    Each candidate is plotted with an auto-scaled heading arrow (like plot_camera_on_floorplan).
+    Each candidate is plotted with an auto-scaled heading arrow.
+
+    Args:
+        top_candidates: List of (map_key_tuple, img_name, score).
+        localizer: Object that provides transform_matrices as a dict with tuple keys.
+        candidates_data: Candidate metadata, keyed by image name.
+        k: Number of candidates to visualize.
+        root_dir: Base directory for floorplans.
     """
-    # 1. Group candidates by map_key
-    key_to_candidates = {}
+    # 1. Group candidates by map_key (tuple)
+    key_to_candidates: Dict[Tuple[str, str, str], List[Tuple[str, float]]] = {}
     for map_key, img_name, score in top_candidates[:k]:
         key_to_candidates.setdefault(map_key, []).append((img_name, score))
 
@@ -86,12 +93,7 @@ def visualize_candidates_on_floorplans_with_heading(
     fig = plt.figure(figsize=(8 * n_keys, 8))
 
     for idx, (map_key, candidates) in enumerate(key_to_candidates.items()):
-        # Load floorplan and transform matrix
-        try:
-            place, building, floor = map_key.split("__")
-        except Exception as e:
-            print(f"[WARNING] Failed to split map_key: {map_key}, {e}")
-            continue
+        place, building, floor = map_key
         floorplan_path = os.path.join(root_dir, place, building, floor, "floorplan.png")
         transform_matrix = localizer.transform_matrices.get(map_key)
         if not os.path.exists(floorplan_path) or transform_matrix is None:
@@ -118,9 +120,8 @@ def visualize_candidates_on_floorplans_with_heading(
             if xy is None or ang is None:
                 continue
 
-            # Draw camera position
+            # Draw camera position and heading arrow
             ax.plot(xy[0], xy[1], 'ro', markersize=7)
-            # Draw heading arrow
             angle_rad = np.deg2rad(ang)
             dx = arrow_len * np.cos(angle_rad)
             dy = arrow_len * np.sin(angle_rad)
@@ -129,15 +130,14 @@ def visualize_candidates_on_floorplans_with_heading(
                 head_width=arrow_len * 0.2, head_length=arrow_len * 0.17,
                 fc='red', ec='red', linewidth=2, alpha=0.7
             )
-
     plt.tight_layout()
     plt.show()
-    
+
 def visualize_query_candidate_matches(
     query_img: np.ndarray,
     query_kpts: np.ndarray,
     results: list,
-    all_candidates_kpts: dict,
+    all_candidates_kpts: Dict[Tuple[str, str, str], Dict[str, np.ndarray]],
     root_dir: str,
     num_pairs: int = 3,
     figsize: tuple = (12, 5)
@@ -150,8 +150,8 @@ def visualize_query_candidate_matches(
         query_img (np.ndarray): Query image (H, W, 3).
         query_kpts (np.ndarray): Query keypoints [N, 2].
         results (list): Each dict with 'map_key', 'ref_image_name', 'query_idxs', 'ref_idxs'.
-        all_candidates_kpts (dict): {map_key: {ref_image_name: keypoints [N,2]}}
-        root_dir (str): UNav-IO data root, e.g. "/mnt/data/UNav-IO/temp"
+        all_candidates_kpts (dict): {map_key (tuple): {ref_image_name: keypoints [N,2]}}
+        root_dir (str): UNav-IO data root.
         num_pairs (int): Number of pairs to visualize.
         figsize (tuple): Figure size per pair.
     """
@@ -163,17 +163,13 @@ def visualize_query_candidate_matches(
 
     for idx in indices:
         res = results[idx]
-        map_key = res['map_key']
+        map_key = res['map_key']  # tuple
         ref_name = res['ref_image_name']
         query_idxs = np.array(res['query_idxs'])
         ref_idxs = np.array(res['ref_idxs'])
 
-        # Parse map_key to get path
-        try:
-            place, building, floor = map_key.split("__")
-        except Exception as e:
-            print(f"[ERROR] map_key parsing failed for {map_key}: {e}")
-            continue
+        # Get image path using tuple key
+        place, building, floor = map_key
         img_dir = os.path.join(root_dir, place, building, floor, "perspectives")
         ref_img_path = os.path.join(img_dir, ref_name)
         ref_img = cv2.imread(ref_img_path)
@@ -215,16 +211,16 @@ def visualize_query_candidate_matches(
         title = f"Query ↔ {ref_name} ({map_key})\nMatches: {len(q_pts)}"
         plt.title(title)
         plt.show()
-        
+
 def visualize_2d_3d_crosslink(
-    query_img,
-    image_points,
-    object_points,
-    transform_matrix,
-    floorplan_img,
-    num_matches=10,
-    crop_size=300,
-    random_seed=42
+    query_img: np.ndarray,
+    image_points: np.ndarray,
+    object_points: np.ndarray,
+    transform_matrix: np.ndarray,
+    floorplan_img: np.ndarray,
+    num_matches: int = 10,
+    crop_size: int = 300,
+    random_seed: int = 42
 ):
     """
     Visualize 2D-3D matches with lines connecting query image and floorplan projections.
@@ -246,28 +242,28 @@ def visualize_2d_3d_crosslink(
     if N > num_matches:
         idx = random.sample(list(idx), num_matches)
     # Project 3D→2D
-    obj3d_h = np.concatenate([object_points[idx], np.ones((len(idx),1))], axis=1)
+    obj3d_h = np.concatenate([object_points[idx], np.ones((len(idx), 1))], axis=1)
     proj_2d = (transform_matrix @ obj3d_h.T).T
 
     # Crop floorplan
     cx, cy = np.mean(proj_2d, axis=0)
     h, w = floorplan_img.shape[:2]
-    x1 = int(max(cx - crop_size//2, 0))
-    y1 = int(max(cy - crop_size//2, 0))
-    x2 = int(min(cx + crop_size//2, w))
-    y2 = int(min(cy + crop_size//2, h))
+    x1 = int(max(cx - crop_size // 2, 0))
+    y1 = int(max(cy - crop_size // 2, 0))
+    x2 = int(min(cx + crop_size // 2, w))
+    y2 = int(min(cy + crop_size // 2, h))
     floorplan_crop = floorplan_img[y1:y2, x1:x2]
     proj_2d_crop = proj_2d - np.array([x1, y1])
     # Resize query img to same width
     qh, qw = query_img.shape[:2]
-    scale = (x2-x1) / qw
-    img_resized = cv2.resize(query_img, (x2-x1, int(qh*scale)))
+    scale = (x2 - x1) / qw
+    img_resized = cv2.resize(query_img, (x2 - x1, int(qh * scale)))
     img_points_scaled = image_points[idx] * scale
     # Setup figure
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,6))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
     # Query image
     ax1.imshow(img_resized)
-    ax1.scatter(img_points_scaled[:,0], img_points_scaled[:,1], c='r', s=40, label='2D Points')
+    ax1.scatter(img_points_scaled[:, 0], img_points_scaled[:, 1], c='r', s=40, label='2D Points')
     ax1.set_title('Query Image')
     ax1.axis('off')
     # Floorplan crop
@@ -275,20 +271,20 @@ def visualize_2d_3d_crosslink(
         ax2.imshow(floorplan_crop, cmap='gray')
     else:
         ax2.imshow(floorplan_crop)
-    ax2.scatter(proj_2d_crop[:,0], proj_2d_crop[:,1], c='b', s=40, label='Projected 3D→2D')
+    ax2.scatter(proj_2d_crop[:, 0], proj_2d_crop[:, 1], c='b', s=40, label='Projected 3D→2D')
     ax2.set_title('Projected 3D Points on Floorplan (Local Crop)')
     ax2.axis('off')
     # Draw cross-connections
     for i in range(len(idx)):
         con = ConnectionPatch(
-            xyA=(proj_2d_crop[i,0], proj_2d_crop[i,1]), coordsA=ax2.transData,
-            xyB=(img_points_scaled[i,0], img_points_scaled[i,1]), coordsB=ax1.transData,
+            xyA=(proj_2d_crop[i, 0], proj_2d_crop[i, 1]), coordsA=ax2.transData,
+            xyB=(img_points_scaled[i, 0], img_points_scaled[i, 1]), coordsB=ax1.transData,
             color="green", lw=1.6, alpha=0.8
         )
         fig.add_artist(con)
     plt.tight_layout()
     plt.show()
-    
+
 def plot_camera_on_floorplan(
     floorplan_img: np.ndarray,
     cam_xy: tuple,
@@ -343,7 +339,7 @@ def plot_camera_on_floorplan(
     return ax
 
 def compute_auto_arrow_length(floorplan_img, ratio=0.05):
-    """Auto-compute an arrow length based on floorplan size."""
+    """Automatically compute an arrow length based on floorplan image size."""
     h, _ = floorplan_img.shape[:2]
     length = int(ratio * h)
     return length

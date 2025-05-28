@@ -16,9 +16,9 @@ DATA_TEMP_ROOT="/mnt/data/UNav-IO/temp"
 DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"
 FEATURE_MODEL="DinoV2Salad"
 
-PLACES=("Mahidol_University")
-BUILDINGS=("Ratchasuda")
-FLOORS=("1_floor")
+PLACES=("New_York_University")
+BUILDINGS=("Langone")
+FLOORS=("15_floor" "16_floor")
 
 # ------------- Main Batch Processing Loop ------------
 
@@ -28,7 +28,7 @@ for place in "${PLACES[@]}"; do
       echo "---------------------------------------------"
       echo ">> Mapping: Place=$place | Building=$building | Floor=$floor"
       echo "---------------------------------------------"
-      python main_mapping_pipeline.py \
+      python -m unav.run_mapping \
         "$DATA_TEMP_ROOT" \
         "$DATA_FINAL_ROOT" \
         "$FEATURE_MODEL" \

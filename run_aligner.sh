@@ -17,7 +17,7 @@ DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"     # Final output directory (floorplan
 
 PLACE="New_York_University"                        # Name of the place/city/campus
 BUILDING="Langone"                        # Name of the building
-FLOOR="16_floor"                              # Floor label/ID
+FLOOR="17_floor"                              # Floor label/ID
 
 # ------------------- Main Script Execution -------------------
 
@@ -28,7 +28,7 @@ echo "  Building: $BUILDING"
 echo "  Floor   : $FLOOR"
 echo "---------------------------------------------"
 
-python run_aligner.py \
+python -m unav.run_aligner \
     "$DATA_TEMP_ROOT" \
     "$DATA_FINAL_ROOT" \
     "$PLACE" \

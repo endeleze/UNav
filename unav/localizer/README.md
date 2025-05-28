@@ -51,17 +51,19 @@ from localizer.localizer import UNavLocalizer
 
 # ---- 1. Build config and initialize ----
 DATA_FINAL_ROOT = "/mnt/data/UNav-IO/data"
-PLACES    = ["New_York_City"]
-BUILDINGS = ["LightHouse"]
-FLOORS    = ["3_floor", "4_floor", "6_floor"]
+FEATURE_MODEL = "DinoV2Salad"
+LOCAL_FEATURE_MODEL = "superpoint+lightglue"
+PLACES = {
+    "New_York_City": {
+        "LightHouse": ["3_floor", "4_floor", "6_floor"]
+    }
+}
 
 config = UNavConfig(
     data_final_root=DATA_FINAL_ROOT,
     places=PLACES,
-    buildings=BUILDINGS,
-    floors=FLOORS,
-    global_descriptor_model="DinoV2Salad",
-    local_feature_model="superpoint+lightglue"
+    global_descriptor_model=FEATURE_MODEL,
+    local_feature_model=LOCAL_FEATURE_MODEL
 )
 localizer_config = config.localizer_config
 
@@ -114,23 +116,6 @@ localizer.transform_pose_to_floorplan(qvec, tvec, transform_matrix)
 Or use the **unified one-shot call**:
 ```python
 result = localizer.localize(query_img, refinement_queue, top_k=...)
-```
-
----
-
-## ⚙️ Example Configuration (`config.py`)
-
-```python
-from config import UNavConfig
-
-config = UNavConfig(
-    data_final_root="/mnt/data/UNav-IO/data",
-    places=["New_York_City"],
-    buildings=["LightHouse"],
-    floors=["3_floor", "4_floor", "6_floor"],
-    global_descriptor_model="DinoV2Salad",
-    local_feature_model="superpoint+lightglue"
-)
 ```
 
 ---

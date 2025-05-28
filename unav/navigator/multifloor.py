@@ -10,26 +10,30 @@ from unav.config import UNavNavigationConfig
 
 class FacilityNavigator:
     """
-    A multi-place, multi-building, multi-floor unified navigation system supporting inter-floor and inter-building routing
-    with explicit support for labeled inter-waypoints (e.g., stairs, elevators).
+    Unified navigation system supporting multi-place, multi-building, multi-floor pathfinding,
+    with robust cross-floor and cross-building routing via named inter-waypoints (e.g., stairs, elevators).
+    All keys are tuples for full clarity and safety.
     """
 
     def __init__(self, config: UNavNavigationConfig):
         """
-        Initialize the navigation system with a unified configuration.
+        Initialize the facility navigator.
 
         Args:
-            config (UNavNavigationConfig): Navigation configuration.
+            config (UNavNavigationConfig): Unified navigation configuration.
         """
         self.config = config
 
-        # Map keys are in the form: "place__building__floor"
-        self.pf_map: Dict[str, PathFinder] = {}
-        self.inter_waypoints: Dict[str, List[str]] = {}  # label → list of full node keys (with place)
+        # pf_map uses (place, building, floor) as key, PathFinder as value
+        self.pf_map: Dict[Tuple[str, str, str], PathFinder] = {}
+        # inter_waypoints: label → list of (place, building, floor, node_id)
+        self.inter_waypoints: Dict[str, List[Tuple[str, str, str, int]]] = {}
+
+        # Load all PathFinder objects for every place/building/floor
         for place, buildings in self.config.building_jsons.items():
-            for bld, floors in buildings.items():
-                for fl, json_path in floors.items():
-                    key = f"{place}__{bld}__{fl}"
+            for building, floors in buildings.items():
+                for floor, json_path in floors.items():
+                    key = (place, building, floor)
                     pf = PathFinder(json_path)
                     self.pf_map[key] = pf
 
@@ -37,72 +41,65 @@ class FacilityNavigator:
         self.G = nx.DiGraph()
         self._build_unified_graph()
 
-    def _load_scales(self, scale_file: Optional[str]) -> Dict[str, float]:
+    def _load_scales(self, scale_file: Optional[str]) -> Dict[Tuple[str, str, str], float]:
         """
-        Load scaling factors for each floor from a JSON file. Used for metric conversion.
-        Keys are in the form: "place__building__floor".
+        Load scaling factors for each floor from a JSON file.
 
         Args:
-            scale_file (str): Path to JSON file containing scale factors.
+            scale_file (Optional[str]): Path to scale JSON file.
 
         Returns:
-            Dict[str, float]: Mapping from floor key to scale value.
+            Dict[Tuple[str, str, str], float]: Mapping from (place, building, floor) to scale.
         """
         scales = {key: 1.0 for key in self.pf_map}
         if scale_file and os.path.exists(scale_file):
-            with open(scale_file) as f:
+            with open(scale_file, 'r') as f:
                 data = json.load(f)
             for place, buildings in data.items():
-                for bld, floors in buildings.items():
-                    for fl, sc in floors.items():
-                        key = f"{place}__{bld}__{fl}"
+                for building, floors in buildings.items():
+                    for floor, sc in floors.items():
+                        key = (place, building, floor)
                         if key in scales:
                             scales[key] = sc
         return scales
 
     def _build_unified_graph(self):
         """
-        Construct a unified directed graph over all places, buildings, and floors.
-        This graph contains all walkable connections and explicitly connects inter-waypoints (e.g., stairs, elevators).
+        Build a unified directed navigation graph over all places/buildings/floors.
+        All graph node keys are (place, building, floor, node_id).
         """
-        # Add all intra-floor edges.
+        # Add intra-floor walkable edges
         for key, pf in self.pf_map.items():
             scale = self.scales.get(key, 1.0)
             for u, v, d in pf.G.edges(data=True):
-                uid = f"{key}__{u}"
-                vid = f"{key}__{v}"
+                uid = (*key, u)  # (place, building, floor, node_id)
+                vid = (*key, v)
                 scaled_weight = d['weight'] * scale
                 self.G.add_edge(uid, vid, weight=scaled_weight)
-
-            # Collect all inter-waypoints (group 4) by label; node_key includes place.
+            # Collect labeled inter-waypoints (group 4)
             for nid in pf.nav_ids:
                 if pf.group_ids.get(nid) == 4:
                     label = pf.labels[nid]
-                    if not label:
-                        continue
-                    node_key = f"{key}__{nid}"
-                    self.inter_waypoints.setdefault(label, []).append(node_key)
+                    if label:
+                        node_key = (*key, nid)
+                        self.inter_waypoints.setdefault(label, []).append(node_key)
 
-        # Add edges between all inter-waypoints of the same label (across floors/buildings).
+        # Add cross-floor/building edges for inter-waypoints of same label
         for label, nodes in self.inter_waypoints.items():
             for i in range(len(nodes)):
                 for j in range(i + 1, len(nodes)):
                     u, v = nodes[i], nodes[j]
-
-                    # Parse floor and description for jump penalty.
-                    bld_fl_u, nid_u = u.rsplit("__", 1)
-                    pf_u = self.pf_map[bld_fl_u]
-                    desc = pf_u.descriptions.get(int(nid_u), "").lower()
+                    pf_u = self.pf_map[u[:3]]
+                    desc = pf_u.descriptions.get(u[3], "").lower()
                     try:
-                        _, _, floor_u = bld_fl_u.split("__")
-                        _, _, floor_v = v.split("__")[:3]
+                        floor_u = u[2]
+                        floor_v = v[2]
                         floor_u_num = int(''.join(filter(str.isdigit, floor_u)))
                         floor_v_num = int(''.join(filter(str.isdigit, floor_v)))
                         jump = abs(floor_u_num - floor_v_num)
                     except Exception:
                         jump = 0
-
-                    # Penalty for traversing inter-waypoints, different for stairs/elevators.
+                    # Penalty by description type
                     if "staircase" in desc:
                         penalty_per_jump = 50.0
                         total_penalty = penalty_per_jump * jump
@@ -110,24 +107,21 @@ class FacilityNavigator:
                         total_penalty = 3.0
                     else:
                         total_penalty = 0.0
-
                     self.G.add_edge(u, v, weight=total_penalty)
                     self.G.add_edge(v, u, weight=total_penalty)
 
     def list_destinations(self) -> Dict[Tuple[str, str, str, int], Tuple[str, Tuple[float, float]]]:
         """
-        List all available destinations across all places, buildings, and floors.
+        List all available destinations.
 
         Returns:
-            Dict[Tuple[str, str, str, int], Tuple[str, Tuple[float, float]]]:
-                Keys are (place, building, floor, dest_id).
-                Values are (label, coordinates).
+            Dict[Tuple[str, str, str, int], Tuple[label, (x, y)]]
         """
         out = {}
         for key, pf in self.pf_map.items():
-            place, bld, fl = key.split("__")
+            place, building, floor = key
             for did in pf.dest_ids:
-                out[(place, bld, fl, did)] = (pf.labels[did], pf.nodes[did])
+                out[(place, building, floor, did)] = (pf.labels[did], pf.nodes[did])
         return out
 
     def find_path(
@@ -142,43 +136,41 @@ class FacilityNavigator:
         dest_id: int
     ) -> Dict[str, Any]:
         """
-        Compute the shortest valid path from a given coordinate to a specified destination ID,
-        possibly crossing places, buildings, or floors.
+        Compute shortest path from start coordinate to a destination node,
+        possibly crossing places/buildings/floors.
 
         Args:
-            start_place (str): Name of the starting place.
-            start_building (str): Name of the starting building.
-            start_floor (str): Name of the starting floor.
-            start_xy (tuple): (x, y) coordinates of the starting point.
-            dest_place (str): Name of the destination place.
-            dest_building (str): Name of the destination building.
-            dest_floor (str): Name of the destination floor.
-            dest_id (int): Destination node ID.
+            start_place (str): Name of start place.
+            start_building (str): Name of start building.
+            start_floor (str): Name of start floor.
+            start_xy (Tuple[float, float]): Start (x, y) in floorplan.
+            dest_place (str): Name of dest place.
+            dest_building (str): Name of dest building.
+            dest_floor (str): Name of dest floor.
+            dest_id (int): Destination node id.
 
         Returns:
-            Dict: {
-                "path_coords": List[Tuple[float, float]],    # Path coordinates in metric/floorplan units.
-                "path_labels": List[str],                    # Labels for each path node.
-                "path_keys": List[str],                      # Full unique keys for each path node.
-                "path_descriptions": List[str],              # Descriptions (stairs, elevator, etc).
-                "total_cost": float,                         # Total path cost (sum of edge weights).
-                "error": Optional[str]                       # Error message, if pathfinding failed.
-            }
+            Dict with keys:
+                path_coords: List[Tuple[float, float]]
+                path_labels: List[str]
+                path_keys:   List[Tuple[str, str, str, int] or str]
+                path_descriptions: List[str]
+                total_cost: float
+                error: Optional[str]
         """
-        start_key = f"{start_place}__{start_building}__{start_floor}"
-        target_key = f"{dest_place}__{dest_building}__{dest_floor}__{dest_id}"
+        start_key = (start_place, start_building, start_floor)
+        target_key = (dest_place, dest_building, dest_floor, dest_id)
         pf0 = self.pf_map[start_key]
-
-        # Snap starting location inside walkable area if outside.
+        # Snap starting point into walkable region if needed
         start_xy = snap_inside_walkable(start_xy, pf0.walkable_union)
 
-        # Create a temporary virtual node representing the user's real start coordinate.
+        # Add temporary virtual node for the real start point
         virt = "VIRT"
         self.G.add_node(virt)
         for nid in pf0.nav_ids + pf0.dest_ids:
             if pf0._visible(start_xy, pf0.nodes[nid]):
                 w = math.hypot(start_xy[0] - pf0.nodes[nid][0], start_xy[1] - pf0.nodes[nid][1])
-                self.G.add_edge(virt, f"{start_key}__{nid}", weight=w)
+                self.G.add_edge(virt, (*start_key, nid), weight=w)
 
         try:
             path = nx.dijkstra_path(self.G, virt, target_key)
@@ -186,7 +178,6 @@ class FacilityNavigator:
             self.G.remove_node(virt)
             return {"error": "No path found"}
 
-        # Assemble path information.
         coords = []
         labels = []
         keys = []
@@ -201,19 +192,13 @@ class FacilityNavigator:
                 labels.append("(start)")
                 descriptions.append("")
                 continue
-
-            node_split = node.split("__")
-            if len(node_split) < 4:
+            if not (isinstance(node, tuple) and len(node) == 4):
                 continue
-            place, bld, fl, nid_str = node_split
-            floor_key = f"{place}__{bld}__{fl}"
-            pf = self.pf_map[floor_key]
-            nid = int(nid_str)
+            place, building, floor, nid = node
+            pf = self.pf_map[(place, building, floor)]
             pt = pf.nodes[nid]
             coords.append(pt)
             labels.append(pf.labels[nid])
-
-            # Add human-friendly descriptions for navigation cues.
             if pf.group_ids[nid] == 4:
                 desc = pf.descriptions.get(nid, "")
             elif pf.group_ids[nid] == 5:
@@ -221,7 +206,6 @@ class FacilityNavigator:
             else:
                 desc = ""
             descriptions.append(desc)
-
             cost += math.hypot(prev_pt[0] - pt[0], prev_pt[1] - pt[1])
             prev_pt = pt
 

@@ -11,15 +11,30 @@ def batch_local_matching_and_ransac(
     device: torch.device,
     feature_score_threshold: float = 0.09,
     min_inliers: int = 6
-) -> Tuple[str, Dict[str, np.ndarray], List[Dict[str, Any]]]:
+) -> Tuple[Tuple[str, str, str], Dict[str, np.ndarray], List[Dict[str, Any]]]:
     """
-    Batch local matching + geometric verification (RANSAC) for VPR candidates.
+    Perform batch local matching and geometric verification (RANSAC) for VPR candidates.
     Returns only the best map region's 2D-3D matches for robust downstream PnP/refinement.
-    
+
+    Args:
+        query_local_feat (Dict[str, Any]): Query local features (keypoints, descriptors, etc.).
+        candidates_data (Dict[str, Dict[str, Any]]): 
+            Dictionary of candidates, keyed by ref_image_name.
+            Each value must contain:
+                - 'frame': COLMAP frame dictionary.
+                - 'local_feat': Local feature dictionary.
+                - 'map_key': (place, building, floor) tuple.
+                - 'score': Retrieval similarity score (float).
+        matcher (Callable): Local feature matcher function/class.
+        device (torch.device): Torch device for computation.
+        feature_score_threshold (float): Keypoint score threshold for filtering (default: 0.09).
+        min_inliers (int): Minimum required RANSAC inliers (default: 6).
+
     Returns:
-        best_map_key (str): The selected best map_key after geometric filtering.
-        pnp_pairs (Dict): Concatenated 2D-3D pairs for best map_key.
-        results (List[Dict]): Each candidate's matching info (only for best_map_key).
+        Tuple[Tuple[str, str, str], Dict[str, np.ndarray], List[Dict[str, Any]]]:
+            - best_map_key: The selected best (place, building, floor) tuple after geometric verification.
+            - pnp_pairs: Dict containing 'kpts2d', 'pts3d', and other arrays for the best region, for downstream PnP/refinement.
+            - results: List of matching info for all candidates in the best region.
     """
 
     # 1. Local feature matching

@@ -12,9 +12,7 @@ class UNavConfig:
         self,
         data_temp_root: str = "/mnt/data/UNav-IO/temp",
         data_final_root: str = "/mnt/data/UNav-IO/final",
-        places: List[str] = ["New_York_City"],
-        buildings: List[str] = ["LightHouse"],
-        floors: List[str] = ["3_floor", "4_floor", "6_floor"],
+        places: Dict[str, Dict[str, List[str]]] = {"New_York_City": {"LightHouse": ["3_floor", "4_floor", "6_floor"],"OtherBuilding": ["1_floor"]}},
         mapping_place: str = "New_York_City",
         mapping_building: str = "LightHouse",
         mapping_floor: str = "3_floor",
@@ -27,9 +25,7 @@ class UNavConfig:
         Args:
             data_temp_root (str): Path for temporary/intermediate files.
             data_final_root (str): Path for final output/results.
-            places (List[str]): Supported places/campuses.
-            buildings (List[str]): Supported buildings.
-            floors (List[str]): Supported floors.
+            places (Dict[str, Dict[str, List[str]]]): Supported places.
             mapping_place (str): Default mapping place.
             mapping_building (str): Default mapping building.
             mapping_floor (str): Default mapping floor.
@@ -40,18 +36,17 @@ class UNavConfig:
             data_final_root, mapping_place, mapping_building, mapping_floor
         )
         # Prepare floorplan JSON dictionary for navigation
-        building_jsons: Dict[str, Dict[str, Dict[str, str]]] = {
-            place: {
-                building: {
-                    floor: os.path.join(data_final_root, place, building, floor, "boundaries.json")
-                    for floor in floors
-                }
-                for building in buildings
-            }
-            for place in places
-        }
+        building_jsons = {}
+        for place, bld_dict in places.items():
+            building_jsons[place] = {}
+            for building, floors in bld_dict.items():
+                building_jsons[place][building] = {}
+                for floor in floors:
+                    building_jsons[place][building][floor] = os.path.join(
+                        data_final_root, place, building, floor, "boundaries.json"
+                    )
         scale_file = os.path.join(data_final_root, "scale.json")
-
+        
         self.mapping_config = UNavMappingConfig(
             data_temp_root=data_temp_root,
             data_final_root=data_final_root,
@@ -64,8 +59,6 @@ class UNavConfig:
         self.localizer_config = UNavLocalizationConfig(
             data_final_root=data_final_root,
             places=places,
-            buildings=buildings,
-            floors=floors,
             global_descriptor_model=global_descriptor_model,
             local_feature_model=local_feature_model
         )
@@ -89,7 +82,6 @@ class UNavConfig:
         return result
 
 # -------------------------------- Mapping Config --------------------------------
-
 
 class UNavMappingConfig:
     """
@@ -461,16 +453,12 @@ class UNavLocalizationConfig:
     def __init__(
         self,
         data_final_root: str = "/mnt/data/UNav-IO/final",
-        places: List[str] = ["New_York_City"],
-        buildings: List[str] = ["LightHouse"],
-        floors: List[str] = ["3_floor", "4_floor", "6_floor"],
+        places: Dict[str, Dict[str, List[str]]] = {"New_York_City": {"LightHouse": ["3_floor", "4_floor", "6_floor"],"OtherBuilding": ["1_floor"]}},
         global_descriptor_model: str = "DinoV2Salad",
         local_feature_model: str = "superpoint+lightglue"
     ) -> None:
         self.data_final_root: str = data_final_root
-        self.places: List[str] = places
-        self.buildings: List[str] = buildings
-        self.floors: List[str] = floors
+        self.places: Dict[str, Dict[str, List[str]]] = places
         self.global_descriptor_model: str = global_descriptor_model
         self.local_feature_model: str = local_feature_model
         self.feature_extraction_config: Dict[str, Any] = self._init_feature_extraction_config()

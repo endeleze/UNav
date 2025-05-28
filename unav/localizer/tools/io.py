@@ -1,4 +1,5 @@
 import h5py
+import json
 import numpy as np
 from typing import Dict, List, Any, Tuple
 
@@ -111,7 +112,6 @@ def load_transformation_matrix(
         ValueError: If the file format is unsupported or the matrix cannot be parsed.
     """
     if file_path.endswith('.json'):
-        import json
         with open(file_path, 'r') as f:
             data = json.load(f)
         matrix = np.array(data["transformation_matrix"])
