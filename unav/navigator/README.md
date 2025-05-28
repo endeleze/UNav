@@ -127,7 +127,7 @@ To simulate and debug navigation visually, use:
 
 - Floorplan JSONs should be produced using [labelme](https://github.com/wkentaro/labelme).
 - Annotate walkable areas, obstacles, doors, navigation nodes, inter-waypoints, and destinations according to project convention.
-- See `core/LABELME_README.md` for detailed guidelines.
+- See `unav/core/LABELME_README.md` for detailed guidelines.
 
 ---
 
