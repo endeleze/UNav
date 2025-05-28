@@ -18,7 +18,7 @@ FEATURE_MODEL="DinoV2Salad"
 
 PLACES=("New_York_University")
 BUILDINGS=("Langone")
-FLOORS=("15_floor" "16_floor")
+FLOORS=("15_floor")
 
 # ------------- Main Batch Processing Loop ------------
 
