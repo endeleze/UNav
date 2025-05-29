@@ -87,14 +87,11 @@ def commands_from_result(
     i = 0
     straight_distance = 0.0
     door_events = []
-    accumulated_segments = []
-    segment_start_idx = 0
 
     while i < len(coords) - 1:
         key0, key1 = keys[i], keys[i + 1]
         p0, p1 = coords[i], coords[i + 1]
         desc1 = descriptions[i + 1].lower()
-        label1 = labels[i + 1]
 
         # Compute heading and bearing
         dx, dy = p1[0] - p0[0], p0[1] - p1[1]
@@ -111,8 +108,8 @@ def commands_from_result(
         if (isinstance(key0, tuple) and len(key0) == 4 and
             isinstance(key1, tuple) and len(key1) == 4):
 
-            place0, building0, floor0, nodeid0 = key0
-            place1, building1, floor1, nodeid1 = key1
+            place0, building0, floor0, _ = key0
+            place1, building1, floor1, _ = key1
 
             # Place transition
             if place0 != place1:
@@ -202,7 +199,7 @@ def commands_from_result(
         hour = 12 if clock_n == 0 else clock_n
 
         # Check if this step requires a turn
-        is_turn = abs(turn) >= 25
+        is_turn = abs(turn) >= 5
 
         if is_turn:
             # Flush previous straight segment if any

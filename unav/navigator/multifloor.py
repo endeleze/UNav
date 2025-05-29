@@ -162,6 +162,7 @@ class FacilityNavigator:
         target_key = (dest_place, dest_building, dest_floor, dest_id)
         pf0 = self.pf_map[start_key]
         # Snap starting point into walkable region if needed
+        scale = self.scales.get(start_key, 1.0)
         start_xy = snap_inside_walkable(start_xy, pf0.walkable_union)
 
         # Add temporary virtual node for the real start point
@@ -169,7 +170,7 @@ class FacilityNavigator:
         self.G.add_node(virt)
         for nid in pf0.nav_ids + pf0.dest_ids:
             if pf0._visible(start_xy, pf0.nodes[nid]):
-                w = math.hypot(start_xy[0] - pf0.nodes[nid][0], start_xy[1] - pf0.nodes[nid][1])
+                w = math.hypot(start_xy[0] - pf0.nodes[nid][0], start_xy[1] - pf0.nodes[nid][1]) * scale
                 self.G.add_edge(virt, (*start_key, nid), weight=w)
 
         try:
