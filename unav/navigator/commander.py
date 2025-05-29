@@ -84,7 +84,6 @@ def commands_from_result(
 
     # --- Main loop for navigation steps ---
     heading = initial_heading
-    last_bearing = initial_heading
     i = 0
     straight_distance = 0.0
     door_events = []
@@ -274,17 +273,22 @@ def commands_from_result(
         'down': -90.0,
         'left': 180.0
     }
-    orientation_bearing = desc_to_bearing.get(desc, last_bearing)
-    turn = normalize_angle(orientation_bearing - last_bearing)
+    orientation_bearing = desc_to_bearing.get(desc, heading)
+    turn = normalize_angle(orientation_bearing - heading)
     raw = -turn
     clock_n = int(round(raw / 30)) % 12
     hour = 12 if clock_n == 0 else clock_n
-    dir_word = {
-        12: "ahead",
-        3: "right",
-        6: "behind",
-        9: "left"
-    }.get(hour, "ahead")
+
+    # Direction wording follows standard clock (right=3, left=9)
+    if hour == 12:
+        dir_word = "ahead"
+    elif hour == 6:
+        dir_word = "behind"
+    elif hour in (1, 2, 3, 4, 5):
+        dir_word = "right"
+    elif hour in (7, 8, 9, 10, 11):
+        dir_word = "left"
+
     commands.append(f"{final_label} on {hour} o'clock {dir_word}")
 
     return commands
