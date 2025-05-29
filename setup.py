@@ -47,8 +47,7 @@ setup(
     ],
     include_package_data=True,  # Include non-Python files specified in MANIFEST.in or package_data
     package_data={
-        # If you have data files to include in the package, specify them here
-        # "unav": ["*.md", "*.txt", "data/*.yml"], 
+        "unav.core.third_party.SuperPoint_SuperGlue.extractors.SuperGluePretrainedNetwork.models.weights": ["*.pth"],
     },
     classifiers=[
         "Programming Language :: Python :: 3",
