@@ -68,17 +68,17 @@ def main():
     pipeline_start = time.time()
     print("Starting UNav mapping pipeline...")
 
-    # # 1. Run dense SLAM mapping
-    # t0 = time.time()
-    # from unav.mapper.slam_runner import run_stella_vslam_dense
-    # run_stella_vslam_dense(mapper_config)
-    # print(f"[Stage 1] Dense SLAM mapping completed in {time.time() - t0:.2f} seconds.")
+    # 1. Run dense SLAM mapping
+    t0 = time.time()
+    from unav.mapper.slam_runner import run_stella_vslam_dense
+    run_stella_vslam_dense(mapper_config)
+    print(f"[Stage 1] Dense SLAM mapping completed in {time.time() - t0:.2f} seconds.")
 
-    # # 2. Slice equirectangular video into perspective images
-    # t1 = time.time()
-    # from unav.mapper.slicer import slice_perspectives
-    # slicer_result = slice_perspectives(mapper_config)
-    # print(f"[Stage 2] Perspective slicing completed in {time.time() - t1:.2f} seconds.")
+    # 2. Slice equirectangular video into perspective images
+    t1 = time.time()
+    from unav.mapper.slicer import slice_perspectives
+    slicer_result = slice_perspectives(mapper_config)
+    print(f"[Stage 2] Perspective slicing completed in {time.time() - t1:.2f} seconds.")
 
     # 3. Extract local and global features
     t2 = time.time()
