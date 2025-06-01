@@ -10,7 +10,7 @@ class UNavConfig:
     """
     def __init__(
         self,
-        data_temp_root: str = "/mnt/data/UNav-IO/temp",
+        data_temp_root: Optional[str] = None,
         data_final_root: str = "/mnt/data/UNav-IO/final",
         places: Dict[str, Dict[str, List[str]]] = {"New_York_City": {"LightHouse": ["3_floor", "4_floor", "6_floor"],"OtherBuilding": ["1_floor"]}},
         mapping_place: str = "New_York_City",
@@ -47,15 +47,18 @@ class UNavConfig:
                     )
         scale_file = os.path.join(data_final_root, "scale.json")
         
-        self.mapping_config = UNavMappingConfig(
-            data_temp_root=data_temp_root,
-            data_final_root=data_final_root,
-            place=mapping_place,
-            building=mapping_building,
-            floor=mapping_floor,
-            global_descriptor_model=global_descriptor_model,
-            local_feature_model=local_feature_model
-        )
+        # Only create mapping_config if data_temp_root is provided
+        self.mapping_config = None
+        if data_temp_root:
+            self.mapping_config = UNavMappingConfig(
+                data_temp_root=data_temp_root,
+                data_final_root=data_final_root,
+                place=mapping_place,
+                building=mapping_building,
+                floor=mapping_floor,
+                global_descriptor_model=global_descriptor_model,
+                local_feature_model=local_feature_model
+            )
         self.localizer_config = UNavLocalizationConfig(
             data_final_root=data_final_root,
             places=places,
