@@ -1,6 +1,9 @@
+# navigation_commands.py
+
 import math
 from typing import List, Dict, Any, Tuple, Literal, Union
 from shapely.geometry import LineString
+from unav.navigator.nav_text import nav_text, unit_text
 
 def normalize_angle(angle: float) -> float:
     """
@@ -14,29 +17,23 @@ def normalize_angle(angle: float) -> float:
     """
     return (angle + 180) % 360 - 180
 
-def convert_distance(meters: float, unit: Literal["meter", "feet"] = "meter") -> str:
+def convert_distance(meters: float, unit: Literal["meter", "feet"], lang: str) -> str:
     """
-    Convert a distance from meters to a string in meters or feet.
+    Convert a distance to a localized string in meters or feet.
 
     Args:
         meters: Distance in meters.
         unit: "meter" or "feet".
+        lang: Language code.
 
     Returns:
-        String representation of the distance.
+        Localized distance string.
     """
     if unit == "feet":
         feet = meters * 3.28084
-        feet_rounded = int(round(feet))
-        return f"{feet_rounded} feet"
+        return unit_text(feet, "feet", lang)
     elif unit == "meter":
-        if meters < 1:
-            rounded = round(meters, 1)
-        else:
-            rounded = round(meters * 2) / 2  # Nearest 0.5
-        if rounded.is_integer():
-            rounded = int(rounded)
-        return f"{rounded} meter{'s' if rounded != 1 else ''}"
+        return unit_text(meters, "meter", lang)
     else:
         raise ValueError("Unit must be 'meter' or 'feet'.")
 
@@ -44,20 +41,21 @@ def commands_from_result(
     navigator,
     path_result: Dict[str, Any],
     initial_heading: float,
-    unit: Literal["meter", "feet"] = "meter"
+    unit: Literal["meter", "feet"] = "meter",
+    language: str = "en"
 ) -> List[str]:
     """
-    Generate natural-language navigation commands from a planned path result,
-    merging door instructions with forward movement and optimizing turn/straight logic.
+    Generate step-by-step navigation instructions in the selected language.
 
     Args:
-        navigator: FacilityNavigator instance (should have pf_map, scales, etc).
-        path_result: Dict containing path information (coordinates, keys, labels, descriptions).
+        navigator: FacilityNavigator instance providing floorplan/scale info.
+        path_result: Output from path planning, including path coordinates, keys, and descriptions.
         initial_heading: Starting heading in degrees.
-        unit: Output unit for distances ("meter" or "feet").
+        unit: Output unit for distance ("meter" or "feet").
+        language: Output language code ("en", "zh", "th", ...).
 
     Returns:
-        List of navigation instruction strings.
+        List of localized navigation instruction strings.
     """
     if 'error' in path_result:
         raise ValueError(f"Cannot generate commands: {path_result['error']}")
@@ -69,31 +67,33 @@ def commands_from_result(
 
     commands = []
 
-    # Announce starting location
+    # --- Announce starting location ---
     if len(keys) > 1 and keys[1] != "VIRT":
         if isinstance(keys[1], tuple) and len(keys[1]) == 4:
             floor_key = keys[1][:3]
             place, building, floor = floor_key
             pf0 = navigator.pf_map[floor_key]
             room = pf0.get_current_room(coords[0]) if hasattr(pf0, 'get_current_room') else ""
-            commands.append(f"You are currently in {room} on {floor} of {building}, {place}.")
+            commands.append(nav_text(
+                "start_in", language, room=room, floor=floor, building=building, place=place
+            ))
         else:
-            commands.append("Starting navigation.")
+            commands.append(nav_text("start_nav", language))
     else:
-        commands.append("Starting navigation.")
+        commands.append(nav_text("start_nav", language))
 
-    # --- Main loop for navigation steps ---
     heading = initial_heading
     i = 0
     straight_distance = 0.0
     door_events = []
 
+    # --- Main navigation loop ---
     while i < len(coords) - 1:
         key0, key1 = keys[i], keys[i + 1]
         p0, p1 = coords[i], coords[i + 1]
         desc1 = descriptions[i + 1].lower()
 
-        # Compute heading and bearing
+        # Calculate movement vector and distance
         dx, dy = p1[0] - p0[0], p0[1] - p1[1]
         segment_dist = math.hypot(dx, dy)
 
@@ -114,17 +114,17 @@ def commands_from_result(
             # Place transition
             if place0 != place1:
                 if straight_distance > 0:
-                    dist_str = convert_distance(straight_distance * scale, unit)
+                    dist_str = convert_distance(straight_distance * scale, unit, language)
                     if door_events:
                         door_pos = min(door_events, key=lambda d: d["dist"])
-                        door_dist = convert_distance(door_pos["dist"] * scale, unit)
-                        commands.append(f"Forward {dist_str} and go through a door in {door_dist}")
+                        door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                        commands.append(nav_text("forward_door", language, dist=dist_str, door_dist=door_dist))
                         door_events.clear()
                     else:
-                        commands.append(f"Forward {dist_str}")
+                        commands.append(nav_text("forward", language, dist=dist_str))
                     straight_distance = 0.0
-                commands.append(f"You are approaching the transition to {place1}.")
-                commands.append(f"Proceed to {floor1} of {building1} in {place1}.")
+                commands.append(nav_text("transition_place", language, place=place1))
+                commands.append(nav_text("proceed_to", language, floor=floor1, building=building1, place=place1))
                 heading = initial_heading
                 i += 1
                 continue
@@ -132,17 +132,17 @@ def commands_from_result(
             # Building transition
             if building0 != building1:
                 if straight_distance > 0:
-                    dist_str = convert_distance(straight_distance * scale, unit)
+                    dist_str = convert_distance(straight_distance * scale, unit, language)
                     if door_events:
                         door_pos = min(door_events, key=lambda d: d["dist"])
-                        door_dist = convert_distance(door_pos["dist"] * scale, unit)
-                        commands.append(f"Forward {dist_str} and go through a door in {door_dist}")
+                        door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                        commands.append(nav_text("forward_door", language, dist=dist_str, door_dist=door_dist))
                         door_events.clear()
                     else:
-                        commands.append(f"Forward {dist_str}")
+                        commands.append(nav_text("forward", language, dist=dist_str))
                     straight_distance = 0.0
-                commands.append(f"You are approaching the transition to building {building1}.")
-                commands.append(f"Proceed to {floor1} of {building1}.")
+                commands.append(nav_text("transition_place", language, place=building1))
+                commands.append(nav_text("proceed_to_floor", language, floor=floor1, building=building1))
                 heading = initial_heading
                 i += 1
                 continue
@@ -150,27 +150,27 @@ def commands_from_result(
             # Floor transition
             if floor0 != floor1:
                 if straight_distance > 0:
-                    dist_str = convert_distance(straight_distance * scale, unit)
+                    dist_str = convert_distance(straight_distance * scale, unit, language)
                     if door_events:
                         door_pos = min(door_events, key=lambda d: d["dist"])
-                        door_dist = convert_distance(door_pos["dist"] * scale, unit)
-                        commands.append(f"Forward {dist_str} and go through a door in {door_dist}")
+                        door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                        commands.append(nav_text("forward_door", language, dist=dist_str, door_dist=door_dist))
                         door_events.clear()
                     else:
-                        commands.append(f"Forward {dist_str}")
+                        commands.append(nav_text("forward", language, dist=dist_str))
                     straight_distance = 0.0
 
-                # Announce approach to transition
+                # Announce approach to transition type
                 if "staircase" in desc1:
-                    commands.append("You are approaching the staircase.")
+                    commands.append(nav_text("approaching_stair", language))
                 elif "elevator" in desc1:
-                    commands.append("You are approaching the elevator.")
+                    commands.append(nav_text("approaching_elevator", language))
                 elif "escalator" in desc1:
-                    commands.append("You are approaching the escalator.")
+                    commands.append(nav_text("approaching_escalator", language))
                 else:
-                    commands.append("You are approaching the floor transition area.")
+                    commands.append(nav_text("proceed_to_floor", language, floor=floor1, building=building1))
 
-                # Floor transition instruction
+                # Determine direction (up/down)
                 try:
                     floor_num_0 = int(''.join(filter(str.isdigit, floor0)))
                     floor_num_1 = int(''.join(filter(str.isdigit, floor1)))
@@ -178,54 +178,53 @@ def commands_from_result(
                 except Exception:
                     direction = "up" if floor1 > floor0 else "down"
 
+                # Instruction for vertical movement type
                 if "staircase" in desc1:
-                    commands.append(f"Go {direction} to {floor1} of {building1} via the staircase.")
+                    commands.append(nav_text("go_up_stair", language, direction=direction, floor=floor1, building=building1))
                 elif "elevator" in desc1:
-                    commands.append(f"Press the {direction} button to {floor1} of {building1} using the elevator.")
+                    commands.append(nav_text("go_up_elevator", language, direction=direction, floor=floor1, building=building1))
                 elif "escalator" in desc1:
-                    commands.append(f"Take the escalator {direction} to {floor1} of {building1}.")
+                    commands.append(nav_text("go_up_escalator", language, direction=direction, floor=floor1, building=building1))
                 else:
-                    commands.append(f"Proceed to {floor1} of {building1}.")
+                    commands.append(nav_text("proceed_to_floor", language, floor=floor1, building=building1))
                 heading = initial_heading
                 i += 1
                 continue
 
-        # --- Turn and straight handling ---
-        # Compute turn (change in heading)
+        # --- Turn and straight movement handling ---
         bearing = math.degrees(math.atan2(dy, dx))
         turn = normalize_angle(bearing - heading)
         raw = -turn
         clock_n = int(round(raw / 30)) % 12
         hour = 12 if clock_n == 0 else clock_n
 
-        # Check if this step requires a turn
         is_turn = abs(turn) >= 5
 
         if is_turn:
-            # Flush previous straight segment if any
+            # Output prior straight segment if any
             if straight_distance > 0:
-                dist_str = convert_distance(straight_distance * scale, unit)
+                dist_str = convert_distance(straight_distance * scale, unit, language)
                 if door_events:
                     door_pos = min(door_events, key=lambda d: d["dist"])
-                    door_dist = convert_distance(door_pos["dist"] * scale, unit)
-                    commands.append(f"Forward {dist_str} and go through a door in {door_dist}")
+                    door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                    commands.append(nav_text("forward_door", language, dist=dist_str, door_dist=door_dist))
                     door_events.clear()
                 else:
-                    commands.append(f"Forward {dist_str}")
+                    commands.append(nav_text("forward", language, dist=dist_str))
                 straight_distance = 0.0
 
             if hour != 12 and hour != 6:
                 qual = "Slight" if abs(turn) < 45 else "Turn" if abs(turn) < 90 else "Sharp"
-                direction = "left" if turn > 0 else "right"
-                commands.append(f"{qual} {direction} to {hour} o'clock")
+                direction_word = "left" if turn > 0 else "right"
+                commands.append(nav_text("turn", language, qual=qual, direction=direction_word, hour=hour))
             elif hour == 6:
-                commands.append("Make a U-turn (6 o'clock)")
+                commands.append(nav_text("u_turn", language))
             heading = bearing
 
         # Accumulate straight segment distance
         straight_distance += segment_dist
 
-        # Door detection (between p0 and p1)
+        # Door detection for segment
         if key0 != "VIRT" and hasattr(navigator, "pf_map"):
             floor_key0 = key0[:3]
             pf = navigator.pf_map.get(floor_key0, None)
@@ -237,11 +236,10 @@ def commands_from_result(
                         door_events.append({"dist": proj_px, "idx": i})
                         break
 
-        # If this is the last step, flush any remaining straight segment
+        # If last step or next step is a turn, output pending straight segment
         is_last = (i == len(coords) - 2)
         next_turn = False
         if not is_last:
-            # Preview next step for turn
             p2 = coords[i + 2]
             dx2, dy2 = p2[0] - p1[0], p1[1] - p2[1]
             bearing2 = math.degrees(math.atan2(dy2, dx2))
@@ -249,19 +247,19 @@ def commands_from_result(
 
         if is_last or next_turn:
             if straight_distance > 0:
-                dist_str = convert_distance(straight_distance * scale, unit)
+                dist_str = convert_distance(straight_distance * scale, unit, language)
                 if door_events:
                     door_pos = min(door_events, key=lambda d: d["dist"])
-                    door_dist = convert_distance(door_pos["dist"] * scale, unit)
-                    commands.append(f"Forward {dist_str} and go through a door in {door_dist}")
+                    door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                    commands.append(nav_text("forward_door", language, dist=dist_str, door_dist=door_dist))
                     door_events.clear()
                 else:
-                    commands.append(f"Forward {dist_str}")
+                    commands.append(nav_text("forward", language, dist=dist_str))
                 straight_distance = 0.0
 
         i += 1
 
-    # Final arrival instruction with direction
+    # --- Final arrival instruction ---
     final_label = labels[-1]
     desc = descriptions[-1].lower()
     desc_to_bearing = {
@@ -276,20 +274,26 @@ def commands_from_result(
     clock_n = int(round(raw / 30)) % 12
     hour = 12 if clock_n == 0 else clock_n
 
-    # Direction wording follows standard clock (right=3, left=9)
+    # Localized direction word
     if hour == 12:
-        dir_word = "ahead"
+        dir_word = {
+            "en": "ahead", "zh": "正前方", "th": "ข้างหน้า"
+        }.get(language, "ahead")
     elif hour == 6:
-        dir_word = "behind"
+        dir_word = {
+            "en": "behind", "zh": "正后方", "th": "ข้างหลัง"
+        }.get(language, "behind")
     elif hour in (1, 2, 3, 4, 5):
-        dir_word = "right"
+        dir_word = {
+            "en": "right", "zh": "右侧", "th": "ขวา"
+        }.get(language, "right")
     elif hour in (7, 8, 9, 10, 11):
-        dir_word = "left"
+        dir_word = {
+            "en": "left", "zh": "左侧", "th": "ซ้าย"
+        }.get(language, "left")
 
-    commands.append(f"{final_label} on {hour} o'clock {dir_word}")
-
+    commands.append(nav_text("arrive", language, label=final_label, hour=hour, dir_word=dir_word))
     return commands
-
 
 def split_path_by_floor(
     path_keys: List[Union[str, Tuple[str, str, str, int]]],
