@@ -1,5 +1,7 @@
+import os
 import h5py
 import json
+import concurrent.futures
 import numpy as np
 from typing import Dict, List, Any, Tuple
 
@@ -84,15 +86,19 @@ def load_local_features(
             - 'image_size' (np.ndarray): [W, H]
     """
     result = {}
+    n_threads = os.cpu_count() or 4
     with h5py.File(h5_path, 'r') as f:
-        for name in image_names:
+        def read_one(name):
             group = f[name]
-            result[name] = {
+            return name, {
                 "keypoints": group["keypoints"][()],
                 "descriptors": group["descriptors"][()],
                 "scores": group["scores"][()],
                 "image_size": group["image_size"][()]
             }
+        with concurrent.futures.ThreadPoolExecutor(max_workers=n_threads) as executor:
+            for name, feat in executor.map(read_one, image_names):
+                result[name] = feat
     return result
 
 
