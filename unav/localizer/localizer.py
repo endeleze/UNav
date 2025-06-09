@@ -334,8 +334,7 @@ class UNavLocalizer:
             "n_frames": refine_result.get("n_frames"),
             "refinement_queue": updated_queue,
             "best_map_key": best_map_key,
-            "localization_time": localization_time,
-            "timings": timings,  # Add step-by-step timings here
+            "timings": timings
         }
         if not refine_result["success"]:
             output["reason"] = refine_result.get("reason", "Pose refinement failed.")
