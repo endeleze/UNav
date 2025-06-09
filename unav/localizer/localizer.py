@@ -245,27 +245,54 @@ class UNavLocalizer:
         """
         # Start total localization timer
         start_time = time.time()
-        
+        timings = {}
+        t0 = start_time
+
         # 1. Extract features from query
         global_feat, local_feat_dict = self.extract_query_features(query_img)
+        t1 = time.time()
+        timings['extract_query_features'] = t1 - t0
+        t0 = t1
 
         # 2. VPR: retrieve top candidates
         top_candidates = self.vpr_retrieve(global_feat, top_k=top_k)
+        t1 = time.time()
+        timings['vpr_retrieve'] = t1 - t0
+        t0 = t1
+
         if not top_candidates:
-            return {"success": False, "reason": "VPR failed (no candidates)"}
+            return {
+                "success": False, 
+                "reason": "VPR failed (no candidates)", 
+                "timings": timings
+            }
 
         # 3. Gather map/model/feature data for all candidates
         candidates_data = self.get_candidates_data(top_candidates)
+        t1 = time.time()
+        timings['get_candidates_data'] = t1 - t0
+        t0 = t1
+
         if not candidates_data:
-            return {"success": False, "reason": "No candidate data found", "top_candidates": top_candidates}
+            return {
+                "success": False, 
+                "reason": "No candidate data found", 
+                "top_candidates": top_candidates, 
+                "timings": timings
+            }
 
         # 4. Local matching + RANSAC, grouped by region/map_key
         best_map_key, pnp_pairs, results = self.batch_local_matching_and_ransac(local_feat_dict, candidates_data)
+        t1 = time.time()
+        timings['batch_local_matching_and_ransac'] = t1 - t0
+        t0 = t1
+
         if best_map_key is None or not results:
             return {
                 "success": False,
                 "reason": "No candidates passed local matching + RANSAC.",
                 "top_candidates": top_candidates,
+                "timings": timings
             }
 
         # 5. Pose refinement (multi-frame queue) for this region only
@@ -273,6 +300,9 @@ class UNavLocalizer:
             "pairs": [], "initial_poses": [], "pps": []
         })
         refine_result = self.multi_frame_pose_refine(pnp_pairs, query_img.shape, map_queue)
+        t1 = time.time()
+        timings['multi_frame_pose_refine'] = t1 - t0
+        t0 = t1
 
         # 6. Transform output pose to floorplan coordinates if possible
         colmap_pose = {"qvec": refine_result.get("qvec"), "tvec": refine_result.get("tvec")}
@@ -282,6 +312,9 @@ class UNavLocalizer:
             if (colmap_pose["tvec"] is not None and transform_matrix is not None)
             else None
         )
+        t1 = time.time()
+        timings['transform_pose_to_floorplan'] = t1 - t0
+        t0 = t1
 
         # 7. Update refinement queue for just this map region
         updated_queue = refinement_queue.copy()
@@ -289,6 +322,8 @@ class UNavLocalizer:
 
         # 8. Output structured result
         localization_time = time.time() - start_time
+        timings['total'] = localization_time
+
         output = {
             "success": refine_result["success"],
             "qvec": refine_result.get("qvec"),
@@ -299,8 +334,10 @@ class UNavLocalizer:
             "n_frames": refine_result.get("n_frames"),
             "refinement_queue": updated_queue,
             "best_map_key": best_map_key,
-            "localization_time": localization_time
+            "localization_time": localization_time,
+            "timings": timings,  # Add step-by-step timings here
         }
         if not refine_result["success"]:
             output["reason"] = refine_result.get("reason", "Pose refinement failed.")
+
         return output
