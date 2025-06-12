@@ -38,6 +38,24 @@ This folder contains all scripts and tools to convert raw sensor data into a met
 
 ---
 
+## 🎥 Mapping Data Collection SOP
+
+High-quality 360 video data collection is **essential** for robust SLAM and downstream mapping.  
+**Before using this mapping pipeline, please follow our data collection standard:**
+
+- Use any 360 camera (5K+ recommended).
+- Collect at least 3 complete loops per floorplan:
+    1. First loop: Walk the main corridors/paths, assistants pre-open all doors.
+    2. Second loop: Enter all rooms/side spaces, assistants pre-open doors.
+    3. Third loop: All doors start closed; collector opens/closes each when entering/exiting.
+- Cover all accessible areas, slow down in narrow places/doorways.
+- Export videos at 5K, always with camera forward direction matching walking direction.
+- Before mapping, measure several known point-pairs on the floorplan and in the real world to determine average scale. More pairs = more accurate.
+
+:page_facing_up: **[Full detailed SOP here → Collection_SOP.md](Collection_SOP.md)**
+
+---
+
 ## 🚀 Main Mapping Pipeline
 
 **Script:** `main_mapping_pipeline.py`
