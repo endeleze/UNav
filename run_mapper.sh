@@ -16,9 +16,9 @@ DATA_TEMP_ROOT="/mnt/data/UNav-IO/temp"
 DATA_FINAL_ROOT="/mnt/data/UNav-IO/data"
 FEATURE_MODEL="DinoV2Salad"
 
-PLACES=("New_York_University")
-BUILDINGS=("Langone")
-FLOORS=("15_floor" "16_floor")
+PLACES=("Mahidol_University")
+BUILDINGS=("Ratchasuda")
+FLOORS=("1_floor")
 
 # ------------- Main Batch Processing Loop ------------
 
