@@ -5,6 +5,11 @@ from typing import List, Dict, Any, Tuple, Literal, Union
 from shapely.geometry import LineString
 from unav.navigator.nav_text import nav_text, unit_text
 
+import math
+from typing import List, Dict, Any, Tuple, Literal, Union
+from shapely.geometry import LineString
+from unav.navigator.nav_text import nav_text, unit_text
+
 def normalize_angle(angle: float) -> float:
     """
     Normalize an angle to the range [-180, 180] degrees.
@@ -17,9 +22,9 @@ def normalize_angle(angle: float) -> float:
     """
     return (angle + 180) % 360 - 180
 
-def convert_distance(meters: float, unit: Literal["meter", "feet"], lang: str) -> str:
+def convert_distance_meta(meters: float, unit: Literal["meter", "feet"], lang: str) -> Tuple[str, float, str]:
     """
-    Convert a distance to a localized string in meters or feet.
+    Convert a distance in meters to a localized string and return the numeric value and unit.
 
     Args:
         meters: Distance in meters.
@@ -27,13 +32,15 @@ def convert_distance(meters: float, unit: Literal["meter", "feet"], lang: str) -
         lang: Language code.
 
     Returns:
-        Localized distance string.
+        Tuple of (localized string, numeric value, unit).
     """
     if unit == "feet":
-        feet = meters * 3.28084
-        return unit_text(feet, "feet", lang)
+        value = meters * 3.28084
+        localized = unit_text(value, "feet", lang)
+        return localized, value, "feet"
     elif unit == "meter":
-        return unit_text(meters, "meter", lang)
+        localized = unit_text(meters, "meter", lang)
+        return localized, meters, "meter"
     else:
         raise ValueError("Unit must be 'meter' or 'feet'.")
 
@@ -50,7 +57,7 @@ def commands_from_result(
     Each command is represented as a dictionary containing:
     - tag: semantic label of the command (e.g., 'turn', 'forward', 'arrive')
     - text: localized instruction string
-    - meta: optional metadata for further processing (e.g., distance, direction)
+    - meta: metadata for further processing (e.g., distance and unit split)
 
     Args:
         navigator: FacilityNavigator instance providing scale and floorplan.
@@ -87,12 +94,14 @@ def commands_from_result(
         else:
             commands.append({
                 "tag": "start_nav",
-                "text": nav_text("start_nav", language)
+                "text": nav_text("start_nav", language),
+                "meta": {}
             })
     else:
         commands.append({
             "tag": "start_nav",
-            "text": nav_text("start_nav", language)
+            "text": nav_text("start_nav", language),
+            "meta": {}
         })
 
     heading = initial_heading
@@ -116,23 +125,32 @@ def commands_from_result(
             place0, building0, floor0, _ = key0
             place1, building1, floor1, _ = key1
 
+            # Transition: place/building/floor
             if place0 != place1 or building0 != building1 or floor0 != floor1:
                 if straight_distance > 0:
-                    dist_str = convert_distance(straight_distance * scale, unit, language)
+                    dist_text, dist_val, dist_unit = convert_distance_meta(straight_distance * scale, unit, language)
                     if door_events:
                         door_pos = min(door_events, key=lambda d: d["dist"])
-                        door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                        door_text, door_val, door_unit = convert_distance_meta(door_pos["dist"] * scale, unit, language)
                         commands.append({
                             "tag": "forward_door",
-                            "text": nav_text("forward_door", language, dist=dist_str, door_dist=door_dist),
-                            "meta": {"distance": dist_str, "door_distance": door_dist}
+                            "text": nav_text("forward_door", language, dist=dist_text, door_dist=door_text),
+                            "meta": {
+                                "distance": dist_val,
+                                "unit": dist_unit,
+                                "door_distance": door_val,
+                                "door_unit": door_unit
+                            }
                         })
                         door_events.clear()
                     else:
                         commands.append({
                             "tag": "forward",
-                            "text": nav_text("forward", language, dist=dist_str),
-                            "meta": {"distance": dist_str}
+                            "text": nav_text("forward", language, dist=dist_text),
+                            "meta": {
+                                "distance": dist_val,
+                                "unit": dist_unit
+                            }
                         })
                     straight_distance = 0.0
 
@@ -164,17 +182,20 @@ def commands_from_result(
                     if "staircase" in desc1:
                         commands.append({
                             "tag": "approaching_stair",
-                            "text": nav_text("approaching_stair", language)
+                            "text": nav_text("approaching_stair", language),
+                            "meta": {}
                         })
                     elif "elevator" in desc1:
                         commands.append({
                             "tag": "approaching_elevator",
-                            "text": nav_text("approaching_elevator", language)
+                            "text": nav_text("approaching_elevator", language),
+                            "meta": {}
                         })
                     elif "escalator" in desc1:
                         commands.append({
                             "tag": "approaching_escalator",
-                            "text": nav_text("approaching_escalator", language)
+                            "text": nav_text("approaching_escalator", language),
+                            "meta": {}
                         })
                     else:
                         commands.append({
@@ -183,7 +204,6 @@ def commands_from_result(
                             "meta": {"floor": floor1, "building": building1}
                         })
 
-                    # Determine direction up/down
                     try:
                         floor_num_0 = int(''.join(filter(str.isdigit, floor0)))
                         floor_num_1 = int(''.join(filter(str.isdigit, floor1)))
@@ -220,28 +240,37 @@ def commands_from_result(
 
         if is_turn:
             if straight_distance > 0:
-                dist_str = convert_distance(straight_distance * scale, unit, language)
+                dist_text, dist_val, dist_unit = convert_distance_meta(straight_distance * scale, unit, language)
                 if door_events:
                     door_pos = min(door_events, key=lambda d: d["dist"])
-                    door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                    door_text, door_val, door_unit = convert_distance_meta(door_pos["dist"] * scale, unit, language)
                     commands.append({
                         "tag": "forward_door",
-                        "text": nav_text("forward_door", language, dist=dist_str, door_dist=door_dist),
-                        "meta": {"distance": dist_str, "door_distance": door_dist}
+                        "text": nav_text("forward_door", language, dist=dist_text, door_dist=door_text),
+                        "meta": {
+                            "distance": dist_val,
+                            "unit": dist_unit,
+                            "door_distance": door_val,
+                            "door_unit": door_unit
+                        }
                     })
                     door_events.clear()
                 else:
                     commands.append({
                         "tag": "forward",
-                        "text": nav_text("forward", language, dist=dist_str),
-                        "meta": {"distance": dist_str}
+                        "text": nav_text("forward", language, dist=dist_text),
+                        "meta": {
+                            "distance": dist_val,
+                            "unit": dist_unit
+                        }
                     })
                 straight_distance = 0.0
 
             if hour == 6:
                 commands.append({
                     "tag": "u_turn",
-                    "text": nav_text("u_turn", language)
+                    "text": nav_text("u_turn", language),
+                    "meta": {}
                 })
             else:
                 qual = "Slight" if abs(turn) < 45 else "Turn" if abs(turn) < 90 else "Sharp"
@@ -278,21 +307,29 @@ def commands_from_result(
 
         if is_last or next_turn:
             if straight_distance > 0:
-                dist_str = convert_distance(straight_distance * scale, unit, language)
+                dist_text, dist_val, dist_unit = convert_distance_meta(straight_distance * scale, unit, language)
                 if door_events:
                     door_pos = min(door_events, key=lambda d: d["dist"])
-                    door_dist = convert_distance(door_pos["dist"] * scale, unit, language)
+                    door_text, door_val, door_unit = convert_distance_meta(door_pos["dist"] * scale, unit, language)
                     commands.append({
                         "tag": "forward_door",
-                        "text": nav_text("forward_door", language, dist=dist_str, door_dist=door_dist),
-                        "meta": {"distance": dist_str, "door_distance": door_dist}
+                        "text": nav_text("forward_door", language, dist=dist_text, door_dist=door_text),
+                        "meta": {
+                            "distance": dist_val,
+                            "unit": dist_unit,
+                            "door_distance": door_val,
+                            "door_unit": door_unit
+                        }
                     })
                     door_events.clear()
                 else:
                     commands.append({
                         "tag": "forward",
-                        "text": nav_text("forward", language, dist=dist_str),
-                        "meta": {"distance": dist_str}
+                        "text": nav_text("forward", language, dist=dist_text),
+                        "meta": {
+                            "distance": dist_val,
+                            "unit": dist_unit
+                        }
                     })
                 straight_distance = 0.0
 
