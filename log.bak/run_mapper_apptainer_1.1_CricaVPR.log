@@ -1,0 +1,21 @@
+---------------------------------------------
+>> Mapping: Place=Mahidol_University | Building=ICT | Floor=1.1_CricaVPR
+---------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/run_mapping.py", line 153, in <module>
+    main()
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/run_mapping.py", line 84, in main
+    slicer_result = slice_perspectives(mapper_config)
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/mapper/slicer.py", line 168, in slice_perspectives
+    kf_list = get_keyframe_image_list(keyframe_dir)
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/mapper/tools/slam/read_data.py", line 12, in get_keyframe_image_list
+    files = os.listdir(keyframe_dir)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/Mahidol_University/ICT/1.1_CricaVPR/stella_vslam_dense/keyframes'
+[✓] YAML written to: /home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/equirectangular.yaml.
+Starting UNav mapping pipeline...
+
+✅ All mapping jobs finished successfully.

@@ -1,0 +1,8 @@
+**/__pycache__/
+**/.ipynb_checkpoints/
+**/*.tar.gz
+**/*.zip
+**/*.xls*
+**/*.h5
+**/*.pth
+**/*.DS_Store

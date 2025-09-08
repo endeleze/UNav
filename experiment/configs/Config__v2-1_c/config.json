@@ -1,0 +1,23 @@
+{
+    "data_final_root": "/home/nattachart.tak/Data/experiments/Mapping/data/unav2-data",
+    "global_descriptor_model": "MixVPR",
+    "local_feature_model": "superpoint+lightglue",
+    "places": {
+        "Mahidol_University": {
+            "ICT": [
+                "1.1_MixVPR"
+            ]
+        }
+    },
+    "path_to_images": "/home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/Mahidol_University/ICT/1.1_MixVPR/perspectives",
+    "ground_truth_img_list": "/home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/Mahidol_University/ICT/1.1_MixVPR/groundtruth_img_dataset_ICT_1.1_MixVPR_10P.csv",
+    "img_list_attr": "image_name",
+    "img_ext": "png",
+    "exp_type": "localize",
+    "results_out_path": "Config__v2-1_c",
+    "root_dir": "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/experiment/configs/",
+    "results_fn": "Results_localize.xlsx",
+    "num_trials": 3,
+    "exp_version": "v2-1_c",
+    "exp_description": "\n            v2-1_c - Mapping on 1.1 and localization on the 1.1 dataset\n            v2-1_b - Change to UNav-V2 - Image localization experiment - 5 VPR algorithms. Vision only.\n            v2-1_a - Baseline UNav_MixVPR - Image localization measurement. Measure time to localize (hloc.get_location(..))\n        "
+}

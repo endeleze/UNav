@@ -154,7 +154,12 @@ def load_local_features(
         result[name] = feature_cache.get(name)
 
     # Step 2: Launch background prefetch for spatially-nearby features
-    Thread(target=background_preload, args=(h5_path, image_names)).start()
+    try:
+        t = Thread(target=background_preload, args=(h5_path, image_names)).start()
+    except RuntimeError as e:
+        print("Error in unav/localizer/tools/io.py: 158")
+        print("Thread(target=background_preload, args=(h5_path, image_names)).start()")
+        print(e)
 
     return result
 

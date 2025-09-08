@@ -4,7 +4,6 @@ from torchvision import transforms
 from torchvision.transforms import functional
 from .utilities import DinoV2ExtractFeatures, VLAD
 
-
 class VLADDinoV2FeatureExtractor:
 
     def __init__(self, root, content, pipeline=False):

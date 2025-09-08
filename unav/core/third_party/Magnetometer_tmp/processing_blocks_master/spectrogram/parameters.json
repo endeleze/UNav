@@ -1,0 +1,66 @@
+{
+    "version": 1,
+    "info": {
+        "title": "Spectrogram",
+        "author": "Edge Impulse",
+        "description": "Extracts a spectrogram from audio or sensor data, great for non-voice audio or data with continuous frequencies.",
+        "name": "Spectrogram",
+        "preferConvolution": true,
+        "convolutionColumns": "fft_length",
+        "convolutionKernelSize": 5,
+        "cppType": "spectrogram_custom",
+        "visualization": "dimensionalityReduction",
+        "experimental": false,
+        "latestImplementationVersion": 4,
+        "hasAutoTune": true
+    },
+    "parameters": [
+        {
+            "group": "Spectrogram",
+            "items": [
+                {
+                    "name": "Frame length",
+                    "value": 0.02,
+                    "type": "float",
+                    "help": "The length of each frame in seconds",
+                    "param": "frame_length"
+                },
+                {
+                    "name": "Frame stride",
+                    "value": 0.01,
+                    "type": "float",
+                    "help": "The step between successive frames in seconds",
+                    "param": "frame_stride"
+                },
+                {
+                    "name": "FFT length",
+                    "value": 128,
+                    "type": "int",
+                    "help": "Number of frequency bands. Choose a power of two (e.g. 64, 128, 256) for optimal performance on device.",
+                    "param": "fft_length"
+                }
+            ]
+        },
+        {
+            "group": "Normalization",
+            "items": [
+                {
+                    "name": "Noise floor (dB)",
+                    "value": -52,
+                    "type": "int",
+                    "help": "When the spectrogram is rescaled, all frequency bins below this noise floor will be clipped to zero",
+                    "param": "noise_floor_db",
+                    "showForImplementationVersion": [ 3, 4 ]
+        },
+        {
+                    "name": "Show axes",
+                    "value": true,
+                    "type": "boolean",
+                    "help": "Show frequency / time axes in the graphs",
+                    "param": "show_axes",
+                    "showForImplementationVersion": []
+                }
+            ]
+        }
+    ]
+}

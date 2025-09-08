@@ -1,0 +1,45 @@
+xFormers not available
+/unav/venv/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+xFormers not available
+/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/third_party/LightGlue/lightglue/lightglue.py:15: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @torch.cuda.amp.custom_fwd(cast_inputs=torch.float32)
+/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/third_party/SuperPoint_SuperGlue/extractors/SuperGluePretrainedNetwork/models/superpoint.py:138: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.load_state_dict(torch.load(str(path)))
+/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/third_party/MixVPR/feature_extract.py:17: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  saved_state = torch.load(join(root, join(content["ckpt_path"], "model_best.pth") if pipeline
+/unav/venv/lib/python3.10/site-packages/torch/nested/__init__.py:107: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. (Triggered internally at ../aten/src/ATen/NestedTensorImpl.cpp:178.)
+  return torch._nested_tensor_from_tensor_list(ts, dtype, None, device, None)
+Seed set to: 42 (type: <class 'int'>)
+[INFO] Initializing models: Local -> superpoint+lightglue | Global -> MixVPR
+Loaded SuperPoint model
+Loaded MixVPR model for input images at [320, 320]  from parameters/MixVPR/ckpts/resnet50_MixVPR_4096_channels(1024)_rows(4).ckpt Successfully!
+[✓] Loaded COLMAP model for ('Mahidol_University', 'ICT', '1.1'): 5346 frames
+[✓] Loaded global features for ('Mahidol_University', 'ICT', '1.1'): 5346 images
+[✓] Loaded transform matrix for ('Mahidol_University', 'ICT', '1.1'): shape=(2, 4)
+[INFO] All map and feature loading complete.
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Traceback (most recent call last):
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/./experiment/run_experiment.py", line 124, in <module>
+    best_map_key, pnp_pairs = get_best_map_key(localizer, local_feat_dict, candidates_data)
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/./experiment/run_experiment.py", line 52, in get_best_map_key
+    best_map_key, pnp_pairs, results = localizer.batch_local_matching_and_ransac(local_feat_dict, candidates_data)
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/localizer/localizer.py", line 185, in batch_local_matching_and_ransac
+    return batch_local_matching_and_ransac(
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/localizer/tools/matcher.py", line 80, in batch_local_matching_and_ransac
+    valid_mask, in0, in1, inlier_scores = ransac_filter(
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/feature_filter.py", line 343, in ransac_filter
+    recursive_ransac(list(range(batch_size)))
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/feature_filter.py", line 308, in recursive_ransac
+    pts1[i, :n_i] = torch.tensor(kpts1_list[idx][pts1_idx_list[idx]], dtype=torch.float32)
+IndexError: index 1162 is out of bounds for axis 0 with size 1161
+[Background Prefetch] Error: cannot schedule new futures after interpreter shutdown

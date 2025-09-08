@@ -1,3 +1,4 @@
+import os
 from os.path import join,exists, isfile
 from . import netvlad
 import torchvision.transforms as transforms
@@ -14,9 +15,18 @@ def input_transform():
     ])
 
 class NetVladFeatureExtractor:
-    def __init__(self, ckpt_path, type=None, arch='vgg16', num_clusters=64, pooling='netvlad', vladv2=False, nocuda=False,
+    def __init__(self, root=None, content=None, pipeline=False, ckpt_path=None, type=None, arch='vgg16', num_clusters=64, pooling='netvlad', vladv2=False, nocuda=False,
                  input_transform=input_transform()):
         self.input_transform = input_transform
+
+        if root and content: # If both are given
+            ckpt_path = os.path.join(root, content["ckpt_path"])
+            arch = content["arch"]
+            num_clusters = content["num_clusters"]
+            pooling = content["pooling"]
+            vladv2 = content["vladv2"]
+            nocuda = content["nocuda"]
+
         self.num_clusters = num_clusters
 
         flag_file = join(ckpt_path, 'flags.json')
@@ -99,6 +109,21 @@ class NetVladFeatureExtractor:
             print("=> no model weights found at '{}'".format(resume_ckpt))
             exit()
 
+    def feature(self, image):
+        if self.input_transform:
+            image = self.input_transform(image)
+            #batch size 1
+            image = torch.stack([image])
+        
+        with torch.no_grad():
+            input = image.to(self.device)
+            # TODO 3: Maybe need to reformat input so it can be fed into the new encoder
+            image_encoding = self.model.encoder(input)  # going through edvr
+            # TODO 4: Maybe need to reformat image_encoding so it can be fed into pool
+            vlad_encoding = self.model.pool(image_encoding) 
+
+            return vlad_encoding.detach().cpu().numpy()
+    
     def __call__(self, images):
         image_encoding = self.model.module.encoder(images) if self.is_parallel else self.model.encoder(images)
         vlad_encoding = self.model.module.pool(image_encoding) if self.is_parallel else self.model.pool(image_encoding)

@@ -17,7 +17,9 @@ class CricaVPRFeatureExtractor:
         model = model.eval().to(self.device)
         ckpt_path = join(root, content["ckpt_path"])
         if pipeline:
-            saved_state = torch.load(join(ckpt_path, "model_best.pth"), map_location=self.device)
+            saved_state = torch.load(join(ckpt_path, "CricaVPR.pth"), map_location=self.device)
+            # for param_name, param_tensor in saved_state.items():
+            #     print(f"Parameter: {param_name}")
             # Remove module prefix from state dict
             state_dict_keys = list(saved_state["state_dict"].keys())
             for state_key in state_dict_keys:

@@ -1,0 +1,30 @@
+{
+  "sampling_freq": 10,
+  "scale_axes": 1,
+  "input_decimation_ratio": 1,
+  "filter_type": "none",
+  "filter_cutoff": 0,
+  "filter_order": 0,
+  "analysis_type": "FFT",
+  "fft_length": 8,
+  "do_log": true,
+  "do_fft_overlap": true,
+  "extra_low_freq": false,
+  "wavelet_level": 1,
+  "wavelet": "",
+  "ref_out_data": "combined_coord_MedianSTD_v1_mag_24dec24.xlsx",
+  "random_sample": true,
+  "batch_size": 50,
+  "targets": [
+    "Cx",
+    "Cy"
+  ],
+  "features": [
+    "X_median_axis0",
+    "Y_median_axis0",
+    "Z_median_axis0",
+    "X_std",
+    "Y_std",
+    "Z_std"
+  ]
+}

@@ -96,8 +96,11 @@ def visualize_candidates_on_floorplans_with_heading(
         place, building, floor = map_key
         floorplan_path = os.path.join(root_dir, place, building, floor, "floorplan.png")
         transform_matrix = localizer.transform_matrices.get(map_key)
+        
         if not os.path.exists(floorplan_path) or transform_matrix is None:
-            print(f"[WARNING] Skip {map_key} (missing floorplan or transform)")
+            print(floorplan_path)
+            print(transform_matrix)
+            print(f"..[WARNING] Skip {map_key} (missing floorplan or transform)")
             continue
         floorplan_img = cv2.imread(floorplan_path)
         floorplan_img = cv2.cvtColor(floorplan_img, cv2.COLOR_BGR2RGB)

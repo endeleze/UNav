@@ -1,0 +1,2588 @@
+xFormers not available
+/unav/venv/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+xFormers not available
+/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/third_party/LightGlue/lightglue/lightglue.py:15: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @torch.cuda.amp.custom_fwd(cast_inputs=torch.float32)
+/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/third_party/SuperPoint_SuperGlue/extractors/SuperGluePretrainedNetwork/models/superpoint.py:138: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.load_state_dict(torch.load(str(path)))
+/unav/venv/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/home/nattachart.tak/PhD/Trial_New_UNav/UNav/unav/core/third_party/CricaVPR/util.py:19: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(args.resume, map_location=args.device)
+/unav/venv/lib/python3.10/site-packages/torch/nested/__init__.py:107: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. (Triggered internally at ../aten/src/ATen/NestedTensorImpl.cpp:178.)
+  return torch._nested_tensor_from_tensor_list(ts, dtype, None, device, None)
+Seed set to: 42 (type: <class 'int'>)
+[INFO] Initializing models: Local -> superpoint+lightglue | Global -> CricaVPR
+Loaded SuperPoint model
+CricaVPR loaded from /home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/parameters/CricaVPR/ckpts/CricaVPR.pth successfully!
+[✓] Loaded COLMAP model for ('Mahidol_University', 'ICT', '1.1_CricaVPR'): 6030 frames
+[✓] Loaded global features for ('Mahidol_University', 'ICT', '1.1_CricaVPR'): 6030 images
+[✓] Loaded transform matrix for ('Mahidol_University', 'ICT', '1.1_CricaVPR'): shape=(2, 4)
+[INFO] All map and feature loading complete.
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (7051, 2) 3D shape: (7051, 3)
+Multiframe time (ms): 408
+Floorplan Pose (x, y, angle): {'xy': array([2035.84071646, 1025.73582657]), 'ang': 337.18308129891165}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5985, 2) 3D shape: (5985, 3)
+Multiframe time (ms): 328
+Floorplan Pose (x, y, angle): {'xy': array([ 949.09018003, 1344.807903  ]), 'ang': 102.95994823798331}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13974, 2) 3D shape: (13974, 3)
+Multiframe time (ms): 939
+Floorplan Pose (x, y, angle): {'xy': array([1499.41831869, 1635.4926844 ]), 'ang': 23.18074819032462}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6832, 2) 3D shape: (6832, 3)
+Multiframe time (ms): 416
+Floorplan Pose (x, y, angle): {'xy': array([1796.92585671, 1332.01915475]), 'ang': 93.71243705365423}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (2975, 2) 3D shape: (2975, 3)
+Multiframe time (ms): 200
+Floorplan Pose (x, y, angle): {'xy': array([ 799.40282834, 1295.96125166]), 'ang': 303.29728705914425}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 33
+PnP pairs 2D shape: (2521, 2) 3D shape: (2521, 3)
+Multiframe time (ms): 139
+Floorplan Pose (x, y, angle): {'xy': array([1267.50692789, 1341.73981801]), 'ang': 184.27133693751415}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13086, 2) 3D shape: (13086, 3)
+Multiframe time (ms): 987
+Floorplan Pose (x, y, angle): {'xy': array([1886.38638065, 1728.81831506]), 'ang': 204.38699605308219}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6580, 2) 3D shape: (6580, 3)
+Multiframe time (ms): 401
+Floorplan Pose (x, y, angle): {'xy': array([2024.13500686, 1703.54202487]), 'ang': 87.2822402106893}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8516, 2) 3D shape: (8516, 3)
+Multiframe time (ms): 429
+Floorplan Pose (x, y, angle): {'xy': array([1764.40598189, 1866.50850945]), 'ang': 39.12156624468993}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7091, 2) 3D shape: (7091, 3)
+Multiframe time (ms): 393
+Floorplan Pose (x, y, angle): {'xy': array([2419.75739871, 1759.99922633]), 'ang': 146.18736593827998}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9871, 2) 3D shape: (9871, 3)
+Multiframe time (ms): 674
+Floorplan Pose (x, y, angle): {'xy': array([2314.99569466, 1703.07897159]), 'ang': 316.96584585099123}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9439, 2) 3D shape: (9439, 3)
+Multiframe time (ms): 663
+Floorplan Pose (x, y, angle): {'xy': array([2417.94118033, 1685.86750216]), 'ang': 13.330378951382798}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7816, 2) 3D shape: (7816, 3)
+Multiframe time (ms): 578
+Floorplan Pose (x, y, angle): {'xy': array([2523.67193585, 1813.31680766]), 'ang': 333.9467361070631}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9043, 2) 3D shape: (9043, 3)
+Multiframe time (ms): 826
+Floorplan Pose (x, y, angle): {'xy': array([2223.80575395, 1551.25932361]), 'ang': 349.6617038729754}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (2201, 2) 3D shape: (2201, 3)
+Multiframe time (ms): 140
+Floorplan Pose (x, y, angle): {'xy': array([2097.45110892, 1335.62610286]), 'ang': 354.96042989553894}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6267, 2) 3D shape: (6267, 3)
+Multiframe time (ms): 424
+Floorplan Pose (x, y, angle): {'xy': array([2066.31285333,  866.08102869]), 'ang': 165.2064775996239}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (3804, 2) 3D shape: (3804, 3)
+Multiframe time (ms): 203
+Floorplan Pose (x, y, angle): {'xy': array([1518.07202203, 1338.2020535 ]), 'ang': 91.73184774902934}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 2
+PnP pairs 2D shape: (144, 2) 3D shape: (144, 3)
+Multiframe time (ms): 15
+Floorplan Pose (x, y, angle): {'xy': array([1613.69171957, 1334.5354663 ]), 'ang': 222.6956572538437}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8607, 2) 3D shape: (8607, 3)
+Multiframe time (ms): 666
+Floorplan Pose (x, y, angle): {'xy': array([1848.13537646, 1333.59931722]), 'ang': 135.33294383549224}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 34
+PnP pairs 2D shape: (2867, 2) 3D shape: (2867, 3)
+Multiframe time (ms): 167
+Floorplan Pose (x, y, angle): {'xy': array([ 778.3092155 , 1286.58472791]), 'ang': 53.763237643779284}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8893, 2) 3D shape: (8893, 3)
+Multiframe time (ms): 727
+Floorplan Pose (x, y, angle): {'xy': array([2277.30733193, 1651.98399168]), 'ang': 154.91531621050385}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 45
+PnP pairs 2D shape: (4132, 2) 3D shape: (4132, 3)
+Multiframe time (ms): 256
+Floorplan Pose (x, y, angle): {'xy': array([2036.86566611,  602.93556038]), 'ang': 346.5157651088823}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10172, 2) 3D shape: (10172, 3)
+Multiframe time (ms): 768
+Floorplan Pose (x, y, angle): {'xy': array([2000.68638979, 1326.40762788]), 'ang': 115.6716531016729}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (4744, 2) 3D shape: (4744, 3)
+Multiframe time (ms): 359
+Floorplan Pose (x, y, angle): {'xy': array([1497.94251871, 1663.83873997]), 'ang': 143.83022085563317}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12143, 2) 3D shape: (12143, 3)
+Multiframe time (ms): 975
+Floorplan Pose (x, y, angle): {'xy': array([2365.3266968 , 1691.23251663]), 'ang': 214.1633394627049}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11377, 2) 3D shape: (11377, 3)
+Multiframe time (ms): 1029
+Floorplan Pose (x, y, angle): {'xy': array([2418.7243706, 1762.5950256]), 'ang': 182.54920126156662}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6840, 2) 3D shape: (6840, 3)
+Multiframe time (ms): 303
+Floorplan Pose (x, y, angle): {'xy': array([2315.31919919, 1698.68838626]), 'ang': 115.26245348699449}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 16
+PnP pairs 2D shape: (1395, 2) 3D shape: (1395, 3)
+Multiframe time (ms): 131
+Floorplan Pose (x, y, angle): {'xy': array([ 809.94834427, 1168.61846458]), 'ang': 35.719614872138756}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 27
+PnP pairs 2D shape: (3422, 2) 3D shape: (3422, 3)
+Multiframe time (ms): 160
+Floorplan Pose (x, y, angle): {'xy': array([1852.09322545, 1329.3442216 ]), 'ang': 270.8208660037927}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 11
+PnP pairs 2D shape: (1174, 2) 3D shape: (1174, 3)
+Multiframe time (ms): 106
+Floorplan Pose (x, y, angle): {'xy': array([1247.8876243 , 1346.76622233]), 'ang': 111.37223976448611}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5448, 2) 3D shape: (5448, 3)
+Multiframe time (ms): 301
+Floorplan Pose (x, y, angle): {'xy': array([2026.16164746,  884.71232301]), 'ang': 137.14887031821536}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6765, 2) 3D shape: (6765, 3)
+Multiframe time (ms): 531
+Floorplan Pose (x, y, angle): {'xy': array([2031.0136045 , 1303.55395359]), 'ang': 216.5468325354114}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 23
+PnP pairs 2D shape: (2761, 2) 3D shape: (2761, 3)
+Multiframe time (ms): 147
+Floorplan Pose (x, y, angle): {'xy': array([1493.35656741, 1606.43853222]), 'ang': 177.89171591739083}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (2636, 2) 3D shape: (2636, 3)
+Multiframe time (ms): 163
+Floorplan Pose (x, y, angle): {'xy': array([ 774.30364389, 1251.74069944]), 'ang': 42.53428782515935}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4707, 2) 3D shape: (4707, 3)
+Multiframe time (ms): 338
+Floorplan Pose (x, y, angle): {'xy': array([1976.96850471, 1334.72054437]), 'ang': 182.16329195799898}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5621, 2) 3D shape: (5621, 3)
+Multiframe time (ms): 334
+Floorplan Pose (x, y, angle): {'xy': array([2039.0352289 ,  924.44048965]), 'ang': 293.7950969696754}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (4164, 2) 3D shape: (4164, 3)
+Multiframe time (ms): 314
+Floorplan Pose (x, y, angle): {'xy': array([2643.39086367, 1723.45535183]), 'ang': 37.40191762543681}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (2794, 2) 3D shape: (2794, 3)
+Multiframe time (ms): 137
+Floorplan Pose (x, y, angle): {'xy': array([1874.53816325, 1333.73736447]), 'ang': 251.28736800188653}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (5294, 2) 3D shape: (5294, 3)
+Multiframe time (ms): 370
+Floorplan Pose (x, y, angle): {'xy': array([ 804.84545897, 1316.91359631]), 'ang': 233.26803296029445}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4509, 2) 3D shape: (4509, 3)
+Multiframe time (ms): 228
+Floorplan Pose (x, y, angle): {'xy': array([2070.48429827,  920.4357015 ]), 'ang': 262.217530454848}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 19
+PnP pairs 2D shape: (1200, 2) 3D shape: (1200, 3)
+Multiframe time (ms): 54
+Floorplan Pose (x, y, angle): {'xy': array([1098.66353711, 1356.36935773]), 'ang': 282.2324177206777}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4475, 2) 3D shape: (4475, 3)
+Multiframe time (ms): 323
+Floorplan Pose (x, y, angle): {'xy': array([2068.77704268,  713.66485541]), 'ang': 163.76927083905372}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 38
+PnP pairs 2D shape: (2932, 2) 3D shape: (2932, 3)
+Multiframe time (ms): 184
+Floorplan Pose (x, y, angle): {'xy': array([2053.43911728,  722.29788612]), 'ang': 339.7772018064876}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 2
+PnP pairs 2D shape: (120, 2) 3D shape: (120, 3)
+Multiframe time (ms): 15
+Floorplan Pose (x, y, angle): {'xy': array([1470.43242758, 1335.18950838]), 'ang': 311.75362809235696}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (11753, 2) 3D shape: (11753, 3)
+Multiframe time (ms): 1146
+Floorplan Pose (x, y, angle): {'xy': array([2193.29076538, 1473.013183  ]), 'ang': 113.65971374374985}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6961, 2) 3D shape: (6961, 3)
+Multiframe time (ms): 511
+Floorplan Pose (x, y, angle): {'xy': array([2230.10242581, 1496.51011618]), 'ang': 326.2354638249502}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12127, 2) 3D shape: (12127, 3)
+Multiframe time (ms): 962
+Floorplan Pose (x, y, angle): {'xy': array([2105.75878691, 1359.44722799]), 'ang': 109.96461807860041}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6581, 2) 3D shape: (6581, 3)
+Multiframe time (ms): 559
+Floorplan Pose (x, y, angle): {'xy': array([2026.39079159, 1062.93108244]), 'ang': 226.6278579075958}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4655, 2) 3D shape: (4655, 3)
+Multiframe time (ms): 303
+Floorplan Pose (x, y, angle): {'xy': array([2015.91258645, 1031.57573047]), 'ang': 258.1934056966238}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 24
+PnP pairs 2D shape: (2450, 2) 3D shape: (2450, 3)
+Multiframe time (ms): 149
+Floorplan Pose (x, y, angle): {'xy': array([ 814.96185944, 1200.5457572 ]), 'ang': 200.3703470573559}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (6625, 2) 3D shape: (6625, 3)
+Multiframe time (ms): 381
+Floorplan Pose (x, y, angle): {'xy': array([2072.27766908,  947.25999963]), 'ang': 322.1709958640239}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 23
+PnP pairs 2D shape: (2183, 2) 3D shape: (2183, 3)
+Multiframe time (ms): 194
+Floorplan Pose (x, y, angle): {'xy': array([ 787.94659835, 1227.15124722]), 'ang': 35.76359797600346}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13909, 2) 3D shape: (13909, 3)
+Multiframe time (ms): 1047
+Floorplan Pose (x, y, angle): {'xy': array([1376.72525225, 1495.04617754]), 'ang': 21.553387141230676}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6806, 2) 3D shape: (6806, 3)
+Multiframe time (ms): 374
+Floorplan Pose (x, y, angle): {'xy': array([2018.01822228, 1227.94386196]), 'ang': 297.7814060451579}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7016, 2) 3D shape: (7016, 3)
+Multiframe time (ms): 348
+Floorplan Pose (x, y, angle): {'xy': array([2341.5718401 , 1713.56075346]), 'ang': 101.52020963767542}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (4627, 2) 3D shape: (4627, 3)
+Multiframe time (ms): 445
+Floorplan Pose (x, y, angle): {'xy': array([1480.91323999, 1554.13835936]), 'ang': 214.1348791211648}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (5339, 2) 3D shape: (5339, 3)
+Multiframe time (ms): 440
+Floorplan Pose (x, y, angle): {'xy': array([ 844.80637483, 1347.26219693]), 'ang': 218.7141683752203}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 2
+PnP pairs 2D shape: (126, 2) 3D shape: (126, 3)
+Multiframe time (ms): 37
+Floorplan Pose (x, y, angle): {'xy': array([ 823.32829109, 1198.85889845]), 'ang': 24.88690759163286}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 24
+PnP pairs 2D shape: (2378, 2) 3D shape: (2378, 3)
+Multiframe time (ms): 135
+Floorplan Pose (x, y, angle): {'xy': array([1822.60737866, 1332.39943141]), 'ang': 246.91796298484388}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 4
+PnP pairs 2D shape: (253, 2) 3D shape: (253, 3)
+Multiframe time (ms): 29
+Floorplan Pose (x, y, angle): {'xy': array([ 774.3751502 , 1331.01281847]), 'ang': 65.48531827713263}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7627, 2) 3D shape: (7627, 3)
+Multiframe time (ms): 608
+Floorplan Pose (x, y, angle): {'xy': array([2024.73766809,  985.74108452]), 'ang': 19.402329642889644}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 35
+PnP pairs 2D shape: (4586, 2) 3D shape: (4586, 3)
+Multiframe time (ms): 455
+Floorplan Pose (x, y, angle): {'xy': array([1428.82013894, 1507.56269227]), 'ang': 154.58580501263853}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (9351, 2) 3D shape: (9351, 3)
+Multiframe time (ms): 593
+Floorplan Pose (x, y, angle): {'xy': array([1967.56882137, 1712.51222975]), 'ang': 306.6270914795766}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (3016, 2) 3D shape: (3016, 3)
+Multiframe time (ms): 131
+Floorplan Pose (x, y, angle): {'xy': array([1247.46617248, 1345.19244164]), 'ang': 330.9868096607414}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (5686, 2) 3D shape: (5686, 3)
+Multiframe time (ms): 326
+Floorplan Pose (x, y, angle): {'xy': array([2065.23202965, 1104.33672263]), 'ang': 164.71216107517765}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10909, 2) 3D shape: (10909, 3)
+Multiframe time (ms): 995
+Floorplan Pose (x, y, angle): {'xy': array([2106.42628291, 1379.45862807]), 'ang': 59.67617984922923}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4527, 2) 3D shape: (4527, 3)
+Multiframe time (ms): 409
+Floorplan Pose (x, y, angle): {'xy': array([2049.28111357,  612.42392591]), 'ang': 103.4812654291603}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 31
+PnP pairs 2D shape: (2548, 2) 3D shape: (2548, 3)
+Multiframe time (ms): 164
+Floorplan Pose (x, y, angle): {'xy': array([1824.73212938, 1335.07172191]), 'ang': 205.0708730486917}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (5633, 2) 3D shape: (5633, 3)
+Multiframe time (ms): 378
+Floorplan Pose (x, y, angle): {'xy': array([2079.32799745, 1100.7751411 ]), 'ang': 22.38966612919657}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4843, 2) 3D shape: (4843, 3)
+Multiframe time (ms): 339
+Floorplan Pose (x, y, angle): {'xy': array([2067.8778029 ,  812.87544306]), 'ang': 190.63216878571646}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5868, 2) 3D shape: (5868, 3)
+Multiframe time (ms): 457
+Floorplan Pose (x, y, angle): {'xy': array([2097.39581747, 1337.07629882]), 'ang': 274.43471735816047}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4481, 2) 3D shape: (4481, 3)
+Multiframe time (ms): 276
+Floorplan Pose (x, y, angle): {'xy': array([1209.26630258, 1352.10395567]), 'ang': 151.19999622113164}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4927, 2) 3D shape: (4927, 3)
+Multiframe time (ms): 332
+Floorplan Pose (x, y, angle): {'xy': array([1009.30609453, 1354.06604397]), 'ang': 172.63241616600797}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12934, 2) 3D shape: (12934, 3)
+Multiframe time (ms): 1370
+Floorplan Pose (x, y, angle): {'xy': array([1509.24892828, 1722.64654474]), 'ang': 45.834803483708725}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (2859, 2) 3D shape: (2859, 3)
+Multiframe time (ms): 254
+Floorplan Pose (x, y, angle): {'xy': array([ 782.67423002, 1154.46028612]), 'ang': 91.62540038739002}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 13
+PnP pairs 2D shape: (970, 2) 3D shape: (970, 3)
+Multiframe time (ms): 66
+Floorplan Pose (x, y, angle): {'xy': array([1098.82398882, 1357.35124008]), 'ang': 249.3970659538369}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 39
+PnP pairs 2D shape: (4761, 2) 3D shape: (4761, 3)
+Multiframe time (ms): 347
+Floorplan Pose (x, y, angle): {'xy': array([2128.0886611 , 1462.88687264]), 'ang': 283.8817340229967}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 39
+PnP pairs 2D shape: (3646, 2) 3D shape: (3646, 3)
+Multiframe time (ms): 272
+Floorplan Pose (x, y, angle): {'xy': array([2030.03054293,  782.59372638]), 'ang': 261.9040626680517}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8469, 2) 3D shape: (8469, 3)
+Multiframe time (ms): 606
+Floorplan Pose (x, y, angle): {'xy': array([1992.42796443, 1312.81136193]), 'ang': 329.23528967138014}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9168, 2) 3D shape: (9168, 3)
+Multiframe time (ms): 676
+Floorplan Pose (x, y, angle): {'xy': array([2015.02530549, 1034.67400324]), 'ang': 78.74053481954748}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (4251, 2) 3D shape: (4251, 3)
+Multiframe time (ms): 261
+Floorplan Pose (x, y, angle): {'xy': array([1328.9332107 , 1339.52285797]), 'ang': 6.877479503546521}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (6316, 2) 3D shape: (6316, 3)
+Multiframe time (ms): 365
+Floorplan Pose (x, y, angle): {'xy': array([2017.29685875, 1311.42821242]), 'ang': 334.45596910494356}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8023, 2) 3D shape: (8023, 3)
+Multiframe time (ms): 562
+Floorplan Pose (x, y, angle): {'xy': array([2416.70229444, 1688.09447781]), 'ang': 316.16121802307646}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8984, 2) 3D shape: (8984, 3)
+Multiframe time (ms): 576
+Floorplan Pose (x, y, angle): {'xy': array([1964.94258036, 1707.07994301]), 'ang': 247.945551563994}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12209, 2) 3D shape: (12209, 3)
+Multiframe time (ms): 1341
+Floorplan Pose (x, y, angle): {'xy': array([1440.65164039, 1515.89416235]), 'ang': 1.5355374802100827}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7740, 2) 3D shape: (7740, 3)
+Multiframe time (ms): 882
+Floorplan Pose (x, y, angle): {'xy': array([2364.45159143, 1670.72622459]), 'ang': 51.46244660234348}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 29
+PnP pairs 2D shape: (3150, 2) 3D shape: (3150, 3)
+Multiframe time (ms): 223
+Floorplan Pose (x, y, angle): {'xy': array([2521.05942435, 1671.6298127 ]), 'ang': 287.90131806017206}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (4704, 2) 3D shape: (4704, 3)
+Multiframe time (ms): 359
+Floorplan Pose (x, y, angle): {'xy': array([1392.29775176, 1338.2698482 ]), 'ang': 4.707398808713455}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11963, 2) 3D shape: (11963, 3)
+Multiframe time (ms): 1399
+Floorplan Pose (x, y, angle): {'xy': array([2105.23735911, 1399.6549518 ]), 'ang': 125.6596081851322}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 31
+PnP pairs 2D shape: (3056, 2) 3D shape: (3056, 3)
+Multiframe time (ms): 173
+Floorplan Pose (x, y, angle): {'xy': array([1335.14850381, 1460.30718889]), 'ang': 266.0899299259939}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (3049, 2) 3D shape: (3049, 3)
+Multiframe time (ms): 186
+Floorplan Pose (x, y, angle): {'xy': array([ 816.48873577, 1175.50859048]), 'ang': 222.1196145725906}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6508, 2) 3D shape: (6508, 3)
+Multiframe time (ms): 531
+Floorplan Pose (x, y, angle): {'xy': array([2003.51633821, 1326.38606501]), 'ang': 39.3246258118247}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 23
+PnP pairs 2D shape: (1675, 2) 3D shape: (1675, 3)
+Multiframe time (ms): 137
+Floorplan Pose (x, y, angle): {'xy': array([ 820.01215924, 1195.48511431]), 'ang': 62.905105770924614}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 23
+PnP pairs 2D shape: (2376, 2) 3D shape: (2376, 3)
+Multiframe time (ms): 117
+Floorplan Pose (x, y, angle): {'xy': array([1874.9878869 , 1331.94881499]), 'ang': 300.12098514190745}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (8313, 2) 3D shape: (8313, 3)
+Multiframe time (ms): 664
+Floorplan Pose (x, y, angle): {'xy': array([1494.53426008, 1599.13755913]), 'ang': 93.95991677225841}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 17
+PnP pairs 2D shape: (1143, 2) 3D shape: (1143, 3)
+Multiframe time (ms): 72
+Floorplan Pose (x, y, angle): {'xy': array([1106.83144282, 1357.35938412]), 'ang': 293.041996882473}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (4387, 2) 3D shape: (4387, 3)
+Multiframe time (ms): 241
+Floorplan Pose (x, y, angle): {'xy': array([2229.99420944, 1519.76548589]), 'ang': 281.11586741911117}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 18
+PnP pairs 2D shape: (1724, 2) 3D shape: (1724, 3)
+Multiframe time (ms): 156
+Floorplan Pose (x, y, angle): {'xy': array([ 805.37597683, 1208.30663785]), 'ang': 36.73464521716561}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 1
+PnP pairs 2D shape: (54, 2) 3D shape: (54, 3)
+Multiframe time (ms): 13
+Floorplan Pose (x, y, angle): {'xy': array([1695.26377354, 1331.26914944]), 'ang': 302.98930416066605}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4764, 2) 3D shape: (4764, 3)
+Multiframe time (ms): 396
+Floorplan Pose (x, y, angle): {'xy': array([2049.87430022,  896.60854928]), 'ang': 308.1674646452762}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4989, 2) 3D shape: (4989, 3)
+Multiframe time (ms): 371
+Floorplan Pose (x, y, angle): {'xy': array([2047.27559315,  868.70924707]), 'ang': 171.20404115280198}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (7393, 2) 3D shape: (7393, 3)
+Multiframe time (ms): 616
+Floorplan Pose (x, y, angle): {'xy': array([2009.89572063, 1158.74798037]), 'ang': 44.12370705673388}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (7148, 2) 3D shape: (7148, 3)
+Multiframe time (ms): 668
+Floorplan Pose (x, y, angle): {'xy': array([2418.76323241, 1685.1176696 ]), 'ang': 297.4608261368941}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4788, 2) 3D shape: (4788, 3)
+Multiframe time (ms): 567
+Floorplan Pose (x, y, angle): {'xy': array([2065.08270622,  706.41762467]), 'ang': 149.0992585366295}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 21
+PnP pairs 2D shape: (1893, 2) 3D shape: (1893, 3)
+Multiframe time (ms): 167
+Floorplan Pose (x, y, angle): {'xy': array([2027.53862902,  773.7214154 ]), 'ang': 199.50262615953736}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10719, 2) 3D shape: (10719, 3)
+Multiframe time (ms): 931
+Floorplan Pose (x, y, angle): {'xy': array([1885.13925892, 1723.08390277]), 'ang': 128.94097427832892}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (6295, 2) 3D shape: (6295, 3)
+Multiframe time (ms): 477
+Floorplan Pose (x, y, angle): {'xy': array([1503.60045544, 1743.9569592 ]), 'ang': 204.78821009104558}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 45
+PnP pairs 2D shape: (6704, 2) 3D shape: (6704, 3)
+Multiframe time (ms): 543
+Floorplan Pose (x, y, angle): {'xy': array([1573.24542182, 1867.16352996]), 'ang': 71.58604566714885}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (6178, 2) 3D shape: (6178, 3)
+Multiframe time (ms): 462
+Floorplan Pose (x, y, angle): {'xy': array([1746.72821972, 1334.63755954]), 'ang': 110.70561046171542}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8009, 2) 3D shape: (8009, 3)
+Multiframe time (ms): 547
+Floorplan Pose (x, y, angle): {'xy': array([2011.32855227, 1183.55162094]), 'ang': 119.0796050476894}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7771, 2) 3D shape: (7771, 3)
+Multiframe time (ms): 597
+Floorplan Pose (x, y, angle): {'xy': array([2629.35516262, 1693.36750805]), 'ang': 116.01529819483899}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12514, 2) 3D shape: (12514, 3)
+Multiframe time (ms): 1215
+Floorplan Pose (x, y, angle): {'xy': array([2150.58626069, 1445.00160421]), 'ang': 166.7777103355162}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 34
+PnP pairs 2D shape: (3259, 2) 3D shape: (3259, 3)
+Multiframe time (ms): 188
+Floorplan Pose (x, y, angle): {'xy': array([1044.56907684, 1359.09572641]), 'ang': 27.940635743021}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (6083, 2) 3D shape: (6083, 3)
+Multiframe time (ms): 598
+Floorplan Pose (x, y, angle): {'xy': array([1750.37590573, 1337.8509412 ]), 'ang': 131.14653613536933}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (5221, 2) 3D shape: (5221, 3)
+Multiframe time (ms): 437
+Floorplan Pose (x, y, angle): {'xy': array([1488.3689378 , 1581.09743833]), 'ang': 118.38706127860058}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (5170, 2) 3D shape: (5170, 3)
+Multiframe time (ms): 380
+Floorplan Pose (x, y, angle): {'xy': array([1493.93540804, 1605.10507441]), 'ang': 258.14983444334143}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9110, 2) 3D shape: (9110, 3)
+Multiframe time (ms): 940
+Floorplan Pose (x, y, angle): {'xy': array([2466.79074704, 1794.27867668]), 'ang': 66.54935119960943}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (16039, 2) 3D shape: (16039, 3)
+Multiframe time (ms): 1893
+Floorplan Pose (x, y, angle): {'xy': array([1584.97443059, 1874.42141991]), 'ang': 314.78410038010225}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (3791, 2) 3D shape: (3791, 3)
+Multiframe time (ms): 250
+Floorplan Pose (x, y, angle): {'xy': array([2030.98784116,  695.03492959]), 'ang': 175.4298339737035}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5810, 2) 3D shape: (5810, 3)
+Multiframe time (ms): 450
+Floorplan Pose (x, y, angle): {'xy': array([2044.19059375,  921.83912008]), 'ang': 221.2207609950891}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 27
+PnP pairs 2D shape: (2820, 2) 3D shape: (2820, 3)
+Multiframe time (ms): 221
+Floorplan Pose (x, y, angle): {'xy': array([1494.37673945, 1632.20055959]), 'ang': 198.78586001479175}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (5324, 2) 3D shape: (5324, 3)
+Multiframe time (ms): 324
+Floorplan Pose (x, y, angle): {'xy': array([2054.64010226,  851.22189327]), 'ang': 139.1611092891603}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5925, 2) 3D shape: (5925, 3)
+Multiframe time (ms): 402
+Floorplan Pose (x, y, angle): {'xy': array([2068.28673226,  892.42382506]), 'ang': 144.49067184877453}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (5548, 2) 3D shape: (5548, 3)
+Multiframe time (ms): 453
+Floorplan Pose (x, y, angle): {'xy': array([2081.71938734, 1099.90108621]), 'ang': 345.0988450555283}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (3820, 2) 3D shape: (3820, 3)
+Multiframe time (ms): 210
+Floorplan Pose (x, y, angle): {'xy': array([1556.76970623, 1333.48603302]), 'ang': 150.98628617941458}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9520, 2) 3D shape: (9520, 3)
+Multiframe time (ms): 1067
+Floorplan Pose (x, y, angle): {'xy': array([2103.43817608, 1376.22401043]), 'ang': 40.67399715691509}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12889, 2) 3D shape: (12889, 3)
+Multiframe time (ms): 1676
+Floorplan Pose (x, y, angle): {'xy': array([1804.60803701, 1782.10475953]), 'ang': 224.79486523315157}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13779, 2) 3D shape: (13779, 3)
+Multiframe time (ms): 1244
+Floorplan Pose (x, y, angle): {'xy': array([1905.24473812, 1725.33948579]), 'ang': 345.27715705447645}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (5422, 2) 3D shape: (5422, 3)
+Multiframe time (ms): 602
+Floorplan Pose (x, y, angle): {'xy': array([ 776.32948458, 1312.87402107]), 'ang': 263.67606032853655}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8309, 2) 3D shape: (8309, 3)
+Multiframe time (ms): 612
+Floorplan Pose (x, y, angle): {'xy': array([1879.95561616, 1727.02377929]), 'ang': 87.31194155474189}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 24
+PnP pairs 2D shape: (1968, 2) 3D shape: (1968, 3)
+Multiframe time (ms): 146
+Floorplan Pose (x, y, angle): {'xy': array([1621.71903486, 1338.51560324]), 'ang': 76.05473311232852}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (2289, 2) 3D shape: (2289, 3)
+Multiframe time (ms): 292
+Floorplan Pose (x, y, angle): {'xy': array([ 777.14030094, 1311.79591934]), 'ang': 41.52588554396628}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 45
+PnP pairs 2D shape: (5051, 2) 3D shape: (5051, 3)
+Multiframe time (ms): 431
+Floorplan Pose (x, y, angle): {'xy': array([2017.09336062,  954.72164347]), 'ang': 238.42854113488264}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 45
+PnP pairs 2D shape: (4843, 2) 3D shape: (4843, 3)
+Multiframe time (ms): 358
+Floorplan Pose (x, y, angle): {'xy': array([1368.22690101, 1340.02027175]), 'ang': 5.450146139075984}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 18
+PnP pairs 2D shape: (1471, 2) 3D shape: (1471, 3)
+Multiframe time (ms): 152
+Floorplan Pose (x, y, angle): {'xy': array([ 823.8432094 , 1333.64807376]), 'ang': 313.16795294984604}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (6289, 2) 3D shape: (6289, 3)
+Multiframe time (ms): 573
+Floorplan Pose (x, y, angle): {'xy': array([2128.0232648 , 1435.92800363]), 'ang': 338.63468739783184}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5662, 2) 3D shape: (5662, 3)
+Multiframe time (ms): 359
+Floorplan Pose (x, y, angle): {'xy': array([ 948.25861584, 1347.01287002]), 'ang': 127.18529140170207}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8382, 2) 3D shape: (8382, 3)
+Multiframe time (ms): 732
+Floorplan Pose (x, y, angle): {'xy': array([2042.81130868,  879.65096667]), 'ang': 97.57073811239661}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7364, 2) 3D shape: (7364, 3)
+Multiframe time (ms): 538
+Floorplan Pose (x, y, angle): {'xy': array([2025.02646955, 1701.73120191]), 'ang': 106.47363131007853}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7533, 2) 3D shape: (7533, 3)
+Multiframe time (ms): 683
+Floorplan Pose (x, y, angle): {'xy': array([2634.80993676, 1799.1030126 ]), 'ang': 241.86493406209343}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6843, 2) 3D shape: (6843, 3)
+Multiframe time (ms): 664
+Floorplan Pose (x, y, angle): {'xy': array([2007.61577806, 1307.26852409]), 'ang': 240.38733000019073}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5742, 2) 3D shape: (5742, 3)
+Multiframe time (ms): 480
+Floorplan Pose (x, y, angle): {'xy': array([1720.8594323 , 1332.52967928]), 'ang': 8.82268136803789}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11532, 2) 3D shape: (11532, 3)
+Multiframe time (ms): 1687
+Floorplan Pose (x, y, angle): {'xy': array([2132.12666597, 1471.8034759 ]), 'ang': 9.460247157999971}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (3987, 2) 3D shape: (3987, 3)
+Multiframe time (ms): 301
+Floorplan Pose (x, y, angle): {'xy': array([1076.43539305, 1341.37954804]), 'ang': 65.88190327708722}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 3
+PnP pairs 2D shape: (176, 2) 3D shape: (176, 3)
+Multiframe time (ms): 67
+Floorplan Pose (x, y, angle): {'xy': array([1722.24031143, 1331.26678727]), 'ang': 281.8638224667627}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9189, 2) 3D shape: (9189, 3)
+Multiframe time (ms): 837
+Floorplan Pose (x, y, angle): {'xy': array([2493.24168612, 1807.37196005]), 'ang': 97.4186646751938}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7061, 2) 3D shape: (7061, 3)
+Multiframe time (ms): 437
+Floorplan Pose (x, y, angle): {'xy': array([2579.27986296, 1672.81606197]), 'ang': 351.1224479473788}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6445, 2) 3D shape: (6445, 3)
+Multiframe time (ms): 364
+Floorplan Pose (x, y, angle): {'xy': array([2075.22635159, 1058.92580972]), 'ang': 136.77818818525853}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6153, 2) 3D shape: (6153, 3)
+Multiframe time (ms): 396
+Floorplan Pose (x, y, angle): {'xy': array([2087.23172306,  735.81773586]), 'ang': 125.61973649279473}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (3837, 2) 3D shape: (3837, 3)
+Multiframe time (ms): 320
+Floorplan Pose (x, y, angle): {'xy': array([2071.65474277,  819.25132123]), 'ang': 284.10503190422156}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10061, 2) 3D shape: (10061, 3)
+Multiframe time (ms): 1393
+Floorplan Pose (x, y, angle): {'xy': array([2146.91430398, 1439.98072004]), 'ang': 22.527381515616586}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4275, 2) 3D shape: (4275, 3)
+Multiframe time (ms): 392
+Floorplan Pose (x, y, angle): {'xy': array([2065.55500784,  656.66747579]), 'ang': 222.7918086416433}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4081, 2) 3D shape: (4081, 3)
+Multiframe time (ms): 364
+Floorplan Pose (x, y, angle): {'xy': array([2050.22142376,  616.23962837]), 'ang': 106.93089236451107}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 1
+PnP pairs 2D shape: (60, 2) 3D shape: (60, 3)
+Multiframe time (ms): 11
+Floorplan Pose (x, y, angle): {'xy': array([ 816.96481512, 1215.74952616]), 'ang': 346.82695780352435}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4988, 2) 3D shape: (4988, 3)
+Multiframe time (ms): 320
+Floorplan Pose (x, y, angle): {'xy': array([1126.29930102, 1342.28327475]), 'ang': 1.0097326547730068}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 29
+PnP pairs 2D shape: (2678, 2) 3D shape: (2678, 3)
+Multiframe time (ms): 215
+Floorplan Pose (x, y, angle): {'xy': array([1508.46039902, 1837.62856012]), 'ang': 170.38908471542538}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (14008, 2) 3D shape: (14008, 3)
+Multiframe time (ms): 1330
+Floorplan Pose (x, y, angle): {'xy': array([2559.6856812 , 1810.94152021]), 'ang': 186.15320874203886}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6393, 2) 3D shape: (6393, 3)
+Multiframe time (ms): 501
+Floorplan Pose (x, y, angle): {'xy': array([2030.46600298, 1182.08555579]), 'ang': 292.6830383017118}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (6301, 2) 3D shape: (6301, 3)
+Multiframe time (ms): 497
+Floorplan Pose (x, y, angle): {'xy': array([2022.08434417, 1145.9760784 ]), 'ang': 40.35706684292662}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 38
+PnP pairs 2D shape: (5390, 2) 3D shape: (5390, 3)
+Multiframe time (ms): 657
+Floorplan Pose (x, y, angle): {'xy': array([2108.30220086, 1361.17245152]), 'ang': 212.99685136060435}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7274, 2) 3D shape: (7274, 3)
+Multiframe time (ms): 439
+Floorplan Pose (x, y, angle): {'xy': array([1935.63554462, 1715.06106277]), 'ang': 45.08580102117632}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4515, 2) 3D shape: (4515, 3)
+Multiframe time (ms): 373
+Floorplan Pose (x, y, angle): {'xy': array([2063.1189372,  672.5077934]), 'ang': 238.75711033722695}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (6755, 2) 3D shape: (6755, 3)
+Multiframe time (ms): 740
+Floorplan Pose (x, y, angle): {'xy': array([1494.81745533, 1736.43376672]), 'ang': 182.05096408589426}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (6052, 2) 3D shape: (6052, 3)
+Multiframe time (ms): 409
+Floorplan Pose (x, y, angle): {'xy': array([2036.62561054,  994.68499908]), 'ang': 275.6142029490156}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (15689, 2) 3D shape: (15689, 3)
+Multiframe time (ms): 1401
+Floorplan Pose (x, y, angle): {'xy': array([1518.93702636, 1854.01588977]), 'ang': 352.5862493458179}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8633, 2) 3D shape: (8633, 3)
+Multiframe time (ms): 623
+Floorplan Pose (x, y, angle): {'xy': array([2030.32115835, 1181.3120632 ]), 'ang': 113.57776123218682}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11382, 2) 3D shape: (11382, 3)
+Multiframe time (ms): 1011
+Floorplan Pose (x, y, angle): {'xy': array([2265.40032739, 1664.34581207]), 'ang': 189.0828169992406}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (3605, 2) 3D shape: (3605, 3)
+Multiframe time (ms): 341
+Floorplan Pose (x, y, angle): {'xy': array([2071.3209121 ,  840.77615886]), 'ang': 283.7275889364354}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5904, 2) 3D shape: (5904, 3)
+Multiframe time (ms): 575
+Floorplan Pose (x, y, angle): {'xy': array([2041.69858227,  949.27431148]), 'ang': 199.39253788246947}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (2388, 2) 3D shape: (2388, 3)
+Multiframe time (ms): 168
+Floorplan Pose (x, y, angle): {'xy': array([1847.94716289, 1335.86181052]), 'ang': 209.8171754027837}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7436, 2) 3D shape: (7436, 3)
+Multiframe time (ms): 590
+Floorplan Pose (x, y, angle): {'xy': array([1645.75955905, 1857.7465698 ]), 'ang': 113.91032364618621}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (2043, 2) 3D shape: (2043, 3)
+Multiframe time (ms): 126
+Floorplan Pose (x, y, angle): {'xy': array([1299.54193218, 1343.24065096]), 'ang': 334.09190277584776}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (2882, 2) 3D shape: (2882, 3)
+Multiframe time (ms): 224
+Floorplan Pose (x, y, angle): {'xy': array([1024.47472274, 1344.39504723]), 'ang': 322.49578388694835}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 23
+PnP pairs 2D shape: (2073, 2) 3D shape: (2073, 3)
+Multiframe time (ms): 223
+Floorplan Pose (x, y, angle): {'xy': array([2638.27462138, 1777.26763687]), 'ang': 344.4791204366334}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 29
+PnP pairs 2D shape: (3110, 2) 3D shape: (3110, 3)
+Multiframe time (ms): 396
+Floorplan Pose (x, y, angle): {'xy': array([1206.33979382, 1353.67447963]), 'ang': 72.91308114761131}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11020, 2) 3D shape: (11020, 3)
+Multiframe time (ms): 728
+Floorplan Pose (x, y, angle): {'xy': array([1815.89838378, 1758.18458474]), 'ang': 280.01288042870533}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9766, 2) 3D shape: (9766, 3)
+Multiframe time (ms): 1061
+Floorplan Pose (x, y, angle): {'xy': array([2227.12177291, 1517.82710601]), 'ang': 204.95044913702685}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (2886, 2) 3D shape: (2886, 3)
+Multiframe time (ms): 273
+Floorplan Pose (x, y, angle): {'xy': array([ 799.4317155 , 1296.00372291]), 'ang': 302.24007967478263}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7292, 2) 3D shape: (7292, 3)
+Multiframe time (ms): 587
+Floorplan Pose (x, y, angle): {'xy': array([2415.96222623, 1762.69390031]), 'ang': 145.50234803266412}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7792, 2) 3D shape: (7792, 3)
+Multiframe time (ms): 694
+Floorplan Pose (x, y, angle): {'xy': array([2525.61820557, 1812.56017846]), 'ang': 333.89520006987755}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (2223, 2) 3D shape: (2223, 3)
+Multiframe time (ms): 240
+Floorplan Pose (x, y, angle): {'xy': array([2097.60280317, 1335.40226464]), 'ang': 353.88009707262427}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5946, 2) 3D shape: (5946, 3)
+Multiframe time (ms): 445
+Floorplan Pose (x, y, angle): {'xy': array([2074.62745344,  866.92003598]), 'ang': 160.76639688499458}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10247, 2) 3D shape: (10247, 3)
+Multiframe time (ms): 1093
+Floorplan Pose (x, y, angle): {'xy': array([1811.66831571, 1781.66606262]), 'ang': 43.78821495726352}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 23
+PnP pairs 2D shape: (2451, 2) 3D shape: (2451, 3)
+Multiframe time (ms): 269
+Floorplan Pose (x, y, angle): {'xy': array([ 757.72204179, 1196.13052696]), 'ang': 337.17775649936834}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (7518, 2) 3D shape: (7518, 3)
+Multiframe time (ms): 685
+Floorplan Pose (x, y, angle): {'xy': array([1786.83187372, 1857.22671826]), 'ang': 64.11189759351758}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 35
+PnP pairs 2D shape: (2886, 2) 3D shape: (2886, 3)
+Multiframe time (ms): 187
+Floorplan Pose (x, y, angle): {'xy': array([1702.36373921, 1335.41965092]), 'ang': 323.63785715347865}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 29
+PnP pairs 2D shape: (2693, 2) 3D shape: (2693, 3)
+Multiframe time (ms): 250
+Floorplan Pose (x, y, angle): {'xy': array([2068.21092238,  803.72437581]), 'ang': 358.66535724766595}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7971, 2) 3D shape: (7971, 3)
+Multiframe time (ms): 686
+Floorplan Pose (x, y, angle): {'xy': array([1900.37253783, 1334.63880357]), 'ang': 158.8875861747979}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4025, 2) 3D shape: (4025, 3)
+Multiframe time (ms): 217
+Floorplan Pose (x, y, angle): {'xy': array([2038.09726248,  602.54241459]), 'ang': 346.8954236806388}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10448, 2) 3D shape: (10448, 3)
+Multiframe time (ms): 760
+Floorplan Pose (x, y, angle): {'xy': array([1999.81975465, 1326.60828653]), 'ang': 115.47709439556701}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8314, 2) 3D shape: (8314, 3)
+Multiframe time (ms): 717
+Floorplan Pose (x, y, angle): {'xy': array([2018.12428953,  954.59655538]), 'ang': 98.86236582195507}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7226, 2) 3D shape: (7226, 3)
+Multiframe time (ms): 517
+Floorplan Pose (x, y, angle): {'xy': array([1797.46627924, 1333.1912418 ]), 'ang': 71.7024155262941}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8152, 2) 3D shape: (8152, 3)
+Multiframe time (ms): 834
+Floorplan Pose (x, y, angle): {'xy': array([1271.32741921, 1339.09045893]), 'ang': 51.78033063398118}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12310, 2) 3D shape: (12310, 3)
+Multiframe time (ms): 1298
+Floorplan Pose (x, y, angle): {'xy': array([2365.90253742, 1691.47819069]), 'ang': 214.08891264682111}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11361, 2) 3D shape: (11361, 3)
+Multiframe time (ms): 1049
+Floorplan Pose (x, y, angle): {'xy': array([2417.79216255, 1763.33232795]), 'ang': 182.60261374146302}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (5670, 2) 3D shape: (5670, 3)
+Multiframe time (ms): 469
+Floorplan Pose (x, y, angle): {'xy': array([1255.17567382, 1349.50359572]), 'ang': 23.06016106335127}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (3260, 2) 3D shape: (3260, 3)
+Multiframe time (ms): 180
+Floorplan Pose (x, y, angle): {'xy': array([1848.14061163, 1334.08305553]), 'ang': 272.48174073253654}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5419, 2) 3D shape: (5419, 3)
+Multiframe time (ms): 283
+Floorplan Pose (x, y, angle): {'xy': array([2026.95024508,  884.31811706]), 'ang': 137.20579100039365}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6956, 2) 3D shape: (6956, 3)
+Multiframe time (ms): 488
+Floorplan Pose (x, y, angle): {'xy': array([2081.79248067, 1142.93676266]), 'ang': 208.7597343561396}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 6
+PnP pairs 2D shape: (366, 2) 3D shape: (366, 3)
+Multiframe time (ms): 39
+Floorplan Pose (x, y, angle): {'xy': array([ 776.73880673, 1311.2015841 ]), 'ang': 204.26302454589845}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (3030, 2) 3D shape: (3030, 3)
+Multiframe time (ms): 321
+Floorplan Pose (x, y, angle): {'xy': array([1491.44947954, 1606.34808508]), 'ang': 175.59121657495982}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 6
+PnP pairs 2D shape: (425, 2) 3D shape: (425, 3)
+Multiframe time (ms): 88
+Floorplan Pose (x, y, angle): {'xy': array([1621.16146078, 1337.97180438]), 'ang': 314.73741222774635}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5885, 2) 3D shape: (5885, 3)
+Multiframe time (ms): 360
+Floorplan Pose (x, y, angle): {'xy': array([ 930.11619969, 1361.02823278]), 'ang': 65.38558348930871}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 34
+PnP pairs 2D shape: (2661, 2) 3D shape: (2661, 3)
+Multiframe time (ms): 268
+Floorplan Pose (x, y, angle): {'xy': array([ 822.97996335, 1210.64873728]), 'ang': 129.02747505694222}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4709, 2) 3D shape: (4709, 3)
+Multiframe time (ms): 459
+Floorplan Pose (x, y, angle): {'xy': array([2068.88663936,  680.04468122]), 'ang': 316.08311505880437}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (9832, 2) 3D shape: (9832, 3)
+Multiframe time (ms): 1145
+Floorplan Pose (x, y, angle): {'xy': array([2577.12521873, 1832.76440878]), 'ang': 89.68857596345548}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (3441, 2) 3D shape: (3441, 3)
+Multiframe time (ms): 327
+Floorplan Pose (x, y, angle): {'xy': array([ 856.31267811, 1356.82372719]), 'ang': 251.11328137919048}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4321, 2) 3D shape: (4321, 3)
+Multiframe time (ms): 438
+Floorplan Pose (x, y, angle): {'xy': array([1977.26776284, 1334.66454788]), 'ang': 182.08019662649647}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7728, 2) 3D shape: (7728, 3)
+Multiframe time (ms): 787
+Floorplan Pose (x, y, angle): {'xy': array([2031.71777777, 1259.54012243]), 'ang': 40.91182764994497}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (6026, 2) 3D shape: (6026, 3)
+Multiframe time (ms): 654
+Floorplan Pose (x, y, angle): {'xy': array([1978.98137754, 1334.3425103 ]), 'ang': 265.46067369143316}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10370, 2) 3D shape: (10370, 3)
+Multiframe time (ms): 821
+Floorplan Pose (x, y, angle): {'xy': array([2575.094913  , 1814.49237984]), 'ang': 129.03033802840125}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (5038, 2) 3D shape: (5038, 3)
+Multiframe time (ms): 397
+Floorplan Pose (x, y, angle): {'xy': array([ 804.78417857, 1316.78785901]), 'ang': 233.27897575732925}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (3669, 2) 3D shape: (3669, 3)
+Multiframe time (ms): 340
+Floorplan Pose (x, y, angle): {'xy': array([1505.01694536, 1840.30634416]), 'ang': 132.36894843530948}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 17
+PnP pairs 2D shape: (1092, 2) 3D shape: (1092, 3)
+Multiframe time (ms): 76
+Floorplan Pose (x, y, angle): {'xy': array([1098.5602053 , 1356.93874836]), 'ang': 282.40395473417874}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 1
+PnP pairs 2D shape: (51, 2) 3D shape: (51, 3)
+Multiframe time (ms): 18
+Floorplan Pose (x, y, angle): {'xy': array([1363.1260545 , 1338.56917941]), 'ang': 312.95602260222824}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4503, 2) 3D shape: (4503, 3)
+Multiframe time (ms): 271
+Floorplan Pose (x, y, angle): {'xy': array([2068.18234834,  713.73698878]), 'ang': 163.69944448720142}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (7166, 2) 3D shape: (7166, 3)
+Multiframe time (ms): 807
+Floorplan Pose (x, y, angle): {'xy': array([1562.15769372, 1857.83767851]), 'ang': 230.37179275610205}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7186, 2) 3D shape: (7186, 3)
+Multiframe time (ms): 617
+Floorplan Pose (x, y, angle): {'xy': array([2230.09353573, 1496.83166206]), 'ang': 326.42075266842187}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12220, 2) 3D shape: (12220, 3)
+Multiframe time (ms): 981
+Floorplan Pose (x, y, angle): {'xy': array([2105.01246789, 1360.24423118]), 'ang': 108.26303337534505}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (5186, 2) 3D shape: (5186, 3)
+Multiframe time (ms): 416
+Floorplan Pose (x, y, angle): {'xy': array([2010.06987167, 1311.73477126]), 'ang': 183.33184331986465}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (1744, 2) 3D shape: (1744, 3)
+Multiframe time (ms): 233
+Floorplan Pose (x, y, angle): {'xy': array([ 786.76614158, 1312.57527512]), 'ang': 174.90213084344512}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (2327, 2) 3D shape: (2327, 3)
+Multiframe time (ms): 167
+Floorplan Pose (x, y, angle): {'xy': array([ 815.26547828, 1200.67062422]), 'ang': 200.53004130536726}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (6709, 2) 3D shape: (6709, 3)
+Multiframe time (ms): 510
+Floorplan Pose (x, y, angle): {'xy': array([2072.24480808,  947.68763256]), 'ang': 322.2967915819596}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 22
+PnP pairs 2D shape: (2130, 2) 3D shape: (2130, 3)
+Multiframe time (ms): 229
+Floorplan Pose (x, y, angle): {'xy': array([ 791.01181485, 1228.45801734]), 'ang': 39.761254412900065}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6727, 2) 3D shape: (6727, 3)
+Multiframe time (ms): 490
+Floorplan Pose (x, y, angle): {'xy': array([2016.17892585, 1229.59676353]), 'ang': 297.7014655788263}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 29
+PnP pairs 2D shape: (3292, 2) 3D shape: (3292, 3)
+Multiframe time (ms): 217
+Floorplan Pose (x, y, angle): {'xy': array([2553.60308165, 1676.44183147]), 'ang': 265.2083411403796}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 8
+PnP pairs 2D shape: (635, 2) 3D shape: (635, 3)
+Multiframe time (ms): 67
+Floorplan Pose (x, y, angle): {'xy': array([1319.89061939, 1369.71832605]), 'ang': 276.6491116214712}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8289, 2) 3D shape: (8289, 3)
+Multiframe time (ms): 928
+Floorplan Pose (x, y, angle): {'xy': array([2446.02402611, 1678.00223591]), 'ang': 90.9205173204821}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5303, 2) 3D shape: (5303, 3)
+Multiframe time (ms): 386
+Floorplan Pose (x, y, angle): {'xy': array([ 843.51555799, 1346.65445667]), 'ang': 218.2491326725207}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13351, 2) 3D shape: (13351, 3)
+Multiframe time (ms): 1763
+Floorplan Pose (x, y, angle): {'xy': array([2204.04411944, 1467.99960706]), 'ang': 134.2960122884368}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 3
+PnP pairs 2D shape: (171, 2) 3D shape: (171, 3)
+Multiframe time (ms): 47
+Floorplan Pose (x, y, angle): {'xy': array([ 808.57170656, 1355.47364142]), 'ang': 75.42366585445131}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 4
+PnP pairs 2D shape: (267, 2) 3D shape: (267, 3)
+Multiframe time (ms): 27
+Floorplan Pose (x, y, angle): {'xy': array([ 770.66352924, 1332.08218014]), 'ang': 70.2707310214451}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8375, 2) 3D shape: (8375, 3)
+Multiframe time (ms): 554
+Floorplan Pose (x, y, angle): {'xy': array([2025.00370622,  985.45642854]), 'ang': 19.07155732219605}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (9489, 2) 3D shape: (9489, 3)
+Multiframe time (ms): 734
+Floorplan Pose (x, y, angle): {'xy': array([1965.74462599, 1713.92417436]), 'ang': 306.5900963063158}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10335, 2) 3D shape: (10335, 3)
+Multiframe time (ms): 1428
+Floorplan Pose (x, y, angle): {'xy': array([2107.82016911, 1380.9916702 ]), 'ang': 59.76353246839051}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 39
+PnP pairs 2D shape: (4395, 2) 3D shape: (4395, 3)
+Multiframe time (ms): 283
+Floorplan Pose (x, y, angle): {'xy': array([2012.38565672, 1183.33441784]), 'ang': 158.90613552485044}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 39
+PnP pairs 2D shape: (6631, 2) 3D shape: (6631, 3)
+Multiframe time (ms): 521
+Floorplan Pose (x, y, angle): {'xy': array([2643.2705877 , 1697.95587594]), 'ang': 289.09985388369046}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (11905, 2) 3D shape: (11905, 3)
+Multiframe time (ms): 992
+Floorplan Pose (x, y, angle): {'xy': array([1745.71484776, 1873.32202796]), 'ang': 202.3349074407605}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 24
+PnP pairs 2D shape: (1939, 2) 3D shape: (1939, 3)
+Multiframe time (ms): 162
+Floorplan Pose (x, y, angle): {'xy': array([2643.71049772, 1748.95469136]), 'ang': 16.73734827923295}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (3727, 2) 3D shape: (3727, 3)
+Multiframe time (ms): 268
+Floorplan Pose (x, y, angle): {'xy': array([2025.8296768 ,  882.70912961]), 'ang': 259.6617255330243}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (5589, 2) 3D shape: (5589, 3)
+Multiframe time (ms): 352
+Floorplan Pose (x, y, angle): {'xy': array([2079.44964111, 1100.79422963]), 'ang': 22.338275204235973}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (5973, 2) 3D shape: (5973, 3)
+Multiframe time (ms): 355
+Floorplan Pose (x, y, angle): {'xy': array([2499.28795926, 1681.10976225]), 'ang': 309.0692688437896}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10426, 2) 3D shape: (10426, 3)
+Multiframe time (ms): 996
+Floorplan Pose (x, y, angle): {'xy': array([2220.23420213, 1494.95793978]), 'ang': 33.200052135932545}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (6012, 2) 3D shape: (6012, 3)
+Multiframe time (ms): 527
+Floorplan Pose (x, y, angle): {'xy': array([2083.17154039, 1195.06522294]), 'ang': 305.75882720913864}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (5924, 2) 3D shape: (5924, 3)
+Multiframe time (ms): 427
+Floorplan Pose (x, y, angle): {'xy': array([2097.71386747, 1335.2720096 ]), 'ang': 274.6109934001483}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11545, 2) 3D shape: (11545, 3)
+Multiframe time (ms): 981
+Floorplan Pose (x, y, angle): {'xy': array([2238.83795847, 1688.67773823]), 'ang': 195.2680081937461}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (4401, 2) 3D shape: (4401, 3)
+Multiframe time (ms): 290
+Floorplan Pose (x, y, angle): {'xy': array([1208.84875072, 1352.4924023 ]), 'ang': 151.17406932858367}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4994, 2) 3D shape: (4994, 3)
+Multiframe time (ms): 444
+Floorplan Pose (x, y, angle): {'xy': array([1009.74726655, 1353.96552829]), 'ang': 172.36340694875608}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (2305, 2) 3D shape: (2305, 3)
+Multiframe time (ms): 172
+Floorplan Pose (x, y, angle): {'xy': array([2076.53903585,  685.60008788]), 'ang': 16.649281714941665}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12864, 2) 3D shape: (12864, 3)
+Multiframe time (ms): 1103
+Floorplan Pose (x, y, angle): {'xy': array([1507.04279375, 1721.9301101 ]), 'ang': 45.932726846356594}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 33
+PnP pairs 2D shape: (3027, 2) 3D shape: (3027, 3)
+Multiframe time (ms): 278
+Floorplan Pose (x, y, angle): {'xy': array([ 783.77505061, 1154.52679842]), 'ang': 92.0864400309286}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8461, 2) 3D shape: (8461, 3)
+Multiframe time (ms): 702
+Floorplan Pose (x, y, angle): {'xy': array([1921.21921411, 1340.1419906 ]), 'ang': 13.735216349216895}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10536, 2) 3D shape: (10536, 3)
+Multiframe time (ms): 779
+Floorplan Pose (x, y, angle): {'xy': array([1815.13319145, 1758.52810451]), 'ang': 137.367038050704}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (3285, 2) 3D shape: (3285, 3)
+Multiframe time (ms): 305
+Floorplan Pose (x, y, angle): {'xy': array([2081.62569687,  784.8456366 ]), 'ang': 310.23363879093205}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4559, 2) 3D shape: (4559, 3)
+Multiframe time (ms): 428
+Floorplan Pose (x, y, angle): {'xy': array([2042.88130643,  757.99915955]), 'ang': 226.91949533908854}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 39
+PnP pairs 2D shape: (3681, 2) 3D shape: (3681, 3)
+Multiframe time (ms): 309
+Floorplan Pose (x, y, angle): {'xy': array([2030.05596349,  783.38101513]), 'ang': 261.9138380570944}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7376, 2) 3D shape: (7376, 3)
+Multiframe time (ms): 739
+Floorplan Pose (x, y, angle): {'xy': array([2007.64423119, 1256.51431097]), 'ang': 44.993221030134336}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8435, 2) 3D shape: (8435, 3)
+Multiframe time (ms): 804
+Floorplan Pose (x, y, angle): {'xy': array([1990.89890451, 1314.25153653]), 'ang': 329.0179505800942}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9356, 2) 3D shape: (9356, 3)
+Multiframe time (ms): 847
+Floorplan Pose (x, y, angle): {'xy': array([2148.4952751 , 1536.34318712]), 'ang': 1.5790011275506062}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 39
+PnP pairs 2D shape: (3714, 2) 3D shape: (3714, 3)
+Multiframe time (ms): 299
+Floorplan Pose (x, y, angle): {'xy': array([2025.26246142,  906.1561445 ]), 'ang': 261.6203933223686}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7037, 2) 3D shape: (7037, 3)
+Multiframe time (ms): 455
+Floorplan Pose (x, y, angle): {'xy': array([2035.6068025 , 1225.38028102]), 'ang': 273.31855355411255}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12550, 2) 3D shape: (12550, 3)
+Multiframe time (ms): 799
+Floorplan Pose (x, y, angle): {'xy': array([1441.31077418, 1516.17252798]), 'ang': 1.5223392989045286}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (5157, 2) 3D shape: (5157, 3)
+Multiframe time (ms): 310
+Floorplan Pose (x, y, angle): {'xy': array([ 817.91602124, 1338.20871498]), 'ang': 24.573343983829474}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 35
+PnP pairs 2D shape: (3982, 2) 3D shape: (3982, 3)
+Multiframe time (ms): 259
+Floorplan Pose (x, y, angle): {'xy': array([1356.96097646, 1492.65221137]), 'ang': 207.39635129262638}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (3693, 2) 3D shape: (3693, 3)
+Multiframe time (ms): 276
+Floorplan Pose (x, y, angle): {'xy': array([1242.87852648, 1351.83572287]), 'ang': 172.42021603988212}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6720, 2) 3D shape: (6720, 3)
+Multiframe time (ms): 510
+Floorplan Pose (x, y, angle): {'xy': array([2037.01973311, 1231.08979985]), 'ang': 316.785265500625}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (3205, 2) 3D shape: (3205, 3)
+Multiframe time (ms): 155
+Floorplan Pose (x, y, angle): {'xy': array([2521.18201781, 1671.42182339]), 'ang': 287.9378627702108}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (7065, 2) 3D shape: (7065, 3)
+Multiframe time (ms): 334
+Floorplan Pose (x, y, angle): {'xy': array([2041.77831724, 1047.79277815]), 'ang': 337.56737351840076}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8638, 2) 3D shape: (8638, 3)
+Multiframe time (ms): 595
+Floorplan Pose (x, y, angle): {'xy': array([2013.7182988 , 1139.90813138]), 'ang': 76.50320356301457}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7487, 2) 3D shape: (7487, 3)
+Multiframe time (ms): 470
+Floorplan Pose (x, y, angle): {'xy': array([1618.3267163 , 1866.87631678]), 'ang': 89.60928593641364}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8922, 2) 3D shape: (8922, 3)
+Multiframe time (ms): 814
+Floorplan Pose (x, y, angle): {'xy': array([1615.53366042, 1861.77942586]), 'ang': 225.15813332106362}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13163, 2) 3D shape: (13163, 3)
+Multiframe time (ms): 1110
+Floorplan Pose (x, y, angle): {'xy': array([1615.69450006, 1865.47927043]), 'ang': 28.39741427766548}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (14404, 2) 3D shape: (14404, 3)
+Multiframe time (ms): 1295
+Floorplan Pose (x, y, angle): {'xy': array([1480.25002653, 1851.28395455]), 'ang': 333.29188285928774}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4754, 2) 3D shape: (4754, 3)
+Multiframe time (ms): 226
+Floorplan Pose (x, y, angle): {'xy': array([2050.16988857,  896.36153706]), 'ang': 308.1701629735159}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5252, 2) 3D shape: (5252, 3)
+Multiframe time (ms): 417
+Floorplan Pose (x, y, angle): {'xy': array([2048.16843623,  869.06110652]), 'ang': 172.12952301333218}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (5555, 2) 3D shape: (5555, 3)
+Multiframe time (ms): 490
+Floorplan Pose (x, y, angle): {'xy': array([1497.93090764, 1678.85831354]), 'ang': 278.7301509851423}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (4694, 2) 3D shape: (4694, 3)
+Multiframe time (ms): 478
+Floorplan Pose (x, y, angle): {'xy': array([2029.82027895,  917.78507284]), 'ang': 231.83076336927041}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4783, 2) 3D shape: (4783, 3)
+Multiframe time (ms): 472
+Floorplan Pose (x, y, angle): {'xy': array([2064.82014421,  705.56166038]), 'ang': 148.6731540777789}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (6867, 2) 3D shape: (6867, 3)
+Multiframe time (ms): 530
+Floorplan Pose (x, y, angle): {'xy': array([1572.24226003, 1864.61237419]), 'ang': 71.59777749377399}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (6246, 2) 3D shape: (6246, 3)
+Multiframe time (ms): 664
+Floorplan Pose (x, y, angle): {'xy': array([1746.74764072, 1333.67943238]), 'ang': 110.45361826434521}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7691, 2) 3D shape: (7691, 3)
+Multiframe time (ms): 581
+Floorplan Pose (x, y, angle): {'xy': array([2631.23115245, 1692.49375522]), 'ang': 116.23232466502968}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7950, 2) 3D shape: (7950, 3)
+Multiframe time (ms): 459
+Floorplan Pose (x, y, angle): {'xy': array([2070.86916572,  950.73791951]), 'ang': 122.19522363981758}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9251, 2) 3D shape: (9251, 3)
+Multiframe time (ms): 1042
+Floorplan Pose (x, y, angle): {'xy': array([2466.82473251, 1795.31836822]), 'ang': 66.58662609298354}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (14182, 2) 3D shape: (14182, 3)
+Multiframe time (ms): 1018
+Floorplan Pose (x, y, angle): {'xy': array([1639.75851369, 1866.18029796]), 'ang': 9.91370088729023}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (16777, 2) 3D shape: (16777, 3)
+Multiframe time (ms): 1387
+Floorplan Pose (x, y, angle): {'xy': array([1586.18895878, 1873.12669808]), 'ang': 314.6677792913342}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (3709, 2) 3D shape: (3709, 3)
+Multiframe time (ms): 275
+Floorplan Pose (x, y, angle): {'xy': array([2030.59644266,  694.65556407]), 'ang': 175.40669026040518}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 27
+PnP pairs 2D shape: (2801, 2) 3D shape: (2801, 3)
+Multiframe time (ms): 190
+Floorplan Pose (x, y, angle): {'xy': array([1493.56711793, 1632.48850247]), 'ang': 198.91999451070365}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (3041, 2) 3D shape: (3041, 3)
+Multiframe time (ms): 161
+Floorplan Pose (x, y, angle): {'xy': array([2033.50337633,  747.7697719 ]), 'ang': 1.2914230735098307}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5569, 2) 3D shape: (5569, 3)
+Multiframe time (ms): 325
+Floorplan Pose (x, y, angle): {'xy': array([2055.49225838,  851.86776131]), 'ang': 139.34891780446213}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5993, 2) 3D shape: (5993, 3)
+Multiframe time (ms): 491
+Floorplan Pose (x, y, angle): {'xy': array([2067.89118807,  893.0578099 ]), 'ang': 144.3555596338251}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (3514, 2) 3D shape: (3514, 3)
+Multiframe time (ms): 349
+Floorplan Pose (x, y, angle): {'xy': array([2084.644736  ,  798.17957772]), 'ang': 252.1941573781884}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (5597, 2) 3D shape: (5597, 3)
+Multiframe time (ms): 237
+Floorplan Pose (x, y, angle): {'xy': array([2080.73376749, 1100.08827069]), 'ang': 344.9454634561015}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9321, 2) 3D shape: (9321, 3)
+Multiframe time (ms): 653
+Floorplan Pose (x, y, angle): {'xy': array([2554.23218072, 1677.60502107]), 'ang': 9.028445895718196}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (3720, 2) 3D shape: (3720, 3)
+Multiframe time (ms): 215
+Floorplan Pose (x, y, angle): {'xy': array([1325.99817093, 1341.59717393]), 'ang': 173.75053641927573}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 34
+PnP pairs 2D shape: (2638, 2) 3D shape: (2638, 3)
+Multiframe time (ms): 222
+Floorplan Pose (x, y, angle): {'xy': array([1207.88269134, 1351.07902346]), 'ang': 204.1155497750713}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (7071, 2) 3D shape: (7071, 3)
+Multiframe time (ms): 403
+Floorplan Pose (x, y, angle): {'xy': array([2580.38491042, 1670.98321812]), 'ang': 306.4321308225552}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13641, 2) 3D shape: (13641, 3)
+Multiframe time (ms): 1300
+Floorplan Pose (x, y, angle): {'xy': array([1905.41196224, 1725.23261169]), 'ang': 345.20138805298825}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (5698, 2) 3D shape: (5698, 3)
+Multiframe time (ms): 384
+Floorplan Pose (x, y, angle): {'xy': array([ 776.62113225, 1313.25111141]), 'ang': 263.6747868590213}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (9426, 2) 3D shape: (9426, 3)
+Multiframe time (ms): 747
+Floorplan Pose (x, y, angle): {'xy': array([1342.14524769, 1479.5532603 ]), 'ang': 71.18297467427846}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 45
+PnP pairs 2D shape: (3900, 2) 3D shape: (3900, 3)
+Multiframe time (ms): 275
+Floorplan Pose (x, y, angle): {'xy': array([2006.45987364, 1038.88645459]), 'ang': 162.2052830803898}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (6919, 2) 3D shape: (6919, 3)
+Multiframe time (ms): 526
+Floorplan Pose (x, y, angle): {'xy': array([1496.07975902, 1762.0679393 ]), 'ang': 184.92597828111877}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (6460, 2) 3D shape: (6460, 3)
+Multiframe time (ms): 566
+Floorplan Pose (x, y, angle): {'xy': array([2128.05259019, 1436.11417079]), 'ang': 338.4946768780618}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8315, 2) 3D shape: (8315, 3)
+Multiframe time (ms): 637
+Floorplan Pose (x, y, angle): {'xy': array([2042.66399436,  874.27315728]), 'ang': 97.17533302727061}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8439, 2) 3D shape: (8439, 3)
+Multiframe time (ms): 649
+Floorplan Pose (x, y, angle): {'xy': array([2492.35058675, 1812.00093527]), 'ang': 341.11572696673403}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (3440, 2) 3D shape: (3440, 3)
+Multiframe time (ms): 240
+Floorplan Pose (x, y, angle): {'xy': array([2073.63664607,  860.69621953]), 'ang': 261.76446391448684}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7863, 2) 3D shape: (7863, 3)
+Multiframe time (ms): 675
+Floorplan Pose (x, y, angle): {'xy': array([2633.92674786, 1796.80367553]), 'ang': 242.3350255351133}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12257, 2) 3D shape: (12257, 3)
+Multiframe time (ms): 903
+Floorplan Pose (x, y, angle): {'xy': array([2018.35452146, 1706.34120699]), 'ang': 344.063409156705}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 3
+PnP pairs 2D shape: (172, 2) 3D shape: (172, 3)
+Multiframe time (ms): 16
+Floorplan Pose (x, y, angle): {'xy': array([1722.24031143, 1331.26678727]), 'ang': 281.8638224668358}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (4967, 2) 3D shape: (4967, 3)
+Multiframe time (ms): 319
+Floorplan Pose (x, y, angle): {'xy': array([ 866.50141339, 1346.99873418]), 'ang': 26.93940040015166}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (7204, 2) 3D shape: (7204, 3)
+Multiframe time (ms): 744
+Floorplan Pose (x, y, angle): {'xy': array([1848.62110939, 1333.60060916]), 'ang': 31.187484377824152}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6501, 2) 3D shape: (6501, 3)
+Multiframe time (ms): 351
+Floorplan Pose (x, y, angle): {'xy': array([2074.58605572, 1058.78746188]), 'ang': 136.9373656925387}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (9216, 2) 3D shape: (9216, 3)
+Multiframe time (ms): 1049
+Floorplan Pose (x, y, angle): {'xy': array([2550.42093398, 1826.50676353]), 'ang': 87.90086549878914}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (4290, 2) 3D shape: (4290, 3)
+Multiframe time (ms): 310
+Floorplan Pose (x, y, angle): {'xy': array([2061.52655273,  655.57652173]), 'ang': 222.74846679324614}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7685, 2) 3D shape: (7685, 3)
+Multiframe time (ms): 562
+Floorplan Pose (x, y, angle): {'xy': array([2622.33561929, 1791.60758819]), 'ang': 244.6741074413511}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8947, 2) 3D shape: (8947, 3)
+Multiframe time (ms): 634
+Floorplan Pose (x, y, angle): {'xy': array([2548.65426034, 1813.65616166]), 'ang': 247.59449112693994}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4133, 2) 3D shape: (4133, 3)
+Multiframe time (ms): 272
+Floorplan Pose (x, y, angle): {'xy': array([2053.41400907,  616.81842216]), 'ang': 108.26972895220469}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10796, 2) 3D shape: (10796, 3)
+Multiframe time (ms): 1028
+Floorplan Pose (x, y, angle): {'xy': array([2074.18931303, 1698.46129782]), 'ang': 8.73641716085174}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4194, 2) 3D shape: (4194, 3)
+Multiframe time (ms): 252
+Floorplan Pose (x, y, angle): {'xy': array([2061.71373104,  684.24676346]), 'ang': 344.66909137774906}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (4092, 2) 3D shape: (4092, 3)
+Multiframe time (ms): 277
+Floorplan Pose (x, y, angle): {'xy': array([1316.47193692, 1373.08094218]), 'ang': 130.48770044051105}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13524, 2) 3D shape: (13524, 3)
+Multiframe time (ms): 1049
+Floorplan Pose (x, y, angle): {'xy': array([2558.76325533, 1811.7335962 ]), 'ang': 186.49993882620447}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6002, 2) 3D shape: (6002, 3)
+Multiframe time (ms): 494
+Floorplan Pose (x, y, angle): {'xy': array([2031.07094021, 1182.31899887]), 'ang': 292.7944200646119}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 21
+PnP pairs 2D shape: (1850, 2) 3D shape: (1850, 3)
+Multiframe time (ms): 98
+Floorplan Pose (x, y, angle): {'xy': array([1390.18367315, 1338.76633047]), 'ang': 127.29858015089368}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13363, 2) 3D shape: (13363, 3)
+Multiframe time (ms): 1315
+Floorplan Pose (x, y, angle): {'xy': array([2558.747356  , 1809.16916298]), 'ang': 169.6092919869384}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (6056, 2) 3D shape: (6056, 3)
+Multiframe time (ms): 408
+Floorplan Pose (x, y, angle): {'xy': array([2018.18541519, 1140.53627136]), 'ang': 42.24196853410136}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7049, 2) 3D shape: (7049, 3)
+Multiframe time (ms): 587
+Floorplan Pose (x, y, angle): {'xy': array([1934.25350905, 1713.71991951]), 'ang': 45.01115564986885}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4528, 2) 3D shape: (4528, 3)
+Multiframe time (ms): 459
+Floorplan Pose (x, y, angle): {'xy': array([2066.69287445,  671.0324123 ]), 'ang': 238.53388781385144}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (6488, 2) 3D shape: (6488, 3)
+Multiframe time (ms): 520
+Floorplan Pose (x, y, angle): {'xy': array([1493.81636211, 1736.52835508]), 'ang': 182.080658343311}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (15861, 2) 3D shape: (15861, 3)
+Multiframe time (ms): 1511
+Floorplan Pose (x, y, angle): {'xy': array([1519.93925523, 1852.88872424]), 'ang': 352.55626415227323}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8569, 2) 3D shape: (8569, 3)
+Multiframe time (ms): 752
+Floorplan Pose (x, y, angle): {'xy': array([2029.77862205, 1181.59847816]), 'ang': 113.43589919456342}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (3551, 2) 3D shape: (3551, 3)
+Multiframe time (ms): 309
+Floorplan Pose (x, y, angle): {'xy': array([2071.49556832,  840.80569187]), 'ang': 283.65507147586453}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6172, 2) 3D shape: (6172, 3)
+Multiframe time (ms): 519
+Floorplan Pose (x, y, angle): {'xy': array([2041.85634514,  949.13450099]), 'ang': 199.39785200217923}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (2430, 2) 3D shape: (2430, 3)
+Multiframe time (ms): 158
+Floorplan Pose (x, y, angle): {'xy': array([1848.82031202, 1336.16764693]), 'ang': 209.54346619133074}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7713, 2) 3D shape: (7713, 3)
+Multiframe time (ms): 771
+Floorplan Pose (x, y, angle): {'xy': array([1644.52535853, 1859.91219969]), 'ang': 113.63018933439501}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8812, 2) 3D shape: (8812, 3)
+Multiframe time (ms): 723
+Floorplan Pose (x, y, angle): {'xy': array([2075.7297315, 1024.1327226]), 'ang': 62.62280058700667}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (2890, 2) 3D shape: (2890, 3)
+Multiframe time (ms): 149
+Floorplan Pose (x, y, angle): {'xy': array([1024.51162951, 1344.33371763]), 'ang': 322.4219080316543}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 12
+PnP pairs 2D shape: (809, 2) 3D shape: (809, 3)
+Multiframe time (ms): 65
+Floorplan Pose (x, y, angle): {'xy': array([2089.81424609,  710.92660187]), 'ang': 0.5838737744882028}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 11
+PnP pairs 2D shape: (882, 2) 3D shape: (882, 3)
+Multiframe time (ms): 78
+Floorplan Pose (x, y, angle): {'xy': array([ 799.44455358, 1294.81428585]), 'ang': 106.31202529574041}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 45
+PnP pairs 2D shape: (7020, 2) 3D shape: (7020, 3)
+Multiframe time (ms): 468
+Floorplan Pose (x, y, angle): {'xy': array([2035.7541831 , 1025.28044216]), 'ang': 337.037755704521}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8346, 2) 3D shape: (8346, 3)
+Multiframe time (ms): 517
+Floorplan Pose (x, y, angle): {'xy': array([1763.70481939, 1865.32684673]), 'ang': 39.05671791903615}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7198, 2) 3D shape: (7198, 3)
+Multiframe time (ms): 359
+Floorplan Pose (x, y, angle): {'xy': array([2417.04157543, 1761.90863055]), 'ang': 146.36325418416138}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7804, 2) 3D shape: (7804, 3)
+Multiframe time (ms): 599
+Floorplan Pose (x, y, angle): {'xy': array([2522.87815612, 1813.26258685]), 'ang': 334.0513619520046}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6208, 2) 3D shape: (6208, 3)
+Multiframe time (ms): 476
+Floorplan Pose (x, y, angle): {'xy': array([2074.05950341,  867.26391758]), 'ang': 160.8895179042934}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10005, 2) 3D shape: (10005, 3)
+Multiframe time (ms): 694
+Floorplan Pose (x, y, angle): {'xy': array([1810.15872749, 1781.9106235 ]), 'ang': 43.31068006282128}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (3791, 2) 3D shape: (3791, 3)
+Multiframe time (ms): 185
+Floorplan Pose (x, y, angle): {'xy': array([1518.19057755, 1338.17356883]), 'ang': 91.76201875680603}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 22
+PnP pairs 2D shape: (2370, 2) 3D shape: (2370, 3)
+Multiframe time (ms): 138
+Floorplan Pose (x, y, angle): {'xy': array([ 764.83886935, 1193.44892315]), 'ang': 324.8840584391393}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (7194, 2) 3D shape: (7194, 3)
+Multiframe time (ms): 461
+Floorplan Pose (x, y, angle): {'xy': array([1785.57853156, 1858.36260851]), 'ang': 63.42323394222745}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 36
+PnP pairs 2D shape: (2805, 2) 3D shape: (2805, 3)
+Multiframe time (ms): 163
+Floorplan Pose (x, y, angle): {'xy': array([1699.24643295, 1335.54275704]), 'ang': 325.86225190659553}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (2527, 2) 3D shape: (2527, 3)
+Multiframe time (ms): 127
+Floorplan Pose (x, y, angle): {'xy': array([2072.90142542,  804.97923157]), 'ang': 357.4102197403585}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (3936, 2) 3D shape: (3936, 3)
+Multiframe time (ms): 232
+Floorplan Pose (x, y, angle): {'xy': array([2037.23337419,  602.81131596]), 'ang': 346.5093519435608}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7404, 2) 3D shape: (7404, 3)
+Multiframe time (ms): 437
+Floorplan Pose (x, y, angle): {'xy': array([1797.49189235, 1333.16286197]), 'ang': 71.69359496264437}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4593, 2) 3D shape: (4593, 3)
+Multiframe time (ms): 198
+Floorplan Pose (x, y, angle): {'xy': array([1108.10330736, 1354.99275922]), 'ang': 346.5642826838292}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 35
+PnP pairs 2D shape: (2491, 2) 3D shape: (2491, 3)
+Multiframe time (ms): 181
+Floorplan Pose (x, y, angle): {'xy': array([2059.31413419,  697.39732447]), 'ang': 357.46567582003195}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 27
+PnP pairs 2D shape: (2082, 2) 3D shape: (2082, 3)
+Multiframe time (ms): 129
+Floorplan Pose (x, y, angle): {'xy': array([1206.4640248 , 1353.70166261]), 'ang': 308.57119819315125}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (11429, 2) 3D shape: (11429, 3)
+Multiframe time (ms): 789
+Floorplan Pose (x, y, angle): {'xy': array([2418.25202454, 1762.08572285]), 'ang': 182.66400708812427}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7142, 2) 3D shape: (7142, 3)
+Multiframe time (ms): 552
+Floorplan Pose (x, y, angle): {'xy': array([2099.39684351, 1241.71652822]), 'ang': 204.4027743835248}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (5713, 2) 3D shape: (5713, 3)
+Multiframe time (ms): 399
+Floorplan Pose (x, y, angle): {'xy': array([1256.75617747, 1350.65322309]), 'ang': 23.050584645361646}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8060, 2) 3D shape: (8060, 3)
+Multiframe time (ms): 717
+Floorplan Pose (x, y, angle): {'xy': array([2019.08385252, 1087.52874973]), 'ang': 41.24597636975342}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 11
+PnP pairs 2D shape: (1127, 2) 3D shape: (1127, 3)
+Multiframe time (ms): 109
+Floorplan Pose (x, y, angle): {'xy': array([1248.35555358, 1345.99804964]), 'ang': 112.21063358788084}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5267, 2) 3D shape: (5267, 3)
+Multiframe time (ms): 368
+Floorplan Pose (x, y, angle): {'xy': array([2027.32373109,  883.84670352]), 'ang': 137.13153833334803}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6914, 2) 3D shape: (6914, 3)
+Multiframe time (ms): 634
+Floorplan Pose (x, y, angle): {'xy': array([2079.80843898, 1142.06354722]), 'ang': 208.73028257031373}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 8
+PnP pairs 2D shape: (479, 2) 3D shape: (479, 3)
+Multiframe time (ms): 51
+Floorplan Pose (x, y, angle): {'xy': array([ 776.46850212, 1310.43320323]), 'ang': 204.96606287254392}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6800, 2) 3D shape: (6800, 3)
+Multiframe time (ms): 613
+Floorplan Pose (x, y, angle): {'xy': array([2030.40706141, 1303.4198584 ]), 'ang': 216.90899290888066}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (2583, 2) 3D shape: (2583, 3)
+Multiframe time (ms): 196
+Floorplan Pose (x, y, angle): {'xy': array([ 774.69032076, 1252.19590847]), 'ang': 42.37071539288491}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (4889, 2) 3D shape: (4889, 3)
+Multiframe time (ms): 332
+Floorplan Pose (x, y, angle): {'xy': array([2068.81914825,  679.72130847]), 'ang': 315.9046591382096}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 36
+PnP pairs 2D shape: (3552, 2) 3D shape: (3552, 3)
+Multiframe time (ms): 176
+Floorplan Pose (x, y, angle): {'xy': array([1228.75164582, 1340.67106331]), 'ang': 150.2258460768095}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (11579, 2) 3D shape: (11579, 3)
+Multiframe time (ms): 921
+Floorplan Pose (x, y, angle): {'xy': array([1501.09517496, 1797.02073882]), 'ang': 44.60364068781153}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5729, 2) 3D shape: (5729, 3)
+Multiframe time (ms): 495
+Floorplan Pose (x, y, angle): {'xy': array([2038.42387256,  924.98844817]), 'ang': 293.80247360678436}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 17
+PnP pairs 2D shape: (1580, 2) 3D shape: (1580, 3)
+Multiframe time (ms): 154
+Floorplan Pose (x, y, angle): {'xy': array([2106.10499978, 1349.91580379]), 'ang': 358.4653071812078}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8914, 2) 3D shape: (8914, 3)
+Multiframe time (ms): 898
+Floorplan Pose (x, y, angle): {'xy': array([2109.39803553, 1702.10871385]), 'ang': 311.9781441471972}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (5164, 2) 3D shape: (5164, 3)
+Multiframe time (ms): 435
+Floorplan Pose (x, y, angle): {'xy': array([ 804.92822278, 1316.81106481]), 'ang': 233.36845250064226}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4732, 2) 3D shape: (4732, 3)
+Multiframe time (ms): 516
+Floorplan Pose (x, y, angle): {'xy': array([2076.1405853 ,  782.51946812]), 'ang': 226.6486755788443}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10511, 2) 3D shape: (10511, 3)
+Multiframe time (ms): 690
+Floorplan Pose (x, y, angle): {'xy': array([2082.89886978, 1252.88001177]), 'ang': 118.91141596023606}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (7175, 2) 3D shape: (7175, 3)
+Multiframe time (ms): 513
+Floorplan Pose (x, y, angle): {'xy': array([1484.54753639, 1547.0193051 ]), 'ang': 89.19463748486936}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (7107, 2) 3D shape: (7107, 3)
+Multiframe time (ms): 706
+Floorplan Pose (x, y, angle): {'xy': array([1562.57396777, 1858.29001384]), 'ang': 230.48436725426214}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (3533, 2) 3D shape: (3533, 3)
+Multiframe time (ms): 188
+Floorplan Pose (x, y, angle): {'xy': array([2053.33217814,  651.56793828]), 'ang': 34.09746758041175}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (11853, 2) 3D shape: (11853, 3)
+Multiframe time (ms): 1003
+Floorplan Pose (x, y, angle): {'xy': array([2193.90106736, 1471.38498921]), 'ang': 114.47280965107198}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6899, 2) 3D shape: (6899, 3)
+Multiframe time (ms): 546
+Floorplan Pose (x, y, angle): {'xy': array([2229.00053305, 1497.50811863]), 'ang': 326.12430048186434}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12235, 2) 3D shape: (12235, 3)
+Multiframe time (ms): 1096
+Floorplan Pose (x, y, angle): {'xy': array([2099.42121992, 1361.59623476]), 'ang': 107.74075119466134}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 34
+PnP pairs 2D shape: (2494, 2) 3D shape: (2494, 3)
+Multiframe time (ms): 147
+Floorplan Pose (x, y, angle): {'xy': array([1823.70543016, 1335.1207304 ]), 'ang': 205.06552352752237}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6668, 2) 3D shape: (6668, 3)
+Multiframe time (ms): 480
+Floorplan Pose (x, y, angle): {'xy': array([2025.0461593 , 1062.62019009]), 'ang': 226.34722189633024}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 26
+PnP pairs 2D shape: (1729, 2) 3D shape: (1729, 3)
+Multiframe time (ms): 148
+Floorplan Pose (x, y, angle): {'xy': array([ 788.96581569, 1313.26146862]), 'ang': 175.77266320944966}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (4923, 2) 3D shape: (4923, 3)
+Multiframe time (ms): 311
+Floorplan Pose (x, y, angle): {'xy': array([2016.51524877, 1033.12764137]), 'ang': 258.1128549897877}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (6620, 2) 3D shape: (6620, 3)
+Multiframe time (ms): 322
+Floorplan Pose (x, y, angle): {'xy': array([2071.80477086,  947.90397537]), 'ang': 322.4365640509174}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (2210, 2) 3D shape: (2210, 3)
+Multiframe time (ms): 121
+Floorplan Pose (x, y, angle): {'xy': array([1978.72947876, 1335.31889715]), 'ang': 205.89944095686843}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7017, 2) 3D shape: (7017, 3)
+Multiframe time (ms): 472
+Floorplan Pose (x, y, angle): {'xy': array([2343.08133228, 1711.99265514]), 'ang': 100.68614645442855}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 24
+PnP pairs 2D shape: (2577, 2) 3D shape: (2577, 3)
+Multiframe time (ms): 146
+Floorplan Pose (x, y, angle): {'xy': array([1389.36947808, 1338.18002924]), 'ang': 149.14705167707638}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (4511, 2) 3D shape: (4511, 3)
+Multiframe time (ms): 327
+Floorplan Pose (x, y, angle): {'xy': array([1481.59674519, 1554.83372924]), 'ang': 214.17752856887105}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 33
+PnP pairs 2D shape: (2352, 2) 3D shape: (2352, 3)
+Multiframe time (ms): 157
+Floorplan Pose (x, y, angle): {'xy': array([1698.5040966 , 1336.04549933]), 'ang': 202.08482001494164}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5128, 2) 3D shape: (5128, 3)
+Multiframe time (ms): 358
+Floorplan Pose (x, y, angle): {'xy': array([ 843.2735649 , 1346.53353682]), 'ang': 218.17811185269554}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 2
+PnP pairs 2D shape: (126, 2) 3D shape: (126, 3)
+Multiframe time (ms): 21
+Floorplan Pose (x, y, angle): {'xy': array([ 823.32829109, 1198.85889845]), 'ang': 24.88690759163286}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 25
+PnP pairs 2D shape: (2444, 2) 3D shape: (2444, 3)
+Multiframe time (ms): 126
+Floorplan Pose (x, y, angle): {'xy': array([1822.20770788, 1331.64505297]), 'ang': 246.74402566024236}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (5453, 2) 3D shape: (5453, 3)
+Multiframe time (ms): 390
+Floorplan Pose (x, y, angle): {'xy': array([2067.0078334 , 1126.71322385]), 'ang': 168.90372655171996}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 24
+PnP pairs 2D shape: (1676, 2) 3D shape: (1676, 3)
+Multiframe time (ms): 97
+Floorplan Pose (x, y, angle): {'xy': array([1668.70331992, 1332.68855189]), 'ang': 327.8372377323222}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 5
+PnP pairs 2D shape: (308, 2) 3D shape: (308, 3)
+Multiframe time (ms): 62
+Floorplan Pose (x, y, angle): {'xy': array([ 775.36439581, 1331.24691083]), 'ang': 65.78295000884098}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4566, 2) 3D shape: (4566, 3)
+Multiframe time (ms): 261
+Floorplan Pose (x, y, angle): {'xy': array([1049.71727169, 1343.28173002]), 'ang': 180.59159934058587}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (4425, 2) 3D shape: (4425, 3)
+Multiframe time (ms): 215
+Floorplan Pose (x, y, angle): {'xy': array([1428.56037974, 1507.80594901]), 'ang': 154.64167965721384}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (9819, 2) 3D shape: (9819, 3)
+Multiframe time (ms): 1381
+Floorplan Pose (x, y, angle): {'xy': array([1966.35565264, 1713.9098166 ]), 'ang': 306.6084866355243}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10822, 2) 3D shape: (10822, 3)
+Multiframe time (ms): 716
+Floorplan Pose (x, y, angle): {'xy': array([2106.39026113, 1379.55388849]), 'ang': 59.70024847170308}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (4320, 2) 3D shape: (4320, 3)
+Multiframe time (ms): 259
+Floorplan Pose (x, y, angle): {'xy': array([2047.81105909,  611.55496981]), 'ang': 103.7041738969147}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (2371, 2) 3D shape: (2371, 3)
+Multiframe time (ms): 151
+Floorplan Pose (x, y, angle): {'xy': array([1300.13292336, 1341.1248408 ]), 'ang': 150.74088424278747}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4553, 2) 3D shape: (4553, 3)
+Multiframe time (ms): 507
+Floorplan Pose (x, y, angle): {'xy': array([2029.20207629,  601.67946106]), 'ang': 245.22575014539458}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5344, 2) 3D shape: (5344, 3)
+Multiframe time (ms): 340
+Floorplan Pose (x, y, angle): {'xy': array([2068.62835459,  812.21924915]), 'ang': 190.2736758289511}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (5605, 2) 3D shape: (5605, 3)
+Multiframe time (ms): 392
+Floorplan Pose (x, y, angle): {'xy': array([ 997.35938114, 1345.33566544]), 'ang': 169.59084727521224}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 39
+PnP pairs 2D shape: (5778, 2) 3D shape: (5778, 3)
+Multiframe time (ms): 362
+Floorplan Pose (x, y, angle): {'xy': array([2074.90984043, 1058.34756106]), 'ang': 357.13280594170135}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13212, 2) 3D shape: (13212, 3)
+Multiframe time (ms): 1150
+Floorplan Pose (x, y, angle): {'xy': array([1507.5874237 , 1722.41628947]), 'ang': 45.894114581679375}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 1
+PnP pairs 2D shape: (86, 2) 3D shape: (86, 3)
+Multiframe time (ms): 12
+Floorplan Pose (x, y, angle): {'xy': array([ 814.72802431, 1243.8424872 ]), 'ang': 325.6022080798949}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 14
+PnP pairs 2D shape: (1020, 2) 3D shape: (1020, 3)
+Multiframe time (ms): 62
+Floorplan Pose (x, y, angle): {'xy': array([1099.10127084, 1357.8908168 ]), 'ang': 248.83881777229283}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8749, 2) 3D shape: (8749, 3)
+Multiframe time (ms): 752
+Floorplan Pose (x, y, angle): {'xy': array([1921.21787098, 1340.15771416]), 'ang': 13.755770168745936}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5743, 2) 3D shape: (5743, 3)
+Multiframe time (ms): 329
+Floorplan Pose (x, y, angle): {'xy': array([2074.9418984 , 1024.42343513]), 'ang': 181.52472090392052}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (4412, 2) 3D shape: (4412, 3)
+Multiframe time (ms): 356
+Floorplan Pose (x, y, angle): {'xy': array([2039.50122771,  755.27010804]), 'ang': 226.41628998124176}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 26
+PnP pairs 2D shape: (1575, 2) 3D shape: (1575, 3)
+Multiframe time (ms): 78
+Floorplan Pose (x, y, angle): {'xy': array([ 849.12709139, 1350.36202333]), 'ang': 103.84108732612783}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6472, 2) 3D shape: (6472, 3)
+Multiframe time (ms): 480
+Floorplan Pose (x, y, angle): {'xy': array([2049.64446243,  713.33710881]), 'ang': 71.25484013754001}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 35
+PnP pairs 2D shape: (3111, 2) 3D shape: (3111, 3)
+Multiframe time (ms): 174
+Floorplan Pose (x, y, angle): {'xy': array([1023.7255526 , 1345.36172755]), 'ang': 203.53242887379307}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9469, 2) 3D shape: (9469, 3)
+Multiframe time (ms): 714
+Floorplan Pose (x, y, angle): {'xy': array([2156.17884791, 1535.95497706]), 'ang': 1.4741968842476174}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (6089, 2) 3D shape: (6089, 3)
+Multiframe time (ms): 317
+Floorplan Pose (x, y, angle): {'xy': array([2017.30133707, 1311.59500482]), 'ang': 334.64305708168297}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (8004, 2) 3D shape: (8004, 3)
+Multiframe time (ms): 469
+Floorplan Pose (x, y, angle): {'xy': array([2416.62039587, 1688.2534416 ]), 'ang': 316.26875386639193}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (7060, 2) 3D shape: (7060, 3)
+Multiframe time (ms): 411
+Floorplan Pose (x, y, angle): {'xy': array([2072.57002655,  974.39925129]), 'ang': 43.32584246275332}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12626, 2) 3D shape: (12626, 3)
+Multiframe time (ms): 837
+Floorplan Pose (x, y, angle): {'xy': array([1443.38332539, 1515.57828529]), 'ang': 1.7122966260783472}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 35
+PnP pairs 2D shape: (4103, 2) 3D shape: (4103, 3)
+Multiframe time (ms): 242
+Floorplan Pose (x, y, angle): {'xy': array([1356.67059976, 1492.31761247]), 'ang': 206.74908218140786}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5562, 2) 3D shape: (5562, 3)
+Multiframe time (ms): 296
+Floorplan Pose (x, y, angle): {'xy': array([2046.98947996,  905.9324862 ]), 'ang': 155.08413387771913}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 27
+PnP pairs 2D shape: (3160, 2) 3D shape: (3160, 3)
+Multiframe time (ms): 170
+Floorplan Pose (x, y, angle): {'xy': array([2521.19328233, 1671.40985038]), 'ang': 288.0507481383604}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 24
+PnP pairs 2D shape: (3316, 2) 3D shape: (3316, 3)
+Multiframe time (ms): 232
+Floorplan Pose (x, y, angle): {'xy': array([1797.16865107, 1331.2334258 ]), 'ang': 292.0063578060132}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6374, 2) 3D shape: (6374, 3)
+Multiframe time (ms): 534
+Floorplan Pose (x, y, angle): {'xy': array([2025.40232518, 1296.98258376]), 'ang': 39.15516337551219}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12569, 2) 3D shape: (12569, 3)
+Multiframe time (ms): 875
+Floorplan Pose (x, y, angle): {'xy': array([2105.24274134, 1399.13567186]), 'ang': 125.34801763848115}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 45
+PnP pairs 2D shape: (4549, 2) 3D shape: (4549, 3)
+Multiframe time (ms): 322
+Floorplan Pose (x, y, angle): {'xy': array([2082.16981201,  689.16194129]), 'ang': 323.73910532374543}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 16
+PnP pairs 2D shape: (1075, 2) 3D shape: (1075, 3)
+Multiframe time (ms): 56
+Floorplan Pose (x, y, angle): {'xy': array([1107.64140534, 1356.50160157]), 'ang': 292.5129249817049}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9000, 2) 3D shape: (9000, 3)
+Multiframe time (ms): 799
+Floorplan Pose (x, y, angle): {'xy': array([2637.24985646, 1719.21946884]), 'ang': 223.44452831435729}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4783, 2) 3D shape: (4783, 3)
+Multiframe time (ms): 231
+Floorplan Pose (x, y, angle): {'xy': array([2049.32828413,  897.45406902]), 'ang': 308.2198312484178}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (4375, 2) 3D shape: (4375, 3)
+Multiframe time (ms): 358
+Floorplan Pose (x, y, angle): {'xy': array([2031.54344983,  607.58555565]), 'ang': 245.2921142425272}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8687, 2) 3D shape: (8687, 3)
+Multiframe time (ms): 636
+Floorplan Pose (x, y, angle): {'xy': array([2100.36721112, 1692.14770212]), 'ang': 26.56714266222326}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10674, 2) 3D shape: (10674, 3)
+Multiframe time (ms): 658
+Floorplan Pose (x, y, angle): {'xy': array([1885.72995462, 1722.31073866]), 'ang': 129.07479499840377}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (7000, 2) 3D shape: (7000, 3)
+Multiframe time (ms): 445
+Floorplan Pose (x, y, angle): {'xy': array([1571.69297016, 1865.21428068]), 'ang': 71.4484775901756}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 36
+PnP pairs 2D shape: (4700, 2) 3D shape: (4700, 3)
+Multiframe time (ms): 277
+Floorplan Pose (x, y, angle): {'xy': array([2071.39542857,  812.67317092]), 'ang': 30.148390750167074}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7948, 2) 3D shape: (7948, 3)
+Multiframe time (ms): 483
+Floorplan Pose (x, y, angle): {'xy': array([2011.54443598, 1183.02597837]), 'ang': 119.01738802010104}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7796, 2) 3D shape: (7796, 3)
+Multiframe time (ms): 537
+Floorplan Pose (x, y, angle): {'xy': array([2631.24173562, 1691.05675411]), 'ang': 116.11021755005105}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (4316, 2) 3D shape: (4316, 3)
+Multiframe time (ms): 258
+Floorplan Pose (x, y, angle): {'xy': array([2045.77771499,  838.83376057]), 'ang': 169.62920756981075}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (5093, 2) 3D shape: (5093, 3)
+Multiframe time (ms): 418
+Floorplan Pose (x, y, angle): {'xy': array([1488.64064249, 1580.91508568]), 'ang': 117.81324306838637}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 31
+PnP pairs 2D shape: (5401, 2) 3D shape: (5401, 3)
+Multiframe time (ms): 406
+Floorplan Pose (x, y, angle): {'xy': array([1494.0472095 , 1604.15533531]), 'ang': 258.1254011624448}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (13760, 2) 3D shape: (13760, 3)
+Multiframe time (ms): 823
+Floorplan Pose (x, y, angle): {'xy': array([1639.56615476, 1866.16893678]), 'ang': 10.342239176928068}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (15141, 2) 3D shape: (15141, 3)
+Multiframe time (ms): 1104
+Floorplan Pose (x, y, angle): {'xy': array([1583.09179004, 1876.79044796]), 'ang': 314.91027947299193}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 41
+PnP pairs 2D shape: (3656, 2) 3D shape: (3656, 3)
+Multiframe time (ms): 276
+Floorplan Pose (x, y, angle): {'xy': array([2031.43199623,  695.42989253]), 'ang': 175.24056132863566}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 27
+PnP pairs 2D shape: (3015, 2) 3D shape: (3015, 3)
+Multiframe time (ms): 199
+Floorplan Pose (x, y, angle): {'xy': array([1494.2285289 , 1632.80838451]), 'ang': 198.70219424069057}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (3274, 2) 3D shape: (3274, 3)
+Multiframe time (ms): 176
+Floorplan Pose (x, y, angle): {'xy': array([2034.10617084,  748.24888659]), 'ang': 0.8746438728889192}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6320, 2) 3D shape: (6320, 3)
+Multiframe time (ms): 498
+Floorplan Pose (x, y, angle): {'xy': array([2068.26644423,  893.34337392]), 'ang': 144.23579685983287}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (3493, 2) 3D shape: (3493, 3)
+Multiframe time (ms): 331
+Floorplan Pose (x, y, angle): {'xy': array([2083.63007812,  798.14201391]), 'ang': 252.54598569739022}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 42
+PnP pairs 2D shape: (5668, 2) 3D shape: (5668, 3)
+Multiframe time (ms): 353
+Floorplan Pose (x, y, angle): {'xy': array([2081.56706083, 1099.89166055]), 'ang': 345.3605419451708}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 43
+PnP pairs 2D shape: (3862, 2) 3D shape: (3862, 3)
+Multiframe time (ms): 329
+Floorplan Pose (x, y, angle): {'xy': array([1325.38069381, 1341.70258916]), 'ang': 173.651406889165}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5075, 2) 3D shape: (5075, 3)
+Multiframe time (ms): 277
+Floorplan Pose (x, y, angle): {'xy': array([2035.89435925, 1020.70692515]), 'ang': 198.713732668681}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (2371, 2) 3D shape: (2371, 3)
+Multiframe time (ms): 157
+Floorplan Pose (x, y, angle): {'xy': array([1208.19107634, 1351.00851391]), 'ang': 203.37206626478422}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (7573, 2) 3D shape: (7573, 3)
+Multiframe time (ms): 537
+Floorplan Pose (x, y, angle): {'xy': array([2387.87264935, 1686.39975806]), 'ang': 94.06252796821363}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (14022, 2) 3D shape: (14022, 3)
+Multiframe time (ms): 919
+Floorplan Pose (x, y, angle): {'xy': array([1906.0911444 , 1725.02233175]), 'ang': 345.02986368821746}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 46
+PnP pairs 2D shape: (5264, 2) 3D shape: (5264, 3)
+Multiframe time (ms): 520
+Floorplan Pose (x, y, angle): {'xy': array([ 776.28430438, 1312.15369337]), 'ang': 263.7188399254969}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9171, 2) 3D shape: (9171, 3)
+Multiframe time (ms): 533
+Floorplan Pose (x, y, angle): {'xy': array([2444.76897728, 1684.98664746]), 'ang': 11.546822984572696}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8457, 2) 3D shape: (8457, 3)
+Multiframe time (ms): 616
+Floorplan Pose (x, y, angle): {'xy': array([1880.50808161, 1726.3899726 ]), 'ang': 87.6339104757497}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (9578, 2) 3D shape: (9578, 3)
+Multiframe time (ms): 692
+Floorplan Pose (x, y, angle): {'xy': array([1341.10432198, 1480.11978703]), 'ang': 71.01001072377063}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5001, 2) 3D shape: (5001, 3)
+Multiframe time (ms): 359
+Floorplan Pose (x, y, angle): {'xy': array([2018.34612823,  956.42797958]), 'ang': 239.66003904416104}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5005, 2) 3D shape: (5005, 3)
+Multiframe time (ms): 479
+Floorplan Pose (x, y, angle): {'xy': array([1367.05960482, 1338.28080258]), 'ang': 6.066311893810426}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 30
+PnP pairs 2D shape: (2117, 2) 3D shape: (2117, 3)
+Multiframe time (ms): 142
+Floorplan Pose (x, y, angle): {'xy': array([1198.71266697, 1342.3719638 ]), 'ang': 206.2954917232654}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (2734, 2) 3D shape: (2734, 3)
+Multiframe time (ms): 133
+Floorplan Pose (x, y, angle): {'xy': array([1152.85504292, 1340.85396336]), 'ang': 326.912405880845}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 34
+PnP pairs 2D shape: (3062, 2) 3D shape: (3062, 3)
+Multiframe time (ms): 243
+Floorplan Pose (x, y, angle): {'xy': array([1667.90532391, 1332.84610765]), 'ang': 352.686696192576}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (3235, 2) 3D shape: (3235, 3)
+Multiframe time (ms): 165
+Floorplan Pose (x, y, angle): {'xy': array([1406.00740332, 1502.71882566]), 'ang': 293.5918980196514}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8337, 2) 3D shape: (8337, 3)
+Multiframe time (ms): 822
+Floorplan Pose (x, y, angle): {'xy': array([2043.19361248,  877.69611713]), 'ang': 97.62519201173495}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 36
+PnP pairs 2D shape: (3590, 2) 3D shape: (3590, 3)
+Multiframe time (ms): 321
+Floorplan Pose (x, y, angle): {'xy': array([2073.54530342,  862.60165724]), 'ang': 261.91573726922064}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7473, 2) 3D shape: (7473, 3)
+Multiframe time (ms): 587
+Floorplan Pose (x, y, angle): {'xy': array([2635.29438678, 1799.93135878]), 'ang': 241.8895936494987}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (4328, 2) 3D shape: (4328, 3)
+Multiframe time (ms): 345
+Floorplan Pose (x, y, angle): {'xy': array([1178.69984113, 1342.73498455]), 'ang': 169.0062996236934}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (12757, 2) 3D shape: (12757, 3)
+Multiframe time (ms): 1396
+Floorplan Pose (x, y, angle): {'xy': array([2019.33696787, 1706.17442296]), 'ang': 345.07986487639874}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (5698, 2) 3D shape: (5698, 3)
+Multiframe time (ms): 490
+Floorplan Pose (x, y, angle): {'xy': array([1719.50081924, 1331.6253098 ]), 'ang': 8.733488422017372}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10976, 2) 3D shape: (10976, 3)
+Multiframe time (ms): 772
+Floorplan Pose (x, y, angle): {'xy': array([2128.94920559, 1471.23372754]), 'ang': 9.251126017880955}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (5341, 2) 3D shape: (5341, 3)
+Multiframe time (ms): 325
+Floorplan Pose (x, y, angle): {'xy': array([ 948.50410802, 1344.45600086]), 'ang': 167.24291700207434}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 3
+PnP pairs 2D shape: (167, 2) 3D shape: (167, 3)
+Multiframe time (ms): 16
+Floorplan Pose (x, y, angle): {'xy': array([1722.24031143, 1331.26678727]), 'ang': 281.86382246683957}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9222, 2) 3D shape: (9222, 3)
+Multiframe time (ms): 836
+Floorplan Pose (x, y, angle): {'xy': array([2493.01824079, 1807.84445893]), 'ang': 97.39901029948795}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (7041, 2) 3D shape: (7041, 3)
+Multiframe time (ms): 618
+Floorplan Pose (x, y, angle): {'xy': array([2578.86914376, 1672.95441051]), 'ang': 351.0889906238152}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (6686, 2) 3D shape: (6686, 3)
+Multiframe time (ms): 479
+Floorplan Pose (x, y, angle): {'xy': array([1849.78870306, 1335.13178112]), 'ang': 29.99664361566409}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6420, 2) 3D shape: (6420, 3)
+Multiframe time (ms): 422
+Floorplan Pose (x, y, angle): {'xy': array([2074.75772077, 1058.51027257]), 'ang': 136.77992957648854}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6322, 2) 3D shape: (6322, 3)
+Multiframe time (ms): 468
+Floorplan Pose (x, y, angle): {'xy': array([2087.23798854,  734.96807446]), 'ang': 125.5007613207761}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (4324, 2) 3D shape: (4324, 3)
+Multiframe time (ms): 440
+Floorplan Pose (x, y, angle): {'xy': array([2060.69531694,  654.00527428]), 'ang': 222.7027289599369}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 1
+PnP pairs 2D shape: (50, 2) 3D shape: (50, 3)
+Multiframe time (ms): 13
+Floorplan Pose (x, y, angle): {'xy': array([ 867.69018514, 1349.83692209]), 'ang': 245.55039171021204}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8917, 2) 3D shape: (8917, 3)
+Multiframe time (ms): 762
+Floorplan Pose (x, y, angle): {'xy': array([2549.06340463, 1813.29022277]), 'ang': 247.94534928845357}
+Best map key: None
+Number of candidates after local matching: 0
+PnP pairs 2D shape: (0, 2) 3D shape: (0, 3)
+Multiframe time (ms): 0
+Not enough 2D-3D correspondences for pose estimation.
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (10362, 2) 3D shape: (10362, 3)
+Multiframe time (ms): 687
+Floorplan Pose (x, y, angle): {'xy': array([2074.09866522, 1698.02460727]), 'ang': 8.761477964634294}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 28
+PnP pairs 2D shape: (2723, 2) 3D shape: (2723, 3)
+Multiframe time (ms): 208
+Floorplan Pose (x, y, angle): {'xy': array([1508.42229934, 1837.23114027]), 'ang': 170.6377243044467}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (6253, 2) 3D shape: (6253, 3)
+Multiframe time (ms): 309
+Floorplan Pose (x, y, angle): {'xy': array([2006.70341922, 1330.18604735]), 'ang': 49.88532084379373}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 27
+PnP pairs 2D shape: (2215, 2) 3D shape: (2215, 3)
+Multiframe time (ms): 173
+Floorplan Pose (x, y, angle): {'xy': array([ 801.0876593 , 1198.38832705]), 'ang': 63.142998839131074}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 38
+PnP pairs 2D shape: (5132, 2) 3D shape: (5132, 3)
+Multiframe time (ms): 330
+Floorplan Pose (x, y, angle): {'xy': array([2072.61928537,  948.17513629]), 'ang': 342.18273242531086}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 49
+PnP pairs 2D shape: (5938, 2) 3D shape: (5938, 3)
+Multiframe time (ms): 437
+Floorplan Pose (x, y, angle): {'xy': array([2030.81315586, 1181.16121454]), 'ang': 292.965562139278}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (6063, 2) 3D shape: (6063, 3)
+Multiframe time (ms): 387
+Floorplan Pose (x, y, angle): {'xy': array([2022.33283843, 1145.87637393]), 'ang': 40.43749704753987}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 47
+PnP pairs 2D shape: (4532, 2) 3D shape: (4532, 3)
+Multiframe time (ms): 325
+Floorplan Pose (x, y, angle): {'xy': array([2067.93775529,  672.70635082]), 'ang': 238.66591531055764}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 37
+PnP pairs 2D shape: (7048, 2) 3D shape: (7048, 3)
+Multiframe time (ms): 561
+Floorplan Pose (x, y, angle): {'xy': array([1494.7985707 , 1736.18757647]), 'ang': 181.99653959400916}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (2626, 2) 3D shape: (2626, 3)
+Multiframe time (ms): 177
+Floorplan Pose (x, y, angle): {'xy': array([ 949.75237197, 1345.23288805]), 'ang': 200.60510486599617}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 16
+PnP pairs 2D shape: (1963, 2) 3D shape: (1963, 3)
+Multiframe time (ms): 155
+Floorplan Pose (x, y, angle): {'xy': array([1226.90919578, 1342.09881854]), 'ang': 109.30678867900698}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 32
+PnP pairs 2D shape: (2599, 2) 3D shape: (2599, 3)
+Multiframe time (ms): 209
+Floorplan Pose (x, y, angle): {'xy': array([1128.63602393, 1341.8492919 ]), 'ang': 199.9533457567493}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (8714, 2) 3D shape: (8714, 3)
+Multiframe time (ms): 828
+Floorplan Pose (x, y, angle): {'xy': array([2232.91028047, 1522.00358651]), 'ang': 337.43173167079146}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 44
+PnP pairs 2D shape: (3631, 2) 3D shape: (3631, 3)
+Multiframe time (ms): 407
+Floorplan Pose (x, y, angle): {'xy': array([2071.25833457,  840.92943527]), 'ang': 283.59574337548185}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9272, 2) 3D shape: (9272, 3)
+Multiframe time (ms): 810
+Floorplan Pose (x, y, angle): {'xy': array([2051.91357171,  938.29675163]), 'ang': 85.32222834208598}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9034, 2) 3D shape: (9034, 3)
+Multiframe time (ms): 694
+Floorplan Pose (x, y, angle): {'xy': array([2076.14873158, 1024.60992766]), 'ang': 62.69988139635399}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 40
+PnP pairs 2D shape: (2898, 2) 3D shape: (2898, 3)
+Multiframe time (ms): 145
+Floorplan Pose (x, y, angle): {'xy': array([1024.40844439, 1344.44288579]), 'ang': 322.5244361248199}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 12
+PnP pairs 2D shape: (794, 2) 3D shape: (794, 3)
+Multiframe time (ms): 53
+Floorplan Pose (x, y, angle): {'xy': array([2090.3498817 ,  710.69957052]), 'ang': 0.6144363029552095}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 48
+PnP pairs 2D shape: (6011, 2) 3D shape: (6011, 3)
+Multiframe time (ms): 385
+Floorplan Pose (x, y, angle): {'xy': array([2092.01377651, 1312.3756991 ]), 'ang': 277.84590610383214}
+Best map key: ('Mahidol_University', 'ICT', '1.1_CricaVPR')
+Number of candidates after local matching: 50
+PnP pairs 2D shape: (9659, 2) 3D shape: (9659, 3)
+Multiframe time (ms): 1118
+Floorplan Pose (x, y, angle): {'xy': array([2227.68902675, 1519.48240216]), 'ang': 204.48814536728582}
+==== Predicted coordinates were saved to '/home/nattachart.tak/PhD/Trial_New_UNav/UNav/experiment/configs//Config__v2-1_c/Results_localize_CricaVPR.xlsx'. ====
+==== Calculate distance errors ====
+Traceback (most recent call last):
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/./experiment/run_experiment.py", line 181, in <module>
+    distance_error_fn = distance_error.save_calculated_distance_error(config_exp, results_fn)
+  File "/home/nattachart.tak/PhD/Trial_New_UNav/UNav/experiment/distance_error.py", line 22, in save_calculated_distance_error
+    lambda row : distance.euclidean([row['coordx'], row['coordy']], [row['cx'], row['cy']]), axis=1).to_frame()
+  File "/unav/venv/lib/python3.10/site-packages/pandas/core/generic.py", line 6299, in __getattr__
+    return object.__getattribute__(self, name)
+AttributeError: 'DataFrame' object has no attribute 'to_frame'
+[Background Prefetch] Error: cannot schedule new futures after interpreter shutdown

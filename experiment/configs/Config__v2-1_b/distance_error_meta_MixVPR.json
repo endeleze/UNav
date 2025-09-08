@@ -1,0 +1,1 @@
+{"exp_version": "v2-1_b", "mean_distance_error_meters": 2.543906928391058, "std_distance_error_meters": 0.6459116491835433, "num_images_localized": 2, "num_images_total": 2, "dataset_name": "TestSet_360_v1.1_a", "algorithm": "MixVPR"}

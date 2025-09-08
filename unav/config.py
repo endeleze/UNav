@@ -102,7 +102,7 @@ class UNavMappingConfig:
             "model_resize": [320, 320]
         },
         "CricaVPR": {
-            "ckpt_path": 'parameters/CricaVPR/ckpts/CricaVPR_clean.pth',
+            "ckpt_path": 'parameters/CricaVPR/ckpts/CricaVPR.pth',
             "cuda": True,
             "model_resize": [320, 320]
         },
@@ -212,7 +212,8 @@ class UNavMappingConfig:
 
         output_base = os.path.join(container_data_root, self.place, self.building, self.floor, "stella_vslam_dense")
         return {
-            "container_name": f"vslam_{self.floor}",
+            #"container_name": f"vslam_{self.floor}",
+            "container_name": "stella_vslam.sif",
             "gpu_id": 0,
             "viewer": False,
             "vocab_path": os.path.join(container_data_root, "orb_vocab.fbow"),
@@ -389,7 +390,7 @@ class UNavMappingConfig:
                 'min_stereo_score': 0
             }
         }
-        yaml_output_path = os.path.join(self.data_temp_root, "equirectangular.yaml")
+        yaml_output_path = os.path.join(self.data_temp_root, self.place, self.building, self.floor, "equirectangular.yaml")
         with open(yaml_output_path, 'w') as f:
             yaml.dump(yaml_content, f, sort_keys=False)
         print(f"[✓] YAML written to: {yaml_output_path}.")
@@ -408,7 +409,8 @@ class UNavLocalizationConfig:
             "model_resize": [320, 320]
         },
         "CricaVPR": {
-            "ckpt_path": 'parameters/CricaVPR/ckpts/CricaVPR_clean.pth',
+            #"ckpt_path": 'parameters/CricaVPR/ckpts/CricaVPR_clean.pth',
+            "ckpt_path": 'parameters/CricaVPR/ckpts/CricaVPR.pth',
             "cuda": True,
             "model_resize": [320, 320]
         },

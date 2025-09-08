@@ -1,0 +1,9 @@
+---------------------------------------------
+>> Mapping: Place=Mahidol_University | Building=ICT | Floor=1.1_DinoV2Salad
+---------------------------------------------
+[✓] YAML written to: /home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/equirectangular.yaml.
+Starting UNav mapping pipeline...
+==== Calculate the groundtruth ====
+==== The groundtruth was saved to /home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/Mahidol_University/ICT/1.1_DinoV2Salad/groundtruth_img_dataset_ICT_1.1_DinoV2Salad.csv and /home/nattachart.tak/Data/experiments/Mapping/data/unav2-data/Mahidol_University/ICT/1.1_DinoV2Salad/groundtruth_img_dataset_ICT_1.1_DinoV2Salad_10P.csv ====
+
+✅ All mapping jobs finished successfully.

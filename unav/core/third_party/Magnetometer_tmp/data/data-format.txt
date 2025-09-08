@@ -1,0 +1,8 @@
+Columns
+-------
+timestamp,
+X (magnetic field X component),
+Y (magnetic field Y component),
+Z (magnetic field Z component),
+Cx (X coordinate on the floorplan),
+Cy (Y cooordinate on the floorplan)
