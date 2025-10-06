@@ -17,7 +17,8 @@ class UNavConfig:
         mapping_building: str = "LightHouse",
         mapping_floor: str = "3_floor",
         global_descriptor_model: str = "DinoV2Salad",
-        local_feature_model: str = "superpoint+lightglue"
+        local_feature_model: str = "superpoint+lightglue",
+        generate_stella_yaml: bool = True
     ) -> None:
         """
         Initialize unified configuration for the entire UNav system.
@@ -57,7 +58,8 @@ class UNavConfig:
                 building=mapping_building,
                 floor=mapping_floor,
                 global_descriptor_model=global_descriptor_model,
-                local_feature_model=local_feature_model
+                local_feature_model=local_feature_model,
+                generate_stella_yaml = generate_stella_yaml
             )
         self.localizer_config = UNavLocalizationConfig(
             data_final_root=data_final_root,
@@ -156,7 +158,8 @@ class UNavMappingConfig:
         building: str = "LightHouse",
         floor: str = "3_floor",
         global_descriptor_model: str = "DinoV2Salad",
-        local_feature_model: str = "superpoint+lightglue"
+        local_feature_model: str = "superpoint+lightglue",
+        generate_stella_yaml: bool = True
     ) -> None:
         """
         Initialize the UNav mapping config.
@@ -176,7 +179,8 @@ class UNavMappingConfig:
         self.feature_extraction_config: Dict[str, Any] = self._init_feature_extraction_config()
         self.matcher_config: Dict[str, Any] = self._init_matching_config()
         self.colmap_config: Dict[str, Any] = self._init_colmap_config()
-        self._generate_stella_vslam_yaml()
+        if generate_stella_yaml:
+            self._generate_stella_vslam_yaml()
 
     def to_dict(self) -> Dict[str, Any]:
         """Export config as a nested dictionary."""

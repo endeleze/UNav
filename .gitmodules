@@ -1,0 +1,3 @@
+[submodule "unav/core/third_party/Magnetometer_tmp/phd-script"]
+	path = unav/core/third_party/Magnetometer_tmp/phd-script
+	url = https://gitlab.com/Tamkittikhun/phd-script.git
