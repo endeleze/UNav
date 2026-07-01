@@ -32,6 +32,7 @@ The parser in `unav/navigator/pathfinder.py` expects the following:
 | 4 | point | inter-floor waypoint (stairs/elevator connector) | `label` connector ID, `description` should be `staircase` or `elevator` |
 | 5 | point | destination | `label` destination name, `description` orientation hint (`left/right/center/up/...`) |
 | 6 | line | companion line for group 4 waypoint | `label` must match group 4 label |
+| 7 | line | corridor **skeleton / "railway"** trunk — a straight centreline segment; endpoints coincide with other group-7 segments at junctions | `label` optional; use `shape_type=line` (2-point, straight) |
 
 ### Labelme Authoring Procedure
 
@@ -43,7 +44,46 @@ The parser in `unav/navigator/pathfinder.py` expects the following:
 6. Place stair/elevator transfer points (`group_id=4`).
 7. Place destination points (`group_id=5`).
 8. Draw companion lines for each group 4 connector (`group_id=6`, same label).
-9. Save JSON as `boundaries.json` in floor folder.
+9. Lay the corridor **skeleton / "railway"** (`group_id=7`) — see [Corridor Skeleton Network](#corridor-skeleton-railway-network-group_id7).
+10. Save JSON as `boundaries.json` in floor folder.
+
+### Corridor Skeleton (Railway) Network (`group_id=7`)
+
+Routing uses a **two-tier network**, like rail + road:
+
+- **Railway (`group_id=7`)** — the long-haul corridor trunk lines. Straight centreline
+  segments running down the middle of corridors. Route planning strongly prefers the
+  railway for the long part of a trip, so corridors are followed as clean **straight legs
+  with 90° turns**, instead of cutting a diagonal short-cut across a junction.
+- **Roads (`group_id=3` waypoints)** — the local network. Used to get **on/off** the
+  railway and for the **last mile** to a destination, and for **open spaces / outdoor**
+  areas where straight-line travel is correct.
+
+Think of a skeleton waypoint as the **first/last station of a straight rail line**: you
+mark the *ends* of the track, not every stop in between.
+
+**How to lay the railway**
+
+1. Draw each straight corridor run as **one straight line** (`group_id=7`,
+   `shape_type=line`) down the **centre** of the corridor.
+2. Put a vertex **only at track ends, junctions, and turns**. **Do NOT** add a vertex at
+   every door or intermediate point — a straight corridor is a **single line from end to
+   end**.
+3. Where corridors meet, make the line endpoints **coincide** (identical coordinates).
+   That shared point is a **junction** — the train can switch tracks there.
+4. At a corner / T-junction, use **two straight lines meeting at the corner vertex** —
+   never one diagonal line across the open junction.
+5. Lay railway **only inside corridors**. **Open spaces and outdoor areas get no railway**
+   — they are handled by roads (`group_id=3` waypoints + line-of-sight).
+
+**Keep it sparse.** The railway is a *skeleton*: a handful of straight lines per floor,
+not a dense mesh. Rooms and destinations are reached **from** the railway by roads, so you
+do **not** extend the railway to every door.
+
+Why this matters: the railway makes the corridor geometry an explicit, hand-controlled
+trunk, so there is no reliance on automatic corridor detection and no diagonal
+corner-cutting. Destinations are then approached down the corridor centre and announced as
+"on your left / right", rather than via a long hypotenuse straight to the door.
 
 ### Inter-floor Connector Rule
 
@@ -65,7 +105,8 @@ Example:
     {"label": "waypoint", "group_id": 3, "shape_type": "point", "points": [[20,10]]},
     {"label": "LH-e1", "group_id": 4, "shape_type": "point", "description": "elevator", "points": [[80,10]]},
     {"label": "Main Elevator", "group_id": 5, "shape_type": "point", "description": "up", "points": [[82,10]]},
-    {"label": "LH-e1", "group_id": 6, "shape_type": "line", "points": [[80,6],[80,14]]}
+    {"label": "LH-e1", "group_id": 6, "shape_type": "line", "points": [[80,6],[80,14]]},
+    {"label": "rail", "group_id": 7, "shape_type": "line", "points": [[20,10],[80,10]]}
   ]
 }
 ```
@@ -143,6 +184,7 @@ Fallback `destinations.json` format:
 
 - `boundaries.json` exists and loads without parse errors
 - All required `group_id` categories are present
+- Corridor skeleton (`group_id=7`) laid along corridor centres; endpoints coincide at junctions; none in open spaces
 - `group_id=4` labels match across floors where transitions should exist
 - `_i18n/labels.json` created and populated
 - Target language labels resolve correctly in app/localization flow
