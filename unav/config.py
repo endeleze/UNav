@@ -256,6 +256,10 @@ class UNavMappingConfig:
             "container_name": f"vslam_{self.floor}",
             "gpu_id": 0,
             "viewer": False,
+            # Cap container RAM so a runaway dense-SLAM map is OOM-killed inside the
+            # container instead of taking down the host + localization server. Tune
+            # per machine; set to None to disable.
+            "mem_limit": "90g",
             "vocab_path": os.path.join(container_data_root, "orb_vocab.fbow"),
             "config_yaml": os.path.join(container_data_root, "equirectangular.yaml"),
             "video_path": os.path.join(container_data_root, self.place, self.building, self.floor, f"{self.floor}.mp4"),

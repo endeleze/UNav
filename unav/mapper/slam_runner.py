@@ -47,17 +47,22 @@ def run_stella_vslam_dense(
         f'--map-db-out "{map_db_out}" '
         f'--pc-out "{pc_out}" '
         f'--kf-out "{kf_out}" '
-        f'{"--viewer none" if not viewer else ""} && '
-        f'echo "[✓] SLAM done for {config.floor}" || echo "[X] SLAM failed for {config.floor}"'
+        f'{"--viewer none" if not viewer else ""}'
     )
 
     # Build the Docker command with correct GPU assignment and mounts
+    mem_limit = slam_cfg.get("mem_limit")  # e.g. "90g"; None disables the cap
     cmd = [
         "docker", "run", "--rm", "-i",
         "--gpus", f"device={gpu_id}",
         "--ipc=host",
         "--ulimit", "memlock=-1",
         "--ulimit", "stack=67108864",
+    ]
+    if mem_limit:
+        # --memory-swap == --memory disables container swap so it fails fast/cleanly.
+        cmd += ["--memory", str(mem_limit), "--memory-swap", str(mem_limit)]
+    cmd += [
         "--entrypoint", "bash",
         "-v", f"{host_data_root}:{container_data_root}",
         "-w", "/stella_vslam_examples/build",
@@ -82,4 +87,19 @@ def run_stella_vslam_dense(
         pass
 
     # Launch SLAM in the container
-    subprocess.run(cmd)
+    result = subprocess.run(cmd)
+
+    # Fail fast: SLAM must exit cleanly AND write its keyframe trajectory. The most
+    # common failure is OOM (dense SLAM grows to tens of GB), which SIGKILLs
+    # run_video_slam (exit 137) before the trajectory is written. Abort here with a
+    # clear message instead of letting the downstream slicer crash on a missing file.
+    traj_file = os.path.join(host_eval_log_dir, "keyframe_trajectory.txt")
+    if result.returncode != 0 or not os.path.exists(traj_file):
+        raise RuntimeError(
+            f"[SLAM] dense SLAM FAILED for {config.floor} "
+            f"(docker exit={result.returncode}, trajectory_written={os.path.exists(traj_file)}). "
+            f"Most likely OOM: run_video_slam can grow to tens of GB. Run one floor at a "
+            f"time, lower the video bitrate/resolution (or use run_mapper_segment), and/or "
+            f"lower slam_config['mem_limit']. Aborting before slicing."
+        )
+    print(f"[✓] SLAM done for {config.floor}")
