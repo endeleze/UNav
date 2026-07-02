@@ -225,10 +225,9 @@ class UNavLocalizer:
         if self.use_mast3r:
             from unav.localizer.tools.matcher import mast3r_matching_and_pnp
             mast3r_cfg = self.config.feature_extraction_config["local_extractor_config"].get("mast3r", {})
-            # DB images may live under the temp (working) tree or the final
-            # (published) tree — search temp first so in-progress maps work.
+            # Perspective DB images live with the published map under the FINAL
+            # tree (mapping writes them there).
             data_roots = [
-                getattr(self.config, "data_temp_root", None),
                 getattr(self.config, "data_final_root", None),
             ]
             return mast3r_matching_and_pnp(

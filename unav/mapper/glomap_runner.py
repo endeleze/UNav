@@ -24,7 +24,7 @@ def run_glomap_segment_pipeline(
         image_parent_dirname (str): Name of the folder for segment images (default 'perspectives').
     """
     features_dir = Path(config.feature_extraction_config["output_feature_dir"])
-    perspectives_root = Path(config.data_temp_dir) / image_parent_dirname
+    perspectives_root = Path(config.data_final_dir) / image_parent_dirname
     colmap_sfm_root = Path(config.data_temp_dir) / "colmap_sfm"
     model_name = config.global_descriptor_model
 

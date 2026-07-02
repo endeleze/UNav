@@ -292,7 +292,7 @@ class UNavMappingConfig:
         return {
             "input_keyframe_dir": os.path.join(self.data_temp_dir, "stella_vslam_dense", "keyframes"),
             "trajectory_file": os.path.join(self.data_temp_dir, "stella_vslam_dense", "eval_logs", "keyframe_trajectory.txt"),
-            "output_perspective_dir": os.path.join(self.data_temp_dir, "perspectives"),
+            "output_perspective_dir": os.path.join(self.data_final_dir, "perspectives"),
             "rotate_along_local_y_axis": False,
             "num_perspectives": 18,
             "fov": 90,
@@ -313,7 +313,7 @@ class UNavMappingConfig:
 
         return {
             "parameters_root": self.data_final_root,
-            "input_perspective_dir": os.path.join(self.data_temp_dir, "perspectives"),
+            "input_perspective_dir": os.path.join(self.data_final_dir, "perspectives"),
             "output_feature_dir": feature_dir,
             "local_feature_model": self.local_feature_model,
             "local_extractor_config": {
