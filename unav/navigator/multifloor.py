@@ -167,6 +167,7 @@ class FacilityNavigator:
         nav_coords = [pf0.nodes[nid] for nid in pf0.nav_ids]
         if force_walkable:
             start_xy = snap_toward_nearest_waypoint(start_xy, pf0.walkable_union, nav_coords)
+            start_xy = pf0.snap_to_route(start_xy)
 
         # Add temporary virtual node for the real start point
         virt = "VIRT"
