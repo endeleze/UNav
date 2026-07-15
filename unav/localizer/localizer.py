@@ -54,6 +54,7 @@ class UNavLocalizer:
         self.global_feat_paths = {}      # {place__building__floor: h5_path}
         self.local_feat_paths = {}       # {place__building__floor: h5_path}
         self.transform_matrices = {}     # {place__building__floor: np.ndarray or None}
+        self._db_xy_cache = {}           # {map_key_tuple: {img_name: (x, y) floorplan px}}
 
         # Kick off global-feature loading (CPU/IO) in a background thread so it
         # overlaps with GPU model init below; the two phases are independent.
@@ -169,6 +170,43 @@ class UNavLocalizer:
             top_k=topk,
             device=str(self.device)
         )
+
+    def _db_floorplan_xy(self, map_key):
+        """Floorplan (x, y) in px of every DB image in a map, cached. Requires the
+        map's COLMAP model + transform_matrix; returns {} when no transform exists."""
+        if map_key in self._db_xy_cache:
+            return self._db_xy_cache[map_key]
+        T = self.transform_matrices.get(map_key)
+        out = {}
+        if T is not None:
+            model = self._ensure_colmap_model(map_key) or {}
+            for name, frame in model.items():
+                fp = self.transform_pose_to_floorplan(
+                    frame.get("qvec"), frame.get("tvec"), T
+                )
+                xy = fp.get("xy") if fp else None
+                if xy is not None:
+                    out[name] = (float(xy[0]), float(xy[1]))
+        self._db_xy_cache[map_key] = out
+        return out
+
+    def _reachability_gate(self, top_candidates, prior_xy, reach_px, keep, min_keep=3):
+        """Keep VPR candidates whose DB floorplan position is within reach_px of the
+        prior pose, then take the top `keep`. Falls back to the ungated top `keep`
+        when too few survive (stale/unreliable prior), so matching never starves."""
+        px, py = float(prior_xy[0]), float(prior_xy[1])
+        r2 = float(reach_px) * float(reach_px)
+        gated = []
+        for cand in top_candidates:
+            map_key, name = cand[0], cand[1]
+            db_xy = self._db_floorplan_xy(map_key).get(name)
+            if db_xy is None:
+                continue
+            if (db_xy[0] - px) ** 2 + (db_xy[1] - py) ** 2 <= r2:
+                gated.append(cand)
+        if len(gated) >= min(keep, min_keep):
+            return gated[:keep]
+        return top_candidates[:keep]
 
     def _ensure_colmap_model(self, key):
         """Lazy-load and cache a floor's COLMAP model on first use."""
@@ -328,8 +366,16 @@ class UNavLocalizer:
         # 2. VPR: retrieve top candidates
         # MASt3R is slower per-pair, use fewer VPR candidates
         effective_topk = min(top_k or 50, 10) if self.use_mast3r else top_k
+        # Optional reachability prior: when the caller supplies the previous pose
+        # (prior_xy, floorplan px) and a reach radius (reach_px), retrieve a larger
+        # pool and keep only candidates physically reachable from the last pose,
+        # suppressing look-alike corridors elsewhere. Off by default (no kwargs).
+        _prior_xy = kwargs.get("prior_xy", None)
+        _reach_px = kwargs.get("reach_px", None)
+        _gate_on = _prior_xy is not None and _reach_px is not None
+        _pool_k = max(effective_topk, 50) if _gate_on else effective_topk
         try:
-            top_candidates = self.vpr_retrieve(global_feat, top_k=effective_topk)
+            top_candidates = self.vpr_retrieve(global_feat, top_k=_pool_k)
         except Exception as e:
             return {
                 "success": False,
@@ -348,6 +394,11 @@ class UNavLocalizer:
                 "stage": "vpr_retrieve",
                 "timings": timings
             }
+
+        if _gate_on:
+            top_candidates = self._reachability_gate(
+                top_candidates, _prior_xy, _reach_px, keep=effective_topk
+            )
 
         # 3. Gather map/model/feature data for all candidates
         try:
