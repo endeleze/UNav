@@ -408,9 +408,18 @@ class PathFinder:
         return (snapped.x, snapped.y)
 
     def get_route_segments(self):
+        # On floors with a hand-drawn railway, only expose the rail skeleton
+        # (group 7). The road tier is an O(n^2) visibility mesh kept in the graph
+        # for routing/fallback, but drawing it clutters the map and snapping to
+        # it is meaningless — on a railway floor the user walks the rail.
+        has_rail = bool(getattr(self, "rail_node_ids", None))
         seen = set()
         segs = []
         for u, v in self.G.edges():
+            if has_rail and not (
+                self.group_ids.get(u) == 7 and self.group_ids.get(v) == 7
+            ):
+                continue
             key = (min(u, v), max(u, v))
             if key not in seen and u in self.nodes and v in self.nodes:
                 seen.add(key)
