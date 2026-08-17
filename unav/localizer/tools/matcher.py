@@ -179,7 +179,7 @@ def mast3r_matching_and_pnp(
     mast3r_matcher,
     colmap_models,
     max_nn_dist: float = 20.0,
-    min_inliers: int = 6,
+    min_matches: int = 6,
     max_candidates: int = 10,
     early_stop_inliers: int = 50,
     pp=None,
@@ -194,6 +194,14 @@ def mast3r_matching_and_pnp(
       3. Collect (image_points, object_points) for PnP
 
     Args:
+        min_matches: Minimum number of raw MASt3R correspondences that survive
+            the ``max_nn_dist`` lookup to a COLMAP keypoint carrying 3D. This is
+            a PRE-geometry count -- no RANSAC has run yet; geometric
+            verification happens downstream in ``pnp.py`` via
+            ``poselib.estimate_1D_radial_absolute_pose``. It is therefore NOT
+            comparable to ``batch_local_matching_and_ransac``'s ``min_inliers``,
+            which counts POST-RANSAC survivors and is rightly ~an order of
+            magnitude larger. Keep the two configured separately.
         data_roots: Ordered list of root directories under which the DB
             images live (``<root>/<place>/<building>/<floor>/perspectives/...``).
             Typically ``[cfg.data_temp_root, cfg.data_final_root]``. When not
@@ -240,7 +248,7 @@ def mast3r_matching_and_pnp(
             query_2d, db_2d, conf = None, None, None
         else:
             query_2d, db_2d, conf = result
-        if query_2d is None or len(query_2d) < min_inliers:
+        if query_2d is None or len(query_2d) < min_matches:
             continue
 
         # Colmap 3D lookup via NN
@@ -249,7 +257,7 @@ def mast3r_matching_and_pnp(
         valid_mask = np.array([p is not None for p in colmap_3d])
         valid_idx = np.where(valid_mask)[0]
 
-        if len(valid_idx) < min_inliers:
+        if len(valid_idx) < min_matches:
             continue
 
         valid_2d = colmap_2d[valid_idx]
@@ -259,7 +267,7 @@ def mast3r_matching_and_pnp(
         dists, nn_idx = tree.query(db_2d, k=1)
         close_mask = dists < max_nn_dist
 
-        if close_mask.sum() < min_inliers:
+        if close_mask.sum() < min_matches:
             continue
 
         image_points = query_2d[close_mask]

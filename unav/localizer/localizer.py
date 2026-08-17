@@ -274,7 +274,10 @@ class UNavLocalizer:
                 mast3r_matcher=self.local_matcher,
                 colmap_models=self.all_colmap_models,
                 max_nn_dist=mast3r_cfg.get("max_nn_dist", 20.0),
-                min_inliers=self.config.localization_config.get("min_inliers", 6),
+                # Pre-geometry correspondence count -- lives in the mast3r
+                # namespace so it can never be moved by tuning the SuperPoint
+                # path's post-RANSAC min_inliers (they measure different things).
+                min_matches=mast3r_cfg.get("min_matches", 6),
                 max_candidates=10,
                 early_stop_inliers=80,
                 pp=pp,
@@ -286,6 +289,7 @@ class UNavLocalizer:
                 candidates_data,
                 matcher=self.local_matcher,
                 feature_score_threshold=self.config.localization_config.get("feature_score_threshold", 0.09),
+                # Post-RANSAC inlier count (survivors of ransac_filter).
                 min_inliers=self.config.localization_config.get("min_inliers", 50),
                 device=self.device
             )
