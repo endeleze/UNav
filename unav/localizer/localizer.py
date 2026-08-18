@@ -109,15 +109,48 @@ class UNavLocalizer:
                         self.transform_matrices[key] = None
 
     def _load_all_global_features(self):
-        """Eagerly load global features for every floor (needed for VPR)."""
+        """Eagerly load global features for every floor (needed for VPR).
+
+        A floor whose features do not load is invisible to retrieval: its
+        queries silently land on whatever other floor looks closest, which
+        for a navigation product means confidently routing a user through
+        the wrong floor. Previously a missing file was skipped with no
+        message at all and a failed load produced a single warning that was
+        easy to miss in startup noise, so record what was skipped and end
+        with an explicit inventory.
+        """
+        self.unavailable_floors = {}
         for key, h5_path in list(self.global_feat_paths.items()):
-            if os.path.exists(h5_path):
-                try:
-                    feats, names = load_global_features(h5_path)
-                    self.all_global_features[key] = (feats, names)
-                    print(f"[✓] Loaded global features for {key}: {len(names)} images")
-                except Exception as e:
-                    print(f"[WARNING] Could not load global features for {key}: {e}")
+            if not os.path.exists(h5_path):
+                self.unavailable_floors[key] = f"missing file: {h5_path}"
+                print(f"[WARNING] No global features for {key}: file not found "
+                      f"({h5_path}) -- this floor will be INVISIBLE to retrieval")
+                continue
+            try:
+                feats, names = load_global_features(h5_path)
+                self.all_global_features[key] = (feats, names)
+                print(f"[✓] Loaded global features for {key}: {len(names)} images")
+            except Exception as e:
+                self.unavailable_floors[key] = f"{type(e).__name__}: {e}"
+                print(f"[WARNING] Could not load global features for {key}: {e} "
+                      f"-- this floor will be INVISIBLE to retrieval")
+        self._report_floor_inventory()
+
+    def _report_floor_inventory(self):
+        """Print a loaded-vs-unavailable summary so a lost floor is obvious."""
+        loaded = len(self.all_global_features)
+        missing = getattr(self, "unavailable_floors", {}) or {}
+        total = loaded + len(missing)
+        if not missing:
+            print(f"[INFO] Floor inventory: {loaded}/{total} floors available for retrieval.")
+            return
+        print(f"[ERROR] Floor inventory: {loaded}/{total} floors available -- "
+              f"{len(missing)} UNAVAILABLE and invisible to retrieval:")
+        for key, reason in missing.items():
+            print(f"[ERROR]   {key}: {reason}")
+        print("[ERROR] Queries belonging to the floors above cannot be matched "
+              "and will be answered with another floor's pose. Fix the data or "
+              "remove those floors from the served set.")
 
     def load_maps_and_features(self):
         """
