@@ -322,6 +322,7 @@ def mast3r_relpose_localization(
     max_candidates: int = 5,
     data_roots: Optional[Iterable[str]] = None,
     scale_m_per_unit: Optional[float] = None,
+    pp: Optional[np.ndarray] = None,
 ):
     """EXPERIMENTAL -- not the production path. Nothing in this library calls it.
 
