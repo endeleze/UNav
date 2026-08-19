@@ -326,16 +326,35 @@ class MASt3RExtractor:
         if not all_pairs:
             return [None] * len(db_img_paths)
 
-        # Batch inference with AMP
+        # Batch inference with AMP. Collation requires every pair in a batch
+        # to share tensor shapes — a query whose aspect differs from the DB's
+        # (e.g. a portrait phone photo against 16:9 renders) or DB images of
+        # mixed resolutions crash the whole batch with "stack expects each
+        # tensor to be equal size". Group pairs by shape and run one batch
+        # per group so heterogeneous inputs degrade to smaller batches
+        # instead of an exception.
+        shape_groups = {}
+        for j, pair in enumerate(all_pairs):
+            key = (tuple(pair[0]['img'].shape), tuple(pair[1]['img'].shape))
+            shape_groups.setdefault(key, []).append(j)
+
+        pair_outputs = [None] * len(all_pairs)  # (group output, idx in group)
         with torch.no_grad(), torch.cuda.amp.autocast():
-            output = inference(all_pairs, self.model, self.device,
-                               batch_size=len(all_pairs), verbose=False)
+            for idxs in shape_groups.values():
+                group = [all_pairs[j] for j in idxs]
+                out = inference(group, self.model, self.device,
+                                batch_size=len(group), verbose=False)
+                for bi, j in enumerate(idxs):
+                    pair_outputs[j] = (out, bi)
 
         # Process each pair result
         import cv2 as _cv2
         results = [None] * len(db_img_paths)
 
-        for batch_idx, orig_idx in enumerate(valid_indices):
+        for pair_idx, orig_idx in enumerate(valid_indices):
+            if pair_outputs[pair_idx] is None:
+                continue
+            output, batch_idx = pair_outputs[pair_idx]
             try:
                 desc1 = output['pred1']['desc'][batch_idx].detach()
                 desc2 = output['pred2']['desc'][batch_idx].detach()
