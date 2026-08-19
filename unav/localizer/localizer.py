@@ -471,11 +471,28 @@ class UNavLocalizer:
                 cv2.imwrite(_tmp.name, query_img)
                 query_img_path = _tmp.name
             pp = kwargs.get("pp", None)
-            best_map_key, pnp_pairs, results = self.batch_local_matching_and_ransac(
-                local_feat_dict, candidates_data,
-                query_img_path=query_img_path,
-                pp=pp,
-            )
+            try:
+                best_map_key, pnp_pairs, results = self.batch_local_matching_and_ransac(
+                    local_feat_dict, candidates_data,
+                    query_img_path=query_img_path,
+                    pp=pp,
+                )
+            except torch.cuda.OutOfMemoryError:
+                # Batch matching over many high-keypoint candidates can
+                # exhaust GPU memory. Free the cache and retry once with the
+                # top candidates by retrieval score — a slightly-less-informed
+                # answer beats an exception.
+                torch.cuda.empty_cache()
+                _top = sorted(
+                    candidates_data.items(),
+                    key=lambda kv: kv[1].get("score", 0.0),
+                    reverse=True,
+                )[:12]
+                best_map_key, pnp_pairs, results = self.batch_local_matching_and_ransac(
+                    local_feat_dict, dict(_top),
+                    query_img_path=query_img_path,
+                    pp=pp,
+                )
             # Clean up temp file
             if self.use_mast3r and 'query_img_path' not in kwargs and query_img_path:
                 import os
