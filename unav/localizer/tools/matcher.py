@@ -321,17 +321,47 @@ def mast3r_relpose_localization(
     min_inliers: int = 10,
     max_candidates: int = 5,
     data_roots: Optional[Iterable[str]] = None,
+    scale_m_per_unit: Optional[float] = None,
 ):
-    """
-    Map-free localization with Procrustes coordinate system alignment.
+    """EXPERIMENTAL -- not the production path. Nothing in this library calls it.
+
+    Briefly made the default in c7286d0 (2026-04-07) and reverted the same day
+    in 96721bc ("RelPose heading needs more work"); production has run
+    :func:`mast3r_matching_and_pnp` ever since. The commit message of c7286d0
+    still reads as though RelPose shipped, which has already misled one reader
+    into adopting it -- hence this notice. Treat the code below as a research
+    branch, not as a description of what we serve.
+
+    Map-free localization: no colmap 3D point cloud needed, only ref images
+    with known poses.
 
     1. For each (query, ref_i) pair, MASt3R gives ref's 3D pointmap in local frame
-    2. Collect matched 3D points in both MASt3R-local and colmap-world coordinates
-       from multiple refs to solve the rigid transform (Procrustes)
-    3. Transform query pose to world coordinates using this alignment
-    4. No colmap 3D point cloud needed — only ref images with known poses
+    2. Compose the query's local displacement onto the ref's known world pose
+    3. With several refs, average the per-ref world positions (weighted by
+       inlier count) and circular-average the headings with outlier rejection
+
+    Note the composition is per-pair: each MASt3R pair defines its own local
+    frame, so the pairs cannot be aligned into one frame and no Procrustes fit
+    is performed, despite what earlier revisions of this docstring claimed.
+
+    Scale
+    -----
+    MASt3R/dust3r pointmaps are METRIC, colmap world coordinates are not: each
+    reconstruction carries an arbitrary unit. The composition adds a local
+    displacement to a colmap-world position, so the displacement must first be
+    expressed in the model's units. Pass ``scale_m_per_unit`` (metres per colmap
+    unit) to do that. Measured on our own maps the spread is wide -- Langone
+    16F/17F are ~0.48/1.19, LightHouse 3F/4F/6F are one to two orders larger --
+    so a model that happens to be near-metric hides the error and a
+    non-metric one produces confident fixes metres away. Reported by Ari
+    Kanevsky, who measured p50 4.5-6.7 m on LightHouse before correcting it.
+
+    Leaving ``scale_m_per_unit`` unset keeps the original (metric-assuming)
+    behaviour and warns once, rather than silently guessing a scale.
 
     Args:
+        scale_m_per_unit: Metres per colmap world unit for the map being
+            queried. ``None`` assumes the model is metric.
         data_roots: Ordered list of root directories for DB image lookup
             (see :func:`mast3r_matching_and_pnp`).
 
@@ -341,6 +371,15 @@ def mast3r_relpose_localization(
     import poselib
     from scipy.spatial.transform import Rotation as R
     from collections import Counter
+
+    if not scale_m_per_unit and not getattr(
+        mast3r_relpose_localization, "_scale_warned", False
+    ):
+        mast3r_relpose_localization._scale_warned = True
+        print("[WARNING] mast3r_relpose_localization: scale_m_per_unit not set, "
+              "assuming the colmap model is metric. On a non-metric model the "
+              "composed pose is wrong by the model's scale factor -- see the "
+              "Scale section of this function's docstring.")
 
     if data_roots is None:
         data_roots = DEFAULT_DB_IMAGE_ROOTS
@@ -386,9 +425,14 @@ def mast3r_relpose_localization(
         if n_inliers < min_inliers:
             continue
 
-        # Query pose in MASt3R local frame
+        # Query pose in MASt3R local frame. The displacement is metric; the
+        # colmap world it gets composed onto is not, so convert it into model
+        # units here -- this is the one point both the single-ref and the
+        # multi-ref branch (and the heading computation) inherit.
         q_rot_local = R.from_quat([pose.q[1], pose.q[2], pose.q[3], pose.q[0]])
         q_center_local = -q_rot_local.as_matrix().T @ np.array(pose.t)
+        if scale_m_per_unit:
+            q_center_local = q_center_local / float(scale_m_per_unit)
 
         # Ref camera center in colmap world
         ref_qvec = ref_frame['qvec']
